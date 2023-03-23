@@ -11,6 +11,7 @@ import "./index.css";
 import Test from "./routes/test/test";
 import User from "./routes/user/user";
 
+// maybe if logged in use ternary to render the right page
 const router = createBrowserRouter([
   {
     path: "/",
