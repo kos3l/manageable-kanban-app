@@ -8,8 +8,8 @@ import Root from "./routes/root/root";
 import ErrorPage from "./routes/root/error-page";
 
 import "./index.css";
-import Test from "./routes/test/test";
-import User from "./routes/user/user";
+import Home from "./routes/home/home";
+import Login from "./routes/login/login";
 
 const router = createBrowserRouter([
   {
@@ -21,12 +21,14 @@ const router = createBrowserRouter([
       {
         errorElement: <ErrorPage />,
         children: [
-          // { index: true, element: <Index /> },
           {
-            path: "test/",
-            element: <Test />,
+            path: "/",
+            element: <Home />,
           },
-          /* the rest of the routes */
+          {
+            path: "login/",
+            element: <Login />,
+          },
         ],
       },
     ],
