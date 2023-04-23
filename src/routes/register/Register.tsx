@@ -1,6 +1,4 @@
 import {
-  ArrowLeftOnRectangleIcon,
-  ArrowRightOnRectangleIcon,
   AtSymbolIcon,
   CakeIcon,
   IdentificationIcon,
@@ -11,6 +9,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import useAxiosPrivate from "../../hooks/UseAxiosPrivate";
 import { ICreateUserDTO } from "../../models/dto/user/ICreateUserDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
@@ -24,23 +23,23 @@ export default function Register() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   //   const query = useQuery("register", "https://manageableapi.onrender.com/");
-  console.log(firstName);
-  console.log(lastName);
-  console.log(birthday);
-  console.log(email);
-  console.log(password);
-
+  // console.log(firstName);
+  // console.log(lastName);
+  // console.log(birthday);
+  // console.log(email);
+  // console.log(password);
+  const axiosPrivate = useAxiosPrivate();
   const mutation = useMutation({
     mutationFn: (newUser: ICreateUserDTO) => {
       return axios.post("http://localhost:4000/api/auth/register", newUser);
     },
   });
-  //   const result = useQuery({
-  //     queryKey: ["todos"],
-  //     queryFn: () => {
-  //       return axios.get("http://localhost:4000/api/team");
-  //     },
-  //   });
+  const result = useQuery({
+    queryKey: ["team"],
+    queryFn: () => {
+      return axiosPrivate.get("http://localhost:4000/api/team");
+    },
+  });
 
   return (
     <div className="flex grow">

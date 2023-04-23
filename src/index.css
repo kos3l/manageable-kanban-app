@@ -8,3 +8,6 @@ body {
   @apply bg-neutral-900;
   background-color: #171717;
 }
+::selection {
+  background-color: #4f46e5;
+}
