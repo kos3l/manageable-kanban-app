@@ -1,32 +1,50 @@
-import { AtSymbolIcon, KeyIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowRightOnRectangleIcon,
+  AtSymbolIcon,
+  KeyIcon,
+} from "@heroicons/react/24/solid";
+import ActionButton from "../../ui/buttons/ActionButton";
+import TextInput from "../../ui/inputs/TextInput";
 
 export default function Login() {
   return (
     <div className="flex grow">
       <div className="flex w-full items-center justify-center">
-        <div className="flex h-2/3 w-1/3 flex-wrap rounded-xl border-2 border-neutral-600 bg-neutral-800/50 p-4">
-          <h1 className="font-serif text-2xl font-bold tracking-wider">
-            Sign in!
-          </h1>
-          <div className="flex h-12 w-full items-center rounded-xl border-2 border-neutral-600 bg-neutral-900 px-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700">
-              <AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>
+        <div className="flex h-max w-1/3 flex-col gap-6">
+          <div className="flex h-max w-full flex-col rounded-xl border-2 border-neutral-600 bg-neutral-800/50 p-4">
+            <h1 className="m-0 mb-1 font-serif text-2xl font-bold tracking-wider">
+              Welcome!
+            </h1>
+            <p className="m-0 font-sans text-sm text-neutral-500">
+              Enter your email and password to sign into the system and start
+              working!
+            </p>
+            <div className="mt-4 flex h-max w-full flex-wrap gap-4">
+              <TextInput
+                icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
+                placeholder="Email.."
+              ></TextInput>
+              <TextInput
+                icon={<KeyIcon className="m-0 w-4 p-0"></KeyIcon>}
+                placeholder="Password.."
+              ></TextInput>
             </div>
-            <input
-              type="text"
-              placeholder="Email.."
-              className="text-md h-full grow bg-transparent px-3 pt-0.5 font-sans font-thin tracking-normal text-neutral-400 placeholder:font-thin placeholder:tracking-wide placeholder:text-neutral-600 focus:outline-none"
-            />
           </div>
-          <div className="flex h-12 w-full items-center rounded-xl border-2 border-neutral-600 bg-neutral-900 px-2">
-            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700">
-              <KeyIcon className="m-0 w-4 p-0"></KeyIcon>
-            </div>
-            <input
-              type="text"
-              placeholder="Password.."
-              className="text-md h-full grow bg-transparent px-3 pt-0.5 font-sans font-thin tracking-normal text-neutral-400 placeholder:font-thin placeholder:tracking-wide placeholder:text-neutral-600 focus:outline-none"
-            />
+          <div className="w-full">
+            <ActionButton
+              content={"SIGN IN"}
+              icon={
+                <ArrowRightOnRectangleIcon className="w-6 text-indigo-600"></ArrowRightOnRectangleIcon>
+              }
+            ></ActionButton>
+          </div>
+          <div className="flex w-full justify-center">
+            <p className="text-neutral-500">
+              Don't have an account yet?
+              <span className="ml-1 text-neutral-200/80 underline">
+                Register
+              </span>
+            </p>
           </div>
         </div>
       </div>
