@@ -11,6 +11,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { ICreateUserDTO } from "../../models/dto/user/ICreateUserDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
 import TextInput from "../../ui/inputs/TextInput";
@@ -30,8 +31,8 @@ export default function Register() {
   console.log(password);
 
   const mutation = useMutation({
-    mutationFn: (newTodo: {}) => {
-      return axios.post("http://localhost:4000/api/auth/register", newTodo);
+    mutationFn: (newUser: ICreateUserDTO) => {
+      return axios.post("http://localhost:4000/api/auth/register", newUser);
     },
   });
   //   const result = useQuery({
