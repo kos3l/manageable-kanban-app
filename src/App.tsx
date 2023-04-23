@@ -5,6 +5,7 @@ import Home from "./routes/home/home";
 import ErrorPage from "./routes/root/error-page";
 import Login from "./routes/login/login";
 import Root from "./routes/root/root";
+import Register from "./routes/register/Register";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route errorElement={<ErrorPage />} path="/" element={<Root />}>
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
+          <Route path="register" element={<Register />} />
         </Route>
       </Routes>
     </div>

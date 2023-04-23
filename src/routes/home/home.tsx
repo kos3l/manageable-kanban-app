@@ -1,5 +1,9 @@
-import { ArrowRightOnRectangleIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowRightOnRectangleIcon,
+  UserPlusIcon,
+} from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
+import LandingButton from "../../ui/buttons/LandingButton";
 export default function Home() {
   return (
     <>
@@ -13,16 +17,30 @@ export default function Home() {
               Create kanban boards for your projects <br /> and collaborate on
               them with a team for free!
             </p>
-            <Link to={"./login"}>
-              <button className="flex w-80 items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-500 hover:drop-shadow-4xl hover:transition">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600/30">
-                  <ArrowRightOnRectangleIcon className="w-6 text-indigo-600"></ArrowRightOnRectangleIcon>
-                </div>
-                <p className="m-0 font-serif text-sm font-semibold tracking-wide">
-                  SIGN IN
-                </p>
-              </button>
-            </Link>
+            <div className="flex w-2/3 justify-center gap-4">
+              <div className="h-max w-1/3">
+                <Link to={"./login"}>
+                  <LandingButton
+                    content={"SIGN IN"}
+                    color="indigo"
+                    icon={
+                      <ArrowRightOnRectangleIcon className="w-6 text-indigo-500"></ArrowRightOnRectangleIcon>
+                    }
+                  ></LandingButton>
+                </Link>
+              </div>
+              <div className="h-max w-1/3">
+                <Link to={"./register"}>
+                  <LandingButton
+                    content={"GET STARTED"}
+                    color="white"
+                    icon={
+                      <UserPlusIcon className="w-6 text-neutral-200"></UserPlusIcon>
+                    }
+                  ></LandingButton>
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
         <div className="col-span-6 mb-16 flex items-center justify-center">
