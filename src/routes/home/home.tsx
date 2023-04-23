@@ -1,4 +1,5 @@
 import {
+  ArrowLeftOnRectangleIcon,
   ArrowRightOnRectangleIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/solid";
@@ -24,7 +25,7 @@ export default function Home() {
                     content={"SIGN IN"}
                     color="indigo"
                     icon={
-                      <ArrowRightOnRectangleIcon className="w-6 text-indigo-500"></ArrowRightOnRectangleIcon>
+                      <ArrowLeftOnRectangleIcon className="w-6 text-indigo-500"></ArrowLeftOnRectangleIcon>
                     }
                   ></LandingButton>
                 </Link>

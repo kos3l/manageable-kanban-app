@@ -1,7 +1,11 @@
 import {
+  ArrowLeftOnRectangleIcon,
   ArrowRightOnRectangleIcon,
   AtSymbolIcon,
+  CakeIcon,
+  IdentificationIcon,
   KeyIcon,
+  UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import ActionButton from "../../ui/buttons/ActionButton";
@@ -21,17 +25,22 @@ export default function Register() {
             </p>
             <div className="mt-4 flex h-max w-full flex-wrap gap-4">
               <TextInput
-                icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
+                icon={
+                  <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+                }
                 placeholder="First Name.."
               ></TextInput>
               <TextInput
-                icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
-                placeholder="Date of birth"
-              ></TextInput>
-              <TextInput
-                icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
+                icon={
+                  <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+                }
                 placeholder="Last Name.."
               ></TextInput>
+              <TextInput
+                icon={<CakeIcon className="m-0 w-5 p-0"></CakeIcon>}
+                placeholder="Date of birth"
+              ></TextInput>
+
               <TextInput
                 icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
                 placeholder="Email.."
@@ -44,9 +53,9 @@ export default function Register() {
           </div>
           <div className="w-full">
             <ActionButton
-              content={"SIGN IN"}
+              content={"SIGN UP"}
               icon={
-                <ArrowRightOnRectangleIcon className="w-6 text-indigo-600"></ArrowRightOnRectangleIcon>
+                <UserPlusIcon className="w-5 text-indigo-600"></UserPlusIcon>
               }
             ></ActionButton>
           </div>

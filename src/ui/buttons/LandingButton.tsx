@@ -25,7 +25,7 @@ export default function LandingButton(props: IProps) {
   };
   const boxColorVariants: testIndex & test = {
     indigo:
-      "flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600/40",
+      "flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600/30",
     pink: "flex h-10 w-10 items-center justify-center rounded-lg bg-pink-600/30",
     white:
       "flex h-10 w-10 items-center justify-center rounded-lg bg-neutral-200/20",

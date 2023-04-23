@@ -1,4 +1,5 @@
 import {
+  ArrowLeftOnRectangleIcon,
   ArrowRightOnRectangleIcon,
   AtSymbolIcon,
   KeyIcon,
@@ -35,7 +36,7 @@ export default function Login() {
             <ActionButton
               content={"SIGN IN"}
               icon={
-                <ArrowRightOnRectangleIcon className="w-6 text-indigo-600"></ArrowRightOnRectangleIcon>
+                <ArrowLeftOnRectangleIcon className="w-6 text-indigo-600"></ArrowLeftOnRectangleIcon>
               }
             ></ActionButton>
           </div>
