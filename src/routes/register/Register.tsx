@@ -7,20 +7,39 @@ import {
   KeyIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/solid";
+import axios from "axios";
 import { useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
 import TextInput from "../../ui/inputs/TextInput";
+import { DateHelper } from "../../util/helpers/DateHelper";
 
 export default function Register() {
-  const [firstName, setFirstName] = useState<string>();
-  const [lastName, setLastName] = useState<string>();
-  const [birthday, setBirthday] = useState<Date>();
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
-  //   const query = useQuery("register", "getTodos");
+  const [firstName, setFirstName] = useState<string>("");
+  const [lastName, setLastName] = useState<string>("");
+  const [birthday, setBirthday] = useState<Date>(new Date());
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  //   const query = useQuery("register", "https://manageableapi.onrender.com/");
+  console.log(firstName);
+  console.log(lastName);
+  console.log(birthday);
+  console.log(email);
+  console.log(password);
+
+  const mutation = useMutation({
+    mutationFn: (newTodo: {}) => {
+      return axios.post("http://localhost:4000/api/auth/register", newTodo);
+    },
+  });
+  //   const result = useQuery({
+  //     queryKey: ["todos"],
+  //     queryFn: () => {
+  //       return axios.get("http://localhost:4000/api/team");
+  //     },
+  //   });
 
   return (
     <div className="flex grow">
@@ -52,7 +71,7 @@ export default function Register() {
               ></TextInput>
               <DateInput
                 icon={<CakeIcon className="m-0 w-5 p-0"></CakeIcon>}
-                value={birthday?.toDateString()}
+                value={DateHelper.formatDateToString(birthday, "YYYY-MM-DD")}
                 onChange={(val) => setBirthday(new Date(val))}
               ></DateInput>
               <TextInput
@@ -71,6 +90,15 @@ export default function Register() {
           </div>
           <div className="w-full">
             <ActionButton
+              onClick={() => {
+                mutation.mutate({
+                  firstName: firstName,
+                  lastName: lastName,
+                  email: email,
+                  password: password,
+                  birthdate: birthday,
+                });
+              }}
               content={"SIGN UP"}
               icon={
                 <UserPlusIcon className="w-5 text-indigo-600"></UserPlusIcon>
