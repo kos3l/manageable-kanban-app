@@ -8,13 +8,13 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
-import useAuth from "../../hooks/useAuth";
+import useAuth from "../../auth/hooks/useAuth";
 import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-import { http } from "../../client/HttpClient";
+import { http } from "../../auth/client/HttpClient";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");

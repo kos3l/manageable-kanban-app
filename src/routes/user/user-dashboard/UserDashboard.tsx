@@ -1,8 +1,8 @@
 import { useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-import { http } from "../../../client/HttpClient";
-import useAuth from "../../../hooks/useAuth";
+import { http } from "../../../auth/client/HttpClient";
+import useAuth from "../../../auth/hooks/useAuth";
 
 export default function UserDashboard() {
   const navigate = useNavigate();

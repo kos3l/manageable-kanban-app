@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { http } from "../../../client/HttpClient";
+import { http } from "../../../auth/client/HttpClient";
 
 export default function Test() {
   const navigate = useNavigate();
