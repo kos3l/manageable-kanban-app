@@ -1,14 +1,15 @@
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
+import { http } from "../../../client/HttpClient";
 
 export default function Test() {
-  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  const client = http.initHttp(true);
+
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["team"],
     queryFn: () => {
-      return axiosPrivate.get("http://localhost:4000/api/team");
+      return client.get("http://localhost:4000/api/team");
     },
   });
 

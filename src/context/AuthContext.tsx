@@ -1,6 +1,6 @@
 import { createContext, FC, useState } from "react";
 
-interface IAuthContext {
+export interface IAuthContext {
   accessToken: string | null;
 }
 

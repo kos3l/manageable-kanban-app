@@ -1,7 +1,7 @@
-import axios from "../client/axios";
+import { AxiosInstance } from "axios";
 import useAuth from "./useAuth";
 
-const useRefreshToken = () => {
+const useRefreshToken = (axios: AxiosInstance) => {
   const { setAuth } = useAuth();
 
   const refresh = async () => {

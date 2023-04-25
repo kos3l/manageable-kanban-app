@@ -14,16 +14,18 @@ import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import { http } from "../../client/HttpClient";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setAuth } = useAuth();
   const navigate = useNavigate();
+  const client = http.initHttp(true);
 
   const mutation = useMutation({
     mutationFn: (newUser: ICreateLoginDTO) => {
-      return axios.post("http://localhost:4000/api/auth/login", newUser, {
+      return client.post("http://localhost:4000/api/auth/login", newUser, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });

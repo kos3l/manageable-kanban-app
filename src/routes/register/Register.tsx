@@ -9,6 +9,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
+import { http } from "../../client/HttpClient";
 import { ICreateUserDTO } from "../../models/dto/user/ICreateUserDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
@@ -16,6 +17,7 @@ import TextInput from "../../ui/inputs/TextInput";
 import { DateHelper } from "../../util/helpers/DateHelper";
 
 export default function Register() {
+  const client = http.initHttp(true);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [birthday, setBirthday] = useState<Date>(new Date());
@@ -29,7 +31,7 @@ export default function Register() {
 
   const mutation = useMutation({
     mutationFn: (newUser: ICreateUserDTO) => {
-      return axios.post("http://localhost:4000/api/auth/register", newUser);
+      return client.post("http://localhost:4000/api/auth/register", newUser);
     },
   });
 

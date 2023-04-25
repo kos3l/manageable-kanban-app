@@ -1,19 +1,19 @@
 import { useQuery, useQueryClient } from "react-query";
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../../../hooks/useAxiosPrivate";
 import { useNavigate } from "react-router-dom";
+import { http } from "../../../client/HttpClient";
 import useAuth from "../../../hooks/useAuth";
 
 export default function UserDashboard() {
-  const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
   const { setAuth } = useAuth();
+  const client = http.initHttp(true);
 
   const fetchTeams = useQuery({
     queryKey: ["team"],
     retry: 1,
     queryFn: async () => {
-      const response = await axiosPrivate.get("http://localhost:4000/api/team");
+      const response = await client.get("http://localhost:4000/api/team");
       if (response.status == 401 || response.status == 403) {
         throw new Error("Token expired");
       }
@@ -28,7 +28,7 @@ export default function UserDashboard() {
     queryKey: ["logout"],
     retry: 1,
     queryFn: async () => {
-      await axiosPrivate.get("http://localhost:4000/api/auth/logout");
+      await client.get("http://localhost:4000/api/auth/logout");
     },
     onSuccess: (data: any) => {
       setAuth((prev) => {
