@@ -1,17 +1,16 @@
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { http } from "../../../auth/client/HttpClient";
 
 export default function Test() {
   const navigate = useNavigate();
-  const client = http.initHttp(true);
+  // const client = http.initHttp();
 
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["team"],
-    queryFn: () => {
-      return client.get("http://localhost:4000/api/team");
-    },
-  });
+  // const { isLoading, isError, data, error } = useQuery({
+  //   queryKey: ["team"],
+  //   queryFn: () => {
+  //     return client.get("http://localhost:4000/api/team");
+  //   },
+  // });
 
   return (
     <>

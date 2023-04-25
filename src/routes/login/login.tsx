@@ -4,7 +4,6 @@ import {
   AtSymbolIcon,
   KeyIcon,
 } from "@heroicons/react/24/solid";
-import axios from "axios";
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
@@ -13,25 +12,23 @@ import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
 import { useNavigate } from "react-router-dom";
-import { useLocation } from "react-router-dom";
-import { http } from "../../auth/client/HttpClient";
+import useAuthService from "../../auth/hooks/useAuthService";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setAuth } = useAuth();
+  const { log } = useAuthService();
+
   const navigate = useNavigate();
-  const client = http.initHttp(true);
 
   const mutation = useMutation({
     mutationFn: (newUser: ICreateLoginDTO) => {
-      return client.post("http://localhost:4000/api/auth/login", newUser, {
-        headers: { "Content-Type": "application/json" },
-        withCredentials: true,
-      });
+      return log(newUser);
     },
     onSuccess: (data, variables, context) => {
-      const accessToken = data?.data.accessToken;
+      console.log(data);
+      const accessToken = data.data.accessToken;
       setAuth({ accessToken });
       setEmail("");
       setPassword("");
@@ -94,4 +91,7 @@ export default function Login() {
       </div>
     </div>
   );
+}
+function log(newUser: ICreateLoginDTO): Promise<unknown> {
+  throw new Error("Function not implemented.");
 }

@@ -1,23 +1,24 @@
-import { createContext, FC, useState } from "react";
+import { createContext, useState } from "react";
 
-export interface IAuthContext {
+export interface IAccessToken {
   accessToken: string | null;
 }
 
-type t = {
-  auth: IAuthContext;
-  setAuth: React.Dispatch<React.SetStateAction<IAuthContext>>;
+type AuthState = {
+  auth: IAccessToken;
+  setAuth: React.Dispatch<React.SetStateAction<IAccessToken>>;
 };
+
 interface IProviderProps {
   children?: any;
 }
 
-const test: IAuthContext = { accessToken: "" };
+const AccessToken: IAccessToken = { accessToken: "" };
 
-const AuthContext = createContext<t>({} as any);
+const AuthContext = createContext<AuthState>({} as any);
 
 export const AuthProvider = ({ children }: IProviderProps) => {
-  const [auth, setAuth] = useState<IAuthContext>(test);
+  const [auth, setAuth] = useState<IAccessToken>(AccessToken);
 
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>

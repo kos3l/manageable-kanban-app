@@ -9,7 +9,6 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import { http } from "../../auth/client/HttpClient";
 import { ICreateUserDTO } from "../../models/dto/user/ICreateUserDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
@@ -17,7 +16,6 @@ import TextInput from "../../ui/inputs/TextInput";
 import { DateHelper } from "../../util/helpers/DateHelper";
 
 export default function Register() {
-  const client = http.initHttp(true);
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [birthday, setBirthday] = useState<Date>(new Date());
@@ -29,11 +27,11 @@ export default function Register() {
   // console.log(email);
   // console.log(password);
 
-  const mutation = useMutation({
-    mutationFn: (newUser: ICreateUserDTO) => {
-      return client.post("http://localhost:4000/api/auth/register", newUser);
-    },
-  });
+  // const mutation = useMutation({
+  //   mutationFn: (newUser: ICreateUserDTO) => {
+  //     return client.post("http://localhost:4000/api/auth/register", newUser);
+  //   },
+  // });
 
   return (
     <div className="flex grow">
@@ -83,7 +81,7 @@ export default function Register() {
             </div>
           </div>
           <div className="w-full">
-            <ActionButton
+            {/* <ActionButton
               onClick={() => {
                 mutation.mutate({
                   firstName: firstName,
@@ -97,7 +95,7 @@ export default function Register() {
               icon={
                 <UserPlusIcon className="w-5 text-indigo-600"></UserPlusIcon>
               }
-            ></ActionButton>
+            ></ActionButton> */}
           </div>
           <div className="flex w-full justify-center">
             <p className="text-neutral-500">
