@@ -27,6 +27,7 @@ const useHttp = () => {
   const baseUrl = import.meta.env.PROD
     ? import.meta.env.VITE_BASE_URL_PRODUCTION
     : import.meta.env.VITE_BASE_URL_DEVELOPMENT;
+
   const http = axios.create({
     baseURL: baseUrl,
     headers,
@@ -118,7 +119,6 @@ const useHttp = () => {
     config?: AxiosRequestConfig
   ): Promise<R> {
     const newInstance = initHttp();
-    console.log("a");
     return newInstance.post<T, R>(url, data, config);
   };
 
@@ -145,6 +145,7 @@ const useHttp = () => {
     post,
     put,
     remove,
+    http,
   };
 };
 

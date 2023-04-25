@@ -13,8 +13,6 @@ import UserRoot from "./routes/user/user-root/UserRoot";
 import useAuth from "./auth/hooks/useAuth";
 
 function App() {
-  const { auth } = useAuth();
-  console.log(auth);
   return (
     <div className="App">
       <Routes>

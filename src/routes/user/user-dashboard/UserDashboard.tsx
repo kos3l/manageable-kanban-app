@@ -43,6 +43,9 @@ export default function UserDashboard() {
       <Link to={"../test"}>
         <span className="ml-1 text-neutral-200/80 underline">Register</span>
       </Link>
+      <Link to={"/login"}>
+        <span className="ml-1 text-neutral-200/80 underline">login</span>
+      </Link>
       {/* <button onClick={() => logout.refetch()}>logout</button> */}
     </>
   );
