@@ -7,16 +7,13 @@ import useAuth from "../../../hooks/useAuth";
 export default function UserDashboard() {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { auth } = useAuth();
-  console.log(auth);
+
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["team"],
     retry: 1,
     queryFn: async () => {
       const response = await axiosPrivate.get("http://localhost:4000/api/team");
-
-      if (response.status == 403) {
+      if (response.status == 401 || response.status == 403) {
         throw new Error("Token expired");
       }
       return response.data;
