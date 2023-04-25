@@ -12,11 +12,14 @@ import useAuth from "../../hooks/useAuth";
 import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setAuth } = useAuth();
+  const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (newUser: ICreateLoginDTO) => {
@@ -30,6 +33,7 @@ export default function Login() {
       setAuth({ accessToken });
       setEmail("");
       setPassword("");
+      navigate("/user/user-dashboard", { replace: true });
     },
   });
 
