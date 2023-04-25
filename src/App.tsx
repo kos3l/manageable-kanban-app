@@ -9,6 +9,7 @@ import Register from "./routes/register/Register";
 import ErrorUserPage from "./routes/user/user-root/error-page";
 import UserRoot from "./routes/user/user-root/UserRoot";
 import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
+import Test from "./routes/user/test/Test";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           element={<UserRoot />}
         >
           <Route path="user-dashboard" element={<UserDashboard />} />
+          <Route path="test" element={<Test />} />
         </Route>
       </Routes>
     </div>

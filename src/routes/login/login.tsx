@@ -4,14 +4,38 @@ import {
   AtSymbolIcon,
   KeyIcon,
 } from "@heroicons/react/24/solid";
+import axios from "axios";
 import { useState } from "react";
+import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
+import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
+import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function Login() {
-  const [email, setEmail] = useState<string>();
-  const [password, setPassword] = useState<string>();
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
+
+  const mutation = useMutation({
+    mutationFn: (newUser: ICreateLoginDTO) => {
+      return axios.post("http://localhost:4000/api/auth/login", newUser, {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+    },
+    onSuccess: (data, variables, context) => {
+      const accessToken = data?.data.accessToken;
+      setAuth({ accessToken });
+      setEmail("");
+      setPassword("");
+      navigate("/user/user-dashboard", { replace: true });
+    },
+  });
 
   return (
     <div className="flex grow">
@@ -43,6 +67,12 @@ export default function Login() {
           <div className="w-full">
             <ActionButton
               content={"SIGN IN"}
+              onClick={() => {
+                mutation.mutate({
+                  email: email,
+                  password: password,
+                });
+              }}
               icon={
                 <ArrowLeftOnRectangleIcon className="w-6 text-indigo-600"></ArrowLeftOnRectangleIcon>
               }
