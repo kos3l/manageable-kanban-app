@@ -27,7 +27,6 @@ export default function Login() {
       return log(newUser);
     },
     onSuccess: (data, variables, context) => {
-      console.log(data);
       const accessToken = data.data.accessToken;
       setAuth({ accessToken });
       setEmail("");
