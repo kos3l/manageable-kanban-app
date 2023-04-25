@@ -7,8 +7,9 @@ import useAuth from "../../../hooks/useAuth";
 export default function UserDashboard() {
   const axiosPrivate = useAxiosPrivate();
   const navigate = useNavigate();
+  const { setAuth } = useAuth();
 
-  const { isLoading, isError, data, error } = useQuery({
+  const fetchTeams = useQuery({
     queryKey: ["team"],
     retry: 1,
     queryFn: async () => {
@@ -23,12 +24,28 @@ export default function UserDashboard() {
     },
   });
 
+  const logout = useQuery({
+    queryKey: ["logout"],
+    retry: 1,
+    queryFn: async () => {
+      await axiosPrivate.get("http://localhost:4000/api/auth/logout");
+    },
+    onSuccess: (data: any) => {
+      setAuth((prev) => {
+        return { accessToken: "" };
+      });
+    },
+    enabled: false,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <>
       Hello logged in user!{" "}
       <Link to={"../test"}>
         <span className="ml-1 text-neutral-200/80 underline">Register</span>
       </Link>
+      <button onClick={() => logout.refetch()}>logout</button>
     </>
   );
 }
