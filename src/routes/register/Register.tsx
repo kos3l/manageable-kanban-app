@@ -9,7 +9,7 @@ import axios from "axios";
 import { useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link } from "react-router-dom";
-import useAxiosPrivate from "../../hooks/UseAxiosPrivate";
+import useAxiosPrivate from "../../hooks/useAxiosPrivate";
 import { ICreateUserDTO } from "../../models/dto/user/ICreateUserDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
