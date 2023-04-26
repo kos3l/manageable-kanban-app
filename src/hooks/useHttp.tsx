@@ -4,9 +4,9 @@ import axios, {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from "axios";
-import AuthContext, { IAccessToken } from "../context/AuthContext";
+import AuthContext, { IAccessToken } from "../auth/context/AuthContext";
 import useRefreshToken from "./useRefreshToken";
-import useAuth from "../hooks/useAuth";
+import useAuth from "./useAuth";
 
 enum StatusCode {
   Unauthorized = 401,
@@ -101,16 +101,16 @@ const useHttp = () => {
   const request = function request<T = any, R = AxiosResponse<T>>(
     config: AxiosRequestConfig
   ): Promise<R> {
-    const newInstance = initHttp();
-    return newInstance.request(config);
+    const useInstance = initHttp();
+    return useInstance.request(config);
   };
 
   const get = function get<T = any, R = AxiosResponse<T>>(
     url: string,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    const newInstance = initHttp();
-    return newInstance.get<T, R>(url, config);
+    const useInstance = initHttp();
+    return useInstance.get<T, R>(url, config);
   };
 
   const post = function post<T = any, R = AxiosResponse<T>>(
@@ -118,8 +118,8 @@ const useHttp = () => {
     data?: T,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    const newInstance = initHttp();
-    return newInstance.post<T, R>(url, data, config);
+    const useInstance = initHttp();
+    return useInstance.post<T, R>(url, data, config);
   };
 
   const put = function put<T = any, R = AxiosResponse<T>>(
@@ -127,16 +127,16 @@ const useHttp = () => {
     data?: T,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    const newInstance = initHttp();
-    return newInstance.put<T, R>(url, data, config);
+    const useInstance = initHttp();
+    return useInstance.put<T, R>(url, data, config);
   };
 
   const remove = function remove<T = any, R = AxiosResponse<T>>(
     url: string,
     config?: AxiosRequestConfig
   ): Promise<R> {
-    const newInstance = initHttp();
-    return newInstance.delete<T, R>(url, config);
+    const useInstance = initHttp();
+    return useInstance.delete<T, R>(url, config);
   };
 
   return {

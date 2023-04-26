@@ -7,24 +7,24 @@ import {
 import { useState } from "react";
 import { useMutation } from "react-query";
 import { Link } from "react-router-dom";
-import useAuth from "../../auth/hooks/useAuth";
+import useAuth from "../../hooks/useAuth";
 import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
 import { useNavigate } from "react-router-dom";
-import useAuthService from "../../auth/hooks/useAuthService";
+import useAuthService from "../../hooks/service/useAuthService";
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setAuth } = useAuth();
-  const { log } = useAuthService();
+  const { loginUser } = useAuthService();
 
   const navigate = useNavigate();
 
   const mutation = useMutation({
     mutationFn: (newUser: ICreateLoginDTO) => {
-      return log(newUser);
+      return loginUser(newUser);
     },
     onSuccess: (data, variables, context) => {
       const accessToken = data.data.accessToken;

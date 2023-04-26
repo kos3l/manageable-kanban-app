@@ -10,7 +10,7 @@ import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
 import Test from "./routes/user/test/Test";
 import PrivateRoutes from "./auth/components/ProtectedRoute";
 import UserRoot from "./routes/user/user-root/UserRoot";
-import useAuth from "./auth/hooks/useAuth";
+import useAuth from "./hooks/useAuth";
 
 function App() {
   return (

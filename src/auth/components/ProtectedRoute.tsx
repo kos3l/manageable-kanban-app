@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet, Route } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
-import useHttp from "../hooks/useHttp";
-import useRefreshToken from "../hooks/useRefreshToken";
+import useAuth from "../../hooks/useAuth";
+import useHttp from "../../hooks/useHttp";
+import useRefreshToken from "../../hooks/useRefreshToken";
 
 const PrivateRoutes = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -12,7 +12,7 @@ const PrivateRoutes = () => {
 
   const verifyRefreshToken = async () => {
     try {
-      const newToken = await refresh();
+      await refresh();
     } catch (err) {
       console.error(err);
     } finally {
