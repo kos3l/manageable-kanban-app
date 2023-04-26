@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import logo from "../../assets/Logo.svg";
 export default function Root() {
   return (
     <>
@@ -8,7 +9,7 @@ export default function Root() {
             <div className="flex items-center">
               <Link to={"/"}>
                 <div className="w-12 md:w-16 2xl:w-12">
-                  <img src="./assets/Logo.svg" alt="" />
+                  <img src={logo} alt="" />
                 </div>
               </Link>
               <Link to={"/"}>
