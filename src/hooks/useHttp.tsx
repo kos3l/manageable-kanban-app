@@ -22,11 +22,12 @@ const useHttp = () => {
     Accept: "application/json",
     "Content-Type": "application/json; charset=utf-8",
     "Access-Control-Allow-Credentials": true,
-    "X-Requested-With": "XMLHttpRequest",
   };
   const baseUrl = import.meta.env.PROD
     ? import.meta.env.VITE_BASE_URL_PRODUCTION
     : import.meta.env.VITE_BASE_URL_DEVELOPMENT;
+
+  console.log(baseUrl, "axios base url - useHttp");
 
   const http = axios.create({
     baseURL: baseUrl,

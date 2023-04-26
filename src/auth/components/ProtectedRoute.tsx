@@ -10,6 +10,9 @@ const PrivateRoutes = () => {
   const { auth } = useAuth();
   const refresh = useRefreshToken(http);
 
+  console.log(http, "axios instance in pricate routes");
+  console.log(auth, "access token in pricate routes");
+
   const verifyRefreshToken = async () => {
     try {
       await refresh();
