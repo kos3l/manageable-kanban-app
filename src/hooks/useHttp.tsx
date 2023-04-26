@@ -28,7 +28,6 @@ const useHttp = () => {
     ? import.meta.env.VITE_BASE_URL_PRODUCTION
     : import.meta.env.VITE_BASE_URL_DEVELOPMENT;
 
-  console.log(baseUrl);
   const http = axios.create({
     baseURL: baseUrl,
     headers,
