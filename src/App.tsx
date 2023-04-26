@@ -1,4 +1,3 @@
-import { useState } from "react";
 import "./App.css";
 import { Routes, Route } from "react-router-dom";
 import Home from "./routes/home/home";
@@ -7,9 +6,11 @@ import Login from "./routes/login/login";
 import Root from "./routes/root/root";
 import Register from "./routes/register/Register";
 import ErrorUserPage from "./routes/user/user-root/error-page";
-import UserRoot from "./routes/user/user-root/UserRoot";
 import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
 import Test from "./routes/user/test/Test";
+import PrivateRoutes from "./auth/components/ProtectedRoute";
+import UserRoot from "./routes/user/user-root/UserRoot";
+import useAuth from "./hooks/useAuth";
 
 function App() {
   return (
@@ -20,13 +21,11 @@ function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
         </Route>
-        <Route
-          errorElement={<ErrorUserPage />}
-          path="/user/"
-          element={<UserRoot />}
-        >
-          <Route path="user-dashboard" element={<UserDashboard />} />
-          <Route path="test" element={<Test />} />
+        <Route errorElement={<ErrorUserPage />} element={<PrivateRoutes />}>
+          <Route path="/user/" element={<UserRoot />}>
+            <Route path="user-dashboard" element={<UserDashboard />} />
+            <Route path="test" element={<Test />} />
+          </Route>
         </Route>
       </Routes>
     </div>

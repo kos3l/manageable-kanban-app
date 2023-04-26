@@ -1,15 +1,15 @@
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
-import { http } from "../../../client/HttpClient";
+import useTeamService from "../../../hooks/service/useTeamService";
 
 export default function Test() {
   const navigate = useNavigate();
-  const client = http.initHttp(true);
+  const { getAllUserTeams } = useTeamService();
 
   const { isLoading, isError, data, error } = useQuery({
     queryKey: ["team"],
     queryFn: () => {
-      return client.get("http://localhost:4000/api/team");
+      return getAllUserTeams();
     },
   });
 

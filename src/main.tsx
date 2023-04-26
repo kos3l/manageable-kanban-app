@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 
 import "./index.css";
 import App from "./App";
-import { AuthProvider } from "./context/AuthContext";
+import { AuthProvider } from "./auth/context/AuthContext";
 
 const queryClient = new QueryClient();
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
