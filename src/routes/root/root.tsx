@@ -8,7 +8,7 @@ export default function Root() {
             <div className="flex items-center">
               <Link to={"/"}>
                 <div className="w-12 md:w-16 2xl:w-12">
-                  <img src="./src/assets/Logo.svg" alt="" />
+                  <img src="./assets/Logo.svg" alt="" />
                 </div>
               </Link>
               <Link to={"/"}>
