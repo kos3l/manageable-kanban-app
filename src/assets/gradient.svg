@@ -1,0 +1,20 @@
+
+<svg width="1728px" height="528px" viewBox="0 0 1728 528" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <radialGradient cx="-5.03372592%" cy="123.638335%" fx="-5.03372592%" fy="123.638335%" r="96.9018421%" gradientTransform="translate(-0.050337,1.236383),scale(0.563563,1.000000),rotate(-75.636212),scale(1.000000,2.851625),translate(0.050337,-1.236383)" id="radialGradient-n1nsvhl8u8-1">
+            <stop stop-color="#3730A3" offset="0%"></stop>
+            <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+        <radialGradient cx="-9.82968138%" cy="119.274988%" fx="-9.82968138%" fy="119.274988%" r="96.5273252%" gradientTransform="translate(-0.098297,1.192750),scale(0.602597,1.000000),rotate(-76.531660),scale(1.000000,2.550016),translate(0.098297,-1.192750)" id="radialGradient-n1nsvhl8u8-2">
+            <stop stop-color="#9D174D" offset="0%"></stop>
+            <stop stop-color="#030102" stop-opacity="0.0218080186" offset="94.6407482%"></stop>
+            <stop stop-color="#000000" stop-opacity="0" offset="100%"></stop>
+        </radialGradient>
+    </defs>
+    <g id="Page-2" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="landing-page" transform="translate(0.000000, -589.000000)">
+            <rect id="Rectangle" fill="url(#radialGradient-n1nsvhl8u8-1)" x="0" y="421" width="1235" height="696"></rect>
+            <rect id="Rectangle" fill="url(#radialGradient-n1nsvhl8u8-2)" transform="translate(1150.500000, 769.000000) scale(-1, 1) translate(-1150.500000, -769.000000) " x="573" y="421" width="1155" height="696"></rect>
+        </g>
+    </g>
+</svg>
