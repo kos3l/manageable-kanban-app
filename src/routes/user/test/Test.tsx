@@ -6,10 +6,18 @@ export default function Test() {
   const navigate = useNavigate();
   const { getAllUserTeams } = useTeamService();
 
-  const { isLoading, isError, data, error } = useQuery({
+  const fetchTeams = useQuery({
     queryKey: ["team"],
-    queryFn: () => {
-      return getAllUserTeams();
+    retry: 1,
+    queryFn: async () => {
+      const response = await getAllUserTeams();
+      if (response.status == 401 || response.status == 403) {
+        throw new Error("Token expired");
+      }
+      return response.data;
+    },
+    onError: (error: any) => {
+      navigate("/login", { replace: true });
     },
   });
 
