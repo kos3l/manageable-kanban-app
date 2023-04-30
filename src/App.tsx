@@ -7,10 +7,8 @@ import Root from "./routes/root/root";
 import Register from "./routes/register/Register";
 import ErrorUserPage from "./routes/user/user-root/error-page";
 import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
-import Test from "./routes/user/test/Test";
 import PrivateRoutes from "./auth/components/ProtectedRoute";
 import UserRoot from "./routes/user/user-root/UserRoot";
-import useAuth from "./hooks/useAuth";
 
 function App() {
   return (
@@ -24,7 +22,6 @@ function App() {
         <Route errorElement={<ErrorUserPage />} element={<PrivateRoutes />}>
           <Route path="/user/" element={<UserRoot />}>
             <Route path="user-dashboard" element={<UserDashboard />} />
-            <Route path="test" element={<Test />} />
           </Route>
         </Route>
       </Routes>

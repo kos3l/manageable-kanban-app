@@ -89,7 +89,7 @@ export default function Login() {
                     Register
                   </span>
                 </Link>
-                <Link to={"/user/test"}>
+                <Link to={"/user/user-dashboard"}>
                   <span className="ml-1 text-neutral-200/80 underline">
                     test
                   </span>
