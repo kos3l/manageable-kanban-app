@@ -13,9 +13,9 @@ export default function Root() {
                 </div>
               </Link>
               <Link to={"/"}>
-                <h1 className="font-serif text-sm tracking-wider md:text-xl">
+                <p className="font-serif text-sm tracking-wider md:text-xl">
                   Manageable
-                </h1>
+                </p>
               </Link>
             </div>
             <div className="ml-12 mr-8 hidden h-1/2 flex-1 border-b border-zinc-500 font-sans md:block 2xl:mr-0 2xl:ml-4"></div>

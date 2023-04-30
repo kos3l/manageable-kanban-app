@@ -7,8 +7,6 @@ import useAuth from "../../../hooks/useAuth";
 
 export default function UserDashboard() {
   const navigate = useNavigate();
-  const { setAuth } = useAuth();
-  const { logoutUser } = useAuthService();
   const { getAllUserTeams } = useTeamService();
 
   const fetchTeams = useQuery({
@@ -26,21 +24,6 @@ export default function UserDashboard() {
     },
   });
 
-  const logout = useQuery({
-    queryKey: ["logout"],
-    retry: 1,
-    queryFn: async () => {
-      await logoutUser();
-    },
-    onSuccess: (data: any) => {
-      setAuth((prev) => {
-        return { accessToken: "" };
-      });
-    },
-    enabled: false,
-    refetchOnWindowFocus: false,
-  });
-
   return (
     <>
       Hello logged in user!{" "}
@@ -50,7 +33,6 @@ export default function UserDashboard() {
       <Link to={"/login"}>
         <span className="ml-1 text-neutral-200/80 underline">login</span>
       </Link>
-      <button onClick={() => logout.refetch()}>logout</button>
     </>
   );
 }
