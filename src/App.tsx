@@ -9,6 +9,7 @@ import ErrorUserPage from "./routes/user/user-root/error-page";
 import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
 import PrivateRoutes from "./auth/components/ProtectedRoute";
 import UserRoot from "./routes/user/user-root/UserRoot";
+import TeamsOverview from "./routes/teams-overview/TeamsOverview";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route errorElement={<ErrorUserPage />} element={<PrivateRoutes />}>
           <Route path="/user/" element={<UserRoot />}>
             <Route path="user-dashboard" element={<UserDashboard />} />
+            <Route path="teams-overview" element={<TeamsOverview />} />
           </Route>
         </Route>
       </Routes>

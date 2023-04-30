@@ -35,7 +35,7 @@ export default class NavigationItems {
       name: "Overview",
       path: "/user/projects-overview",
       icon: <Squares2X2Icon className="w-4 text-indigo-500"></Squares2X2Icon>,
-      sectionTitle: "PROJECT",
+      sectionTitle: "TEAM",
     },
     {
       name: "Kanban Boards",
