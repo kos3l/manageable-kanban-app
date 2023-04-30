@@ -15,7 +15,7 @@ export default function NavigationButton(props: IProps) {
         <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600/30">
           {icon}
         </div>
-        <p className="text-sm tracking-wide">{content}</p>
+        <p className="text-left text-xs tracking-wide lg:text-sm">{content}</p>
       </button>
     </Link>
   );

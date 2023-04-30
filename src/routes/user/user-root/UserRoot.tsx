@@ -4,11 +4,17 @@ import avatar from "../../../assets/avatar.png";
 import useUserService from "../../../hooks/service/useUserService";
 import useAuth from "../../../hooks/useAuth";
 import logo from "../../../assets/Logo.svg";
-import { ArrowRightOnRectangleIcon, HomeIcon } from "@heroicons/react/24/solid";
+import {
+  ArrowRightOnRectangleIcon,
+  Bars3Icon,
+  HomeIcon,
+} from "@heroicons/react/24/solid";
 import NavigationButton from "../../../ui/buttons/NavigationButton";
 import NavigationItems from "../../../static/NavigationItems";
 import useAuthService from "../../../hooks/service/useAuthService";
+import { useState } from "react";
 export default function UserRoot() {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const { getLoggedInUserProfile } = useUserService();
   const { auth, setAuth } = useAuth();
   const { logoutUser } = useAuthService();
@@ -51,8 +57,8 @@ export default function UserRoot() {
 
   return (
     <>
-      <div className="flex h-screen overflow-scroll text-neutral-200">
-        <div className="relative hidden h-full grow-0 flex-col  border-r border-neutral-700 md:flex md:min-w-[10rem] lg:min-w-[15rem] 2xl:min-w-[20rem]">
+      <div className="relative flex h-screen overflow-hidden text-neutral-200 md:overflow-scroll">
+        <div className="relative hidden h-full grow-0 flex-col border-r border-neutral-700 md:flex md:min-w-[10rem] lg:min-w-[15rem] 2xl:min-w-[20rem]">
           <div className="flex h-14 items-center p-2">
             <Link to={"/"}>
               <div className="w-11">
@@ -60,7 +66,9 @@ export default function UserRoot() {
               </div>
             </Link>
             <Link to={"/"}>
-              <p className="font-serif text-base tracking-wider">Manageable</p>
+              <p className="font-serif text-sm tracking-wider lg:text-base">
+                Manageable
+              </p>
             </Link>
           </div>
           <div className="relative flex h-full w-full ">
@@ -93,21 +101,55 @@ export default function UserRoot() {
             <p className="mt-1 text-sm tracking-wide">Log out</p>
           </button>
         </div>
-        <div className="flex h-full grow flex-col">
-          <div className="flex h-14 w-full grow-0 items-center justify-end gap-4 border-b border-neutral-700 px-4">
-            <p className="mt-1 font-serif text-sm">
-              {data?.firstName + " " + data?.lastName}
-            </p>
-            <div className="w-8 overflow-hidden rounded-lg">
-              <img
-                src={avatar}
-                alt=""
-                className="h-full w-full object-contain"
-              />
+        <div className="flex h-full grow flex-col-reverse  md:flex-col">
+          <div className="relative z-40 flex h-14 w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 md:justify-end md:border-b">
+            <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
+              <p className="mt-1 font-serif text-sm">
+                {data?.firstName + " " + data?.lastName}
+              </p>
+              <div className="w-8 overflow-hidden rounded-lg">
+                <img
+                  src={avatar}
+                  alt=""
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </div>
+            <div
+              className="relative z-40 flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-600/30 md:hidden"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              <Bars3Icon className="w-6 text-neutral-200"></Bars3Icon>
             </div>
           </div>
           <div className="w-full grow p-4">
             <Outlet />
+          </div>
+        </div>
+        <div
+          className={
+            isMobileMenuOpen
+              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t border-neutral-600 pt-2 opacity-100 transition-opacity md:hidden"
+              : "absolute bottom-full opacity-0 transition-opacity"
+          }
+        >
+          <div className="flex w-full flex-col">
+            {NavigationItems.navItemsList.map((item) => {
+              return (
+                <>
+                  {item.sectionTitle && (
+                    <div className="mt-4 mb-2 flex h-4 w-full px-4 text-xs font-medium tracking-wider text-neutral-500">
+                      {item.sectionTitle}
+                    </div>
+                  )}
+                  <NavigationButton
+                    content={item.name}
+                    icon={item.icon}
+                    toPath={item.path}
+                  ></NavigationButton>
+                </>
+              );
+            })}
           </div>
         </div>
       </div>
