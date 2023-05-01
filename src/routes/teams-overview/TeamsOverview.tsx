@@ -1,9 +1,10 @@
-import { PlusIcon } from "@heroicons/react/24/solid";
+import { PlusIcon, UsersIcon } from "@heroicons/react/24/solid";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import ActionButton from "../../ui/buttons/ActionButton";
 import FilledButton from "../../ui/buttons/FilledButton";
+import TeamCard from "../../ui/cards/TeamCard";
 
 export default function TeamsOverview() {
   const navigate = useNavigate();
@@ -34,15 +35,13 @@ export default function TeamsOverview() {
       </div>
       <div className="col-span-4">
         {data ? (
-          <div className="grid w-full grid-cols-4">
+          <div className="grid w-full grid-cols-4 gap-2">
             {data.map((team) => {
               return (
-                <div
-                  key={team._id}
-                  className="col-span-1 rounded-lg border border-neutral-600 bg-neutral-800/40 p-2"
-                >
-                  <p>{team.name}</p>
-                </div>
+                <TeamCard
+                  team={team}
+                  icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
+                ></TeamCard>
               );
             })}
           </div>

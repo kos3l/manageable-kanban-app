@@ -11,6 +11,7 @@ import PrivateRoutes from "./auth/components/ProtectedRoute";
 import UserRoot from "./routes/user/user-root/UserRoot";
 import TeamsOverview from "./routes/teams-overview/TeamsOverview";
 import PageNotFound from "./routes/404/PageNotFound";
+import Team from "./routes/team/Team";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           <Route path="/user/" element={<UserRoot />}>
             <Route path="user-dashboard" element={<UserDashboard />} />
             <Route path="teams-overview" element={<TeamsOverview />} />
+            <Route path="teams/:id" element={<Team />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />
