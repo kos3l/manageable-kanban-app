@@ -75,9 +75,12 @@ export default function UserRoot() {
             <div className="absolute top-0 left-[1px] z-10 flex h-full w-full flex-col overflow-scroll">
               {NavigationItems.navItemsList.map((item) => {
                 return (
-                  <>
+                  <div key={item.path}>
                     {item.sectionTitle && (
-                      <div className="mt-4 mb-2 flex h-4 w-full px-4 text-xs font-medium tracking-wider text-neutral-500">
+                      <div
+                        key={item.path}
+                        className="mt-4 mb-2 flex h-4 w-full px-4 text-xs font-medium tracking-wider text-neutral-500"
+                      >
                         {item.sectionTitle}
                       </div>
                     )}
@@ -86,7 +89,7 @@ export default function UserRoot() {
                       icon={item.icon}
                       toPath={item.path}
                     ></NavigationButton>
-                  </>
+                  </div>
                 );
               })}
             </div>
@@ -136,7 +139,7 @@ export default function UserRoot() {
           <div className="flex w-full flex-col">
             {NavigationItems.navItemsList.map((item) => {
               return (
-                <>
+                <div key={item.path}>
                   {item.sectionTitle && (
                     <div className="mt-4 mb-2 flex h-4 w-full px-4 text-xs font-medium tracking-wider text-neutral-500">
                       {item.sectionTitle}
@@ -147,7 +150,7 @@ export default function UserRoot() {
                     icon={item.icon}
                     toPath={item.path}
                   ></NavigationButton>
-                </>
+                </div>
               );
             })}
           </div>

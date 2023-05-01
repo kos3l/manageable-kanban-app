@@ -1,5 +1,5 @@
 type Team = {
-  id: string;
+  _id: string;
   name: string;
   createdBy: string;
   picture?: string;

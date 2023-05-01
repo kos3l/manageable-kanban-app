@@ -18,10 +18,10 @@ export default function LandingButton(props: IProps) {
   const { icon, content, color } = props;
   const wrapperColorVariants: testIndex & test = {
     indigo:
-      "flex w-full items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-4xl hover:transition",
-    pink: "flex w-full items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-pink-600 hover:drop-shadow-4xl hover:transition",
+      "flex w-full items-center gap-4 rounded-xl border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-4xl hover:transition",
+    pink: "flex w-full items-center gap-4 rounded-xl border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-pink-600 hover:drop-shadow-4xl hover:transition",
     white:
-      "flex w-full items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
+      "flex w-full items-center gap-4 rounded-xl border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
   };
   const boxColorVariants: testIndex & test = {
     indigo:
