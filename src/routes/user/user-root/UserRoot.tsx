@@ -93,7 +93,7 @@ export default function UserRoot() {
           </div>
           <button
             onClick={() => logout.refetch()}
-            className="absolute bottom-0 z-30 flex h-16 w-full items-center gap-2 border-t border-neutral-700 bg-neutral-900 px-4 hover:bg-neutral-800/50"
+            className="absolute bottom-0 z-30 flex h-16 w-full items-center gap-2 border-t  border-neutral-700 bg-neutral-900 px-4 hover:bg-neutral-800/50"
           >
             <div className="flex h-8 w-8 items-center justify-center rounded-lg">
               <ArrowRightOnRectangleIcon className="w-6 text-neutral-200"></ArrowRightOnRectangleIcon>
@@ -102,7 +102,7 @@ export default function UserRoot() {
           </button>
         </div>
         <div className="flex h-full grow flex-col-reverse  md:flex-col">
-          <div className="relative z-40 flex h-14 w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 md:justify-end md:border-b">
+          <div className="relative z-40 flex h-14 w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 md:justify-end md:border-t-0 md:border-b">
             <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
               <p className="mt-1 font-serif text-sm">
                 {data?.firstName + " " + data?.lastName}
@@ -129,7 +129,7 @@ export default function UserRoot() {
         <div
           className={
             isMobileMenuOpen
-              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t border-neutral-600 pt-2 opacity-100 transition-opacity md:hidden"
+              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t  border-neutral-600 pt-2 opacity-100 transition-opacity md:hidden "
               : "absolute bottom-full opacity-0 transition-opacity"
           }
         >

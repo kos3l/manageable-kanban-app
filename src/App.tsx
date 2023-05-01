@@ -10,6 +10,7 @@ import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
 import PrivateRoutes from "./auth/components/ProtectedRoute";
 import UserRoot from "./routes/user/user-root/UserRoot";
 import TeamsOverview from "./routes/teams-overview/TeamsOverview";
+import PageNotFound from "./routes/404/PageNotFound";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
             <Route path="teams-overview" element={<TeamsOverview />} />
           </Route>
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );
