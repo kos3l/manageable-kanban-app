@@ -16,7 +16,7 @@ export default function FilledButton(props: IProps) {
     >
       <div
         className={
-          "flex h-7 w-7 items-center justify-center rounded-md bg-neutral-200/30"
+          "flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-200/30"
         }
       >
         {icon}
