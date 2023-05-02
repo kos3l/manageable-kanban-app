@@ -1,27 +1,81 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
+import { colorIndex } from "../../models/util/ColorIndex";
 
-interface IProps {
-  placeholder: string;
+interface IProps<T> {
   icon: ReactNode;
-  value?: string;
-  onChange: (newValue: string) => void;
+  value: T;
+  onChange: (newValue: T) => void;
+  color: string;
+  dropdownValues: T[];
+  displayProperty?: string;
 }
 
-export default function Dropdown(props: IProps) {
-  const { icon, placeholder, value, onChange } = props;
+type colorVariants = {
+  indigo: string;
+  white: string;
+};
+
+export default function Dropdown<T>(props: IProps<T>) {
+  const { icon, color, value, onChange, dropdownValues, displayProperty } =
+    props;
+
+  const boxColorVariants: colorIndex & colorVariants = {
+    indigo:
+      "flex h-7 w-7 items-center justify-center rounded-lg bg-indigo-600/30",
+    white: "flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700",
+  };
+
+  const [isExpanded, setIsExpanded] = useState<boolean>(true);
 
   return (
-    <div className="flex h-12 w-full items-center rounded-lg border border-neutral-600 bg-neutral-900 px-2">
-      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700">
-        {icon}
+    <div
+      className={
+        isExpanded ? " relative flex h-max w-full" : " flex h-12 w-full"
+      }
+    >
+      <div
+        onClick={() => setIsExpanded(!isExpanded)}
+        className={
+          isExpanded
+            ? "absolute z-40 flex h-max w-full cursor-pointer flex-wrap items-center rounded-lg border border-neutral-600 bg-neutral-900 px-2"
+            : "flex h-full w-full cursor-pointer flex-wrap items-center rounded-lg border border-neutral-600 bg-neutral-900 px-2"
+        }
+      >
+        <div
+          onChange={(event) => {}}
+          className="text-md flex h-12 flex-auto grow items-center gap-2 bg-transparent px-1 font-sans font-thin tracking-normal text-neutral-400"
+        >
+          <p className="mt-1 font-medium tracking-wider text-neutral-300">
+            {displayProperty
+              ? (value as { [key in string]: any })[displayProperty]
+              : value}
+          </p>
+        </div>
+        <div className={`${boxColorVariants[color]}`}>{icon}</div>
+        <div
+          className={
+            isExpanded
+              ? "relative flex h-max w-full flex-col gap-2 pb-2"
+              : "hidden"
+          }
+        >
+          {displayProperty
+            ? dropdownValues.map((item) => {
+                return (
+                  <div className="">
+                    {(item as { [key in string]: any })[displayProperty]}
+                  </div>
+                );
+              })
+            : dropdownValues.map((item) => {
+                return (
+                  <div className="flex w-full items-center rounded-md bg-neutral-800 py-2 px-3">
+                    <>{item}</>
+                  </div>
+                );
+              })}
+        </div>
       </div>
-      <input
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        type={"text"}
-        placeholder={placeholder}
-        className="text-md h-full grow bg-transparent px-3 pt-0.5 font-sans font-thin tracking-normal text-neutral-400 placeholder:font-thin placeholder:tracking-wide placeholder:text-neutral-600 focus:outline-none"
-      />
     </div>
   );
 }

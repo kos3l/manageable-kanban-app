@@ -8,15 +8,24 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
-import ActionButton from "../../ui/buttons/ActionButton";
 import FilledButton from "../../ui/buttons/FilledButton";
 import TeamCard from "../../ui/cards/TeamCard";
 import TextInput from "../../ui/inputs/TextInput";
+import Dropdown from "../../ui/selection/Dropdown";
+
+enum Sorting {
+  AZ = "A - Z",
+  ZA = "Z - A",
+  NEWEST = "Newest",
+  OLDEST = "Oldest",
+}
 
 export default function TeamsOverview() {
   const navigate = useNavigate();
   const { getAllUserTeams } = useTeamService();
+  const [sortingOption, setSortingOption] = useState<string>(Sorting.AZ);
   const [search, setSearch] = useState<string>("");
+
   const { data } = useQuery({
     queryKey: ["team"],
     retry: 1,
@@ -31,7 +40,7 @@ export default function TeamsOverview() {
       navigate("/login", { replace: true });
     },
   });
-
+  console.log(Object.values(Sorting));
   return (
     <div className="grid w-full grid-cols-4 gap-2">
       <div className="col-span-1">
@@ -51,13 +60,15 @@ export default function TeamsOverview() {
           ></TextInput>
         </div>
         <div className="flex h-max w-[32.7%] items-center">
-          <TextInput
-            placeholder={"Search..."}
+          <Dropdown
+            color="indigo"
+            value={sortingOption}
+            onChange={(val) => setSortingOption(val)}
             icon={
-              <ChevronUpDownIcon className="w-4 text-neutral-300"></ChevronUpDownIcon>
+              <ChevronUpDownIcon className="w-4 text-indigo-600"></ChevronUpDownIcon>
             }
-            onChange={(newValue: string) => setSearch(newValue)}
-          ></TextInput>
+            dropdownValues={Object.values(Sorting)}
+          ></Dropdown>
         </div>
         {data ? (
           <div className="grid w-full grid-cols-6 gap-2">
