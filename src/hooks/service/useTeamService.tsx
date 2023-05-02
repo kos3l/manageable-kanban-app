@@ -9,7 +9,7 @@ const useTeamService = () => {
   const bastPath = "/api/team";
 
   const getAllUserTeams = () => {
-    return get<void, AxiosResponse<Team>>(bastPath);
+    return get<void, AxiosResponse<Team[]>>(bastPath);
   };
 
   return { getAllUserTeams };

@@ -7,10 +7,11 @@ import Root from "./routes/root/root";
 import Register from "./routes/register/Register";
 import ErrorUserPage from "./routes/user/user-root/error-page";
 import UserDashboard from "./routes/user/user-dashboard/UserDashboard";
-import Test from "./routes/user/test/Test";
 import PrivateRoutes from "./auth/components/ProtectedRoute";
 import UserRoot from "./routes/user/user-root/UserRoot";
-import useAuth from "./hooks/useAuth";
+import TeamsOverview from "./routes/teams-overview/TeamsOverview";
+import PageNotFound from "./routes/404/PageNotFound";
+import Team from "./routes/team/Team";
 
 function App() {
   return (
@@ -24,9 +25,11 @@ function App() {
         <Route errorElement={<ErrorUserPage />} element={<PrivateRoutes />}>
           <Route path="/user/" element={<UserRoot />}>
             <Route path="user-dashboard" element={<UserDashboard />} />
-            <Route path="test" element={<Test />} />
+            <Route path="teams-overview" element={<TeamsOverview />} />
+            <Route path="teams/:id" element={<Team />} />
           </Route>
         </Route>
+        <Route path="*" element={<PageNotFound />} />
       </Routes>
     </div>
   );

@@ -11,7 +11,7 @@ export default function ActionButton(props: IProps) {
   return (
     <button
       onClick={onClick ? () => onClick() : undefined}
-      className="flex w-full items-center gap-3 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-xl hover:transition"
+      className="flex w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-xl hover:transition"
     >
       <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-indigo-600/30">
         {icon}

@@ -1,4 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
+import logo from "../../assets/Logo.svg";
 export default function Root() {
   return (
     <>
@@ -8,13 +9,13 @@ export default function Root() {
             <div className="flex items-center">
               <Link to={"/"}>
                 <div className="w-12 md:w-16 2xl:w-12">
-                  <img src="./src/assets/Logo.svg" alt="" />
+                  <img src={logo} alt="" />
                 </div>
               </Link>
               <Link to={"/"}>
-                <h1 className="font-serif text-sm tracking-wider md:text-xl">
+                <p className="font-serif text-sm tracking-wider md:text-xl">
                   Manageable
-                </h1>
+                </p>
               </Link>
             </div>
             <div className="ml-12 mr-8 hidden h-1/2 flex-1 border-b border-zinc-500 font-sans md:block 2xl:mr-0 2xl:ml-4"></div>

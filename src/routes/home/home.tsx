@@ -5,6 +5,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import LandingButton from "../../ui/buttons/LandingButton";
+import mock from "../../assets/demo.png";
 export default function Home() {
   return (
     <>
@@ -46,11 +47,7 @@ export default function Home() {
         </div>
         <div className="col-span-6 mb-16 flex items-center justify-center">
           <div className=" w-5/6 overflow-hidden rounded-lg drop-shadow-4xl">
-            <img
-              src="./src/assets/demo.png"
-              alt=""
-              className="h-full w-full object-contain"
-            />
+            <img src={mock} alt="" className="h-full w-full object-contain" />
           </div>
         </div>
       </div>
