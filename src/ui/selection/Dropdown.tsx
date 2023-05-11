@@ -25,7 +25,7 @@ export default function Dropdown<T>(props: IProps<T>) {
     white: "flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700",
   };
 
-  const [isExpanded, setIsExpanded] = useState<boolean>(true);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
 
   return (
     <div

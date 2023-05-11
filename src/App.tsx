@@ -13,6 +13,7 @@ import TeamsOverview from "./routes/teams-overview/TeamsOverview";
 import PageNotFound from "./routes/404/PageNotFound";
 import Team from "./routes/team/Team";
 import ProjectsOverview from "./routes/projects-overview/ProjectsOverview";
+import Project from "./routes/project/Project";
 
 function App() {
   return (
@@ -29,6 +30,7 @@ function App() {
             <Route path="teams-overview" element={<TeamsOverview />} />
             <Route path="teams/:id" element={<Team />} />
             <Route path="projects-overview" element={<ProjectsOverview />} />
+            <Route path="projects/:id" element={<Project />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />
