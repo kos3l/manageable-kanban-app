@@ -35,7 +35,7 @@ export default function ProjectCard(props: IProps) {
     <Link to={"../projects/" + project._id}>
       <div
         key={project._id}
-        className="hover:transitio flex h-28 w-full flex-col justify-between overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50  p-3 hover:border-neutral-400"
+        className="hover:transitio flex h-28 w-full flex-col justify-between overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 transition hover:border-neutral-400"
       >
         <div className="flex w-full items-center gap-2">
           <div className={"flex h-6 w-6 items-center justify-center"}>
@@ -53,7 +53,6 @@ export default function ProjectCard(props: IProps) {
             </p>
           </div>
         </div>
-
         <div className="flex-co flex h-max w-full">
           <p className="truncate font-serif text-lg leading-5 tracking-widest">
             <span className="truncate font-sans text-base tracking-normal text-neutral-500">
