@@ -1,5 +1,6 @@
 import {
   ChevronUpDownIcon,
+  ClipboardDocumentIcon,
   MagnifyingGlassIcon,
   PlusIcon,
   UsersIcon,
@@ -7,8 +8,10 @@ import {
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import useProjectService from "../../hooks/service/useProjectService";
 import useTeamService from "../../hooks/service/useTeamService";
 import FilledButton from "../../ui/buttons/FilledButton";
+import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
 import TextInput from "../../ui/inputs/TextInput";
 import Dropdown from "../../ui/selection/Dropdown";
@@ -20,18 +23,18 @@ enum Sorting {
   OLDEST = "Oldest",
 }
 
-export default function TeamsOverview() {
+export default function ProjectsOverview() {
   const navigate = useNavigate();
-  const { getAllUserTeams } = useTeamService();
+  const { getAllUserProjects } = useProjectService();
   const [sortingOption, setSortingOption] = useState<string>(Sorting.AZ);
   const [search, setSearch] = useState<string>("");
 
   const { data } = useQuery({
-    queryKey: ["team"],
+    queryKey: ["projects"],
     retry: 1,
     queryFn: async () => {
-      const response = await getAllUserTeams();
-      if (response.status == 401 || response.status == 403) {
+      const response = await getAllUserProjects();
+      if (response.status == 403) {
         throw new Error("Token expired");
       }
       return response.data;
@@ -40,12 +43,12 @@ export default function TeamsOverview() {
       navigate("/login", { replace: true });
     },
   });
-  console.log(Object.values(Sorting));
+
   return (
     <div className="grid w-full grid-cols-4 gap-2">
       <div className="col-span-1">
         <FilledButton
-          content={"Create A Team"}
+          content={"Create A Project"}
           icon={<PlusIcon className="w-4 text-neutral-300"></PlusIcon>}
         ></FilledButton>
       </div>
@@ -72,16 +75,18 @@ export default function TeamsOverview() {
         </div>
         {data ? (
           <div className="grid w-full grid-cols-6 gap-2">
-            {data.map((team, index) => {
+            {data.map((project, index) => {
               return (
                 <div
                   className="col-span-6 sm:col-span-3 md:col-span-2"
                   key={index}
                 >
-                  <TeamCard
-                    team={team}
-                    icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
-                  ></TeamCard>
+                  <ProjectCard
+                    project={project}
+                    icon={
+                      <ClipboardDocumentIcon className="w-6 text-indigo-500"></ClipboardDocumentIcon>
+                    }
+                  ></ProjectCard>
                 </div>
               );
             })}

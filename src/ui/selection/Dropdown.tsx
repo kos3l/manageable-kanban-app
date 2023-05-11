@@ -60,16 +60,19 @@ export default function Dropdown<T>(props: IProps<T>) {
           }
         >
           {displayProperty
-            ? dropdownValues.map((item) => {
+            ? dropdownValues.map((item, index) => {
                 return (
-                  <div className="">
+                  <div className="" key={index}>
                     {(item as { [key in string]: any })[displayProperty]}
                   </div>
                 );
               })
-            : dropdownValues.map((item) => {
+            : dropdownValues.map((item, index) => {
                 return (
-                  <div className="flex w-full items-center rounded-md bg-neutral-800 py-2 px-3">
+                  <div
+                    key={index}
+                    className="flex w-full items-center rounded-md bg-neutral-800 py-2 px-3"
+                  >
                     <>{item}</>
                   </div>
                 );

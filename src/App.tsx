@@ -12,6 +12,7 @@ import UserRoot from "./routes/user/user-root/UserRoot";
 import TeamsOverview from "./routes/teams-overview/TeamsOverview";
 import PageNotFound from "./routes/404/PageNotFound";
 import Team from "./routes/team/Team";
+import ProjectsOverview from "./routes/projects-overview/ProjectsOverview";
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
             <Route path="user-dashboard" element={<UserDashboard />} />
             <Route path="teams-overview" element={<TeamsOverview />} />
             <Route path="teams/:id" element={<Team />} />
+            <Route path="projects-overview" element={<ProjectsOverview />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />
