@@ -1,6 +1,7 @@
 import {
   ChevronUpDownIcon,
   ClipboardDocumentIcon,
+  ClipboardDocumentListIcon,
   MagnifyingGlassIcon,
   PlusIcon,
   UsersIcon,
@@ -84,7 +85,7 @@ export default function ProjectsOverview() {
                   <ProjectCard
                     project={project}
                     icon={
-                      <ClipboardDocumentIcon className="w-6 text-indigo-500"></ClipboardDocumentIcon>
+                      <ClipboardDocumentListIcon className="w-6 text-indigo-500"></ClipboardDocumentListIcon>
                     }
                   ></ProjectCard>
                 </div>

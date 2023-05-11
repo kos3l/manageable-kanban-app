@@ -1,0 +1,6 @@
+export enum ProjectStatusText {
+  COMPLETED = "COMPLETED",
+  NOTSTARTED = "NOT STARTED",
+  ONGOING = "ONGOING",
+  OVERDUE = "OVERDUE",
+}

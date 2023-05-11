@@ -11,7 +11,7 @@ export default function FilledButton(props: IProps) {
   return (
     <button
       className={
-        "flex h-12 w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-700/50 px-2 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition"
+        "flex h-12 w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-700/50 px-2 py-3 transition hover:border-neutral-400 hover:drop-shadow-4xl hover:transition"
       }
     >
       <div

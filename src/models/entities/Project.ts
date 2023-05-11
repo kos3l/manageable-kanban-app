@@ -1,4 +1,5 @@
 import { ProjectStatus } from "../enum/ProjectStatus";
+import { Team } from "./Team";
 
 type Project = {
   _id: string;
@@ -9,6 +10,7 @@ type Project = {
   startDate: Date;
   endDate: Date;
   teamId: string;
+  team: Team[];
   // columns: ColumnDocument[];
 };
 
