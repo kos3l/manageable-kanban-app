@@ -1,7 +1,6 @@
 import { QueryClient, useQuery } from "react-query";
 import { Link, Outlet, useLoaderData } from "react-router-dom";
 import avatar from "../../../assets/avatar.png";
-import useUserService from "../../../hooks/service/useUserService";
 import useAuth from "../../../hooks/useAuth";
 import logo from "../../../assets/Logo.svg";
 import {

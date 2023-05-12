@@ -1,6 +1,5 @@
 import "./App.css";
 import {
-  Routes,
   Route,
   createRoutesFromElements,
   RouterProvider,
@@ -24,10 +23,6 @@ import ProjectsOverview from "./routes/projects-overview/ProjectsOverview";
 import Project from "./routes/project/Project";
 import Profile from "./routes/profile/Profile";
 import useUserService from "./hooks/service/useUserService";
-import useAuth from "./hooks/useAuth";
-import useHttp from "./hooks/useHttp";
-import useRefreshToken from "./hooks/useRefreshToken";
-import { useEffect } from "react";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile } = useUserService();
@@ -45,6 +40,7 @@ const App = ({ queryClient }: any) => {
             path="/user/"
             element={<UserRoot />}
             loader={profileLoader(queryClient, getLoggedInUserProfile)}
+            id="userRoot"
           >
             <Route path="profile" element={<Profile />} />
             <Route path="user-dashboard" element={<UserDashboard />} />
