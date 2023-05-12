@@ -22,12 +22,14 @@ export default function TeamCard(props: IProps) {
           <p className="truncate font-serif text-base tracking-widest">
             {team.name}
           </p>
-          <div className="flex items-center gap-1">
-            <ClipboardDocumentListIcon className="w-4 text-neutral-500"></ClipboardDocumentListIcon>
-            <p className="mt-0.5 text-base text-neutral-500">
-              {team.projects?.length}
-            </p>
-          </div>
+          {team.projects && (
+            <div className="flex items-center gap-1">
+              <ClipboardDocumentListIcon className="w-4 text-neutral-500"></ClipboardDocumentListIcon>
+              <p className="mt-0.5 text-base text-neutral-500">
+                {team.projects?.length}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </Link>

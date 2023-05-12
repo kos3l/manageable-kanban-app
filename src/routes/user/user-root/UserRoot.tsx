@@ -118,7 +118,7 @@ export default function UserRoot() {
           </button>
         </div>
         <div className="flex h-full grow flex-col-reverse  md:flex-col">
-          <div className="relative z-40 flex h-14 w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 md:justify-end md:border-t-0 md:border-b">
+          <div className="relative z-40 flex h-max w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 py-4 md:justify-end md:border-t-0 md:border-b md:py-[11px]">
             <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
               <p className="mt-1 font-serif text-sm">
                 {user?.firstName + " " + user?.lastName}
@@ -138,14 +138,14 @@ export default function UserRoot() {
               <Bars3Icon className="w-6 text-neutral-200"></Bars3Icon>
             </div>
           </div>
-          <div className="w-full grow p-4">
+          <div className="flex w-full grow overflow-scroll p-4 2xl:justify-center">
             <Outlet />
           </div>
         </div>
         <div
           className={
             isMobileMenuOpen
-              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t  border-neutral-600 pt-2 opacity-100 transition-opacity md:hidden "
+              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t border-neutral-600 bg-neutral-900 pt-2 opacity-100 transition-opacity md:hidden "
               : "absolute bottom-full opacity-0 transition-opacity"
           }
         >
