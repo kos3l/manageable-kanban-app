@@ -1,5 +1,5 @@
-import { useQuery } from "react-query";
-import { Link, Outlet } from "react-router-dom";
+import { QueryClient, useQuery } from "react-query";
+import { Link, Outlet, useLoaderData } from "react-router-dom";
 import avatar from "../../../assets/avatar.png";
 import useUserService from "../../../hooks/service/useUserService";
 import useAuth from "../../../hooks/useAuth";
@@ -13,32 +13,46 @@ import NavigationButton from "../../../ui/buttons/NavigationButton";
 import NavigationItems from "../../../static/NavigationItems";
 import useAuthService from "../../../hooks/service/useAuthService";
 import { useState } from "react";
+import { AxiosResponse } from "axios";
+import { User } from "../../../models/entities/User";
+
+export const profileQuery = (
+  getUserProfileQuery: () => Promise<AxiosResponse<User, any>>
+) => ({
+  queryKey: ["profile", "user"],
+  queryFn: async () => {
+    const response = await getUserProfileQuery();
+    if (response.status == 403) {
+      throw new Error("Token expired");
+    }
+    if (!response) {
+      throw new Response("", {
+        status: 404,
+        statusText: "Not Found",
+      });
+    }
+    return response.data;
+  },
+});
+
+export const loader =
+  (
+    queryClient: QueryClient,
+    getLoggedInUserProfile: () => Promise<AxiosResponse<User, any>>
+  ) =>
+  async () => {
+    const query = profileQuery(getLoggedInUserProfile);
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    );
+  };
+
 export default function UserRoot() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const { getLoggedInUserProfile } = useUserService();
   const { auth, setAuth } = useAuth();
   const { logoutUser } = useAuthService();
-
-  const canFetchUser =
-    auth &&
-    auth.accessToken !== undefined &&
-    auth.accessToken !== null &&
-    auth.accessToken !== "";
-
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["logged-in-user"],
-    queryFn: async () => {
-      const response = await getLoggedInUserProfile();
-      if (response.status == 401 || response.status == 403) {
-        throw new Error("Token expired");
-      }
-      return response.data;
-    },
-    enabled: canFetchUser,
-    onError: (error: any) => {
-      // navigate("/login", { replace: true });
-    },
-  });
+  const user = useLoaderData() as User;
 
   const logout = useQuery({
     queryKey: ["logout"],
@@ -108,7 +122,7 @@ export default function UserRoot() {
           <div className="relative z-40 flex h-14 w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 md:justify-end md:border-t-0 md:border-b">
             <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
               <p className="mt-1 font-serif text-sm">
-                {data?.firstName + " " + data?.lastName}
+                {user?.firstName + " " + user?.lastName}
               </p>
               <div className="w-8 overflow-hidden rounded-lg">
                 <img
