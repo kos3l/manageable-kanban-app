@@ -12,7 +12,7 @@ export default function TextareaInput(props: IProps) {
   const { icon, placeholder, value, onChange, name } = props;
 
   return (
-    <div className="min-h-16 flex h-max w-full items-start rounded-lg border border-neutral-600 bg-neutral-900 px-2">
+    <div className="min-h-24 flex h-max w-full items-start rounded-lg border border-neutral-600 bg-neutral-900 px-2">
       <div className="mt-2 flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700">
         {icon}
       </div>

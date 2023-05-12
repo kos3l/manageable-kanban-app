@@ -51,55 +51,50 @@ export default function EditUser() {
 
   return (
     <div className="flex w-full justify-center md:justify-start 2xl:justify-center">
-      <div className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3">
+      <Form
+        method="post"
+        className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"
+      >
         <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 p-3">
           <h1 className="font-serif text-lg tracking-wider">Edit User</h1>
-          <Form method="post">
-            <TextInput
-              icon={
-                <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
-              }
-              placeholder="First Name.."
-              value={firstName}
-              onChange={(val) => setFirstName(val)}
-              name="firstName"
-            ></TextInput>
-            <TextInput
-              icon={
-                <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
-              }
-              placeholder="Last Name.."
-              name="lastName"
-              value={lastName}
-              onChange={(val) => setLastName(val)}
-            ></TextInput>
-            <DateInput
-              icon={<CakeIcon className="m-0 w-5 p-0"></CakeIcon>}
-              value={DateHelper.formatDateToString(birthdate, "YYYY-MM-DD")}
-              onChange={(val) => setBirthdate(new Date(val))}
-              name="birthdate"
-            ></DateInput>
-            <TextareaInput
-              icon={
-                <Bars3CenterLeftIcon className="m-0 w-4 p-0"></Bars3CenterLeftIcon>
-              }
-              placeholder="Bio.."
-              value={bio}
-              onChange={(val) => setBio(val)}
-              name="bio"
-            ></TextareaInput>
-            <button type="submit">pls</button>
-          </Form>
+          <TextInput
+            icon={
+              <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+            }
+            placeholder="First Name.."
+            value={firstName}
+            onChange={(val) => setFirstName(val)}
+            name="firstName"
+          ></TextInput>
+          <TextInput
+            icon={
+              <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+            }
+            placeholder="Last Name.."
+            name="lastName"
+            value={lastName}
+            onChange={(val) => setLastName(val)}
+          ></TextInput>
+          <DateInput
+            icon={<CakeIcon className="m-0 w-5 p-0"></CakeIcon>}
+            value={DateHelper.formatDateToString(birthdate, "YYYY-MM-DD")}
+            onChange={(val) => setBirthdate(new Date(val))}
+            name="birthdate"
+          ></DateInput>
+          <TextareaInput
+            icon={
+              <Bars3CenterLeftIcon className="m-0 w-4 p-0"></Bars3CenterLeftIcon>
+            }
+            placeholder="Bio.."
+            value={bio}
+            onChange={(val) => setBio(val)}
+            name="bio"
+          ></TextareaInput>
         </div>
         <ActionButton
           content={"Save"}
           color="indigo"
-          onClick={() => {
-            //   firstName: firstName,
-            //   lastName: lastName,
-            //   birthdate: birthdate,
-            //   bio: bio,
-          }}
+          isSubmitBtn
           icon={
             <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
           }
@@ -111,7 +106,7 @@ export default function EditUser() {
           color="red"
           icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
         ></ActionButton>
-      </div>
+      </Form>
     </div>
   );
 }

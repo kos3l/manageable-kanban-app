@@ -6,6 +6,7 @@ interface IProps {
   icon: ReactNode;
   onClick?: () => void;
   color: string;
+  isSubmitBtn?: boolean;
 }
 
 type colorVariants = {
@@ -14,7 +15,7 @@ type colorVariants = {
 };
 
 export default function ActionButton(props: IProps) {
-  const { icon, color, content, onClick } = props;
+  const { icon, color, content, onClick, isSubmitBtn } = props;
 
   const wrapperColorVariants: colorIndex & colorVariants = {
     indigo:
@@ -30,6 +31,7 @@ export default function ActionButton(props: IProps) {
 
   return (
     <button
+      type={isSubmitBtn ? "submit" : "button"}
       onClick={onClick ? () => onClick() : undefined}
       className={`${wrapperColorVariants[color]}`}
     >
