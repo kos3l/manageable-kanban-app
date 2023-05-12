@@ -41,6 +41,10 @@ export const loader =
   ) =>
   async () => {
     const query = profileQuery(getLoggedInUserProfile);
+    const invalidated = queryClient.getQueryState(query.queryKey);
+    if (invalidated) {
+      return await queryClient.fetchQuery(query);
+    }
     return (
       queryClient.getQueryData(query.queryKey) ??
       (await queryClient.fetchQuery(query))

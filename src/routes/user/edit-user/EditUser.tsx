@@ -7,14 +7,13 @@ import {
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
-import { QueryClient, useMutation, useQueryClient } from "react-query";
+import { QueryClient } from "react-query";
 import {
   Form,
   redirect,
   useNavigate,
   useRouteLoaderData,
 } from "react-router-dom";
-import useUserService from "../../../hooks/service/useUserService";
 import { IUpdateUserDTO } from "../../../models/dto/user/IUpdateUserDTO";
 import { User } from "../../../models/entities/User";
 import ActionButton from "../../../ui/buttons/ActionButton";
@@ -35,7 +34,9 @@ export const action =
     const formData = await request.formData();
     const updates = Object.fromEntries(formData);
     await updateUser(params.id, updates);
-    await queryClient.invalidateQueries({ queryKey: ["profile"] });
+    await queryClient.invalidateQueries({
+      queryKey: ["profile"],
+    });
     return redirect(`/user/${params.id}`);
   };
 
