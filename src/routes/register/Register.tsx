@@ -89,6 +89,7 @@ export default function Register() {
             </div>
             <div className="w-full">
               <ActionButton
+                color="indigo"
                 onClick={() => {
                   mutation.mutate({
                     firstName: firstName,

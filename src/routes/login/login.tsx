@@ -69,6 +69,7 @@ export default function Login() {
             </div>
             <div className="w-full">
               <ActionButton
+                color="indigo"
                 content={"SIGN IN"}
                 onClick={() => {
                   mutation.mutate({

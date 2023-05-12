@@ -23,10 +23,12 @@ import ProjectsOverview from "./routes/projects-overview/ProjectsOverview";
 import Project from "./routes/project/Project";
 import Profile from "./routes/profile/Profile";
 import useUserService from "./hooks/service/useUserService";
+import EditUser, {
+  action as userUpdateAction,
+} from "./routes/user/edit-user/EditUser";
 
 const App = ({ queryClient }: any) => {
-  const { getLoggedInUserProfile } = useUserService();
-
+  const { getLoggedInUserProfile, updateUserProfile } = useUserService();
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="">
@@ -42,7 +44,12 @@ const App = ({ queryClient }: any) => {
             loader={profileLoader(queryClient, getLoggedInUserProfile)}
             id="userRoot"
           >
-            <Route path="profile" element={<Profile />} />
+            <Route path=":id" element={<Profile />} />
+            <Route
+              path=":id/edit"
+              element={<EditUser />}
+              action={userUpdateAction(queryClient, updateUserProfile)}
+            />
             <Route path="user-dashboard" element={<UserDashboard />} />
             <Route path="teams-overview" element={<TeamsOverview />} />
             <Route path="teams/:id" element={<Team />} />

@@ -1,4 +1,9 @@
-import { useLoaderData, useRouteLoaderData } from "react-router-dom";
+import {
+  Link,
+  useLoaderData,
+  useRevalidator,
+  useRouteLoaderData,
+} from "react-router-dom";
 import { User } from "../../models/entities/User";
 import avatar from "../../assets/avatar.png";
 import ActionButton from "../../ui/buttons/ActionButton";
@@ -15,13 +20,35 @@ import { Project } from "../../models/entities/Project";
 import useProjectService from "../../hooks/service/useProjectService";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
+import { useEffect } from "react";
+import useUserService from "../../hooks/service/useUserService";
 
 const projectsWithTeamsQuery = (
   getAllUserProjects: () => Promise<AxiosResponse<Project[], any>>
 ) => ({
-  queryKey: ["projects", "teams", "profile"],
+  queryKey: ["projects", "teams"],
   queryFn: async () => {
     const response = await getAllUserProjects();
+    if (response.status == 403) {
+      throw new Error("Token expired");
+    }
+    if (!response) {
+      throw new Response("", {
+        status: 404,
+        statusText: "Not Found",
+      });
+    }
+
+    return response.data;
+  },
+});
+
+const profileQuery = (
+  getUserProfileQuery: () => Promise<AxiosResponse<User, any>>
+) => ({
+  queryKey: ["profile"],
+  queryFn: async () => {
+    const response = await getUserProfileQuery();
     if (response.status == 403) {
       throw new Error("Token expired");
     }
@@ -36,11 +63,13 @@ const projectsWithTeamsQuery = (
 });
 
 export default function Profile() {
-  const user = useRouteLoaderData("userRoot") as User;
   const { getAllUserProjects } = useProjectService();
+  const { getLoggedInUserProfile } = useUserService();
+
   const { data: projects } = useQuery(
     projectsWithTeamsQuery(getAllUserProjects)
   );
+  const { data: user } = useQuery(profileQuery(getLoggedInUserProfile));
 
   const distinctTeamOnProjects = projects
     ? [
@@ -52,19 +81,25 @@ export default function Profile() {
 
   const teams = distinctTeamOnProjects.map((project) => project.team[0]);
 
-  console.log(teams);
+  if (!user) {
+    return <>Loading</>;
+  }
+
   return (
     <div className="flex h-max w-full flex-wrap gap-4 sm:h-full sm:flex-nowrap">
       <div className="flex h-80 w-full grow-0 flex-col gap-3 sm:h-full sm:basis-96 md:basis-64 lg:basis-72">
         <div className="w-full overflow-hidden rounded-lg border border-neutral-600 sm:border-0 ">
           <img src={avatar} alt="" className="h-full w-full object-contain" />
         </div>
-        <ActionButton
-          content={"Edit Profile"}
-          icon={
-            <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
-          }
-        ></ActionButton>
+        <Link to={"./edit"}>
+          <ActionButton
+            color="indigo"
+            content={"Edit Profile"}
+            icon={
+              <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+            }
+          ></ActionButton>
+        </Link>
       </div>
       <div className="flex grid w-full grow-0 grid-cols-4 gap-3 sm:grow 2xl:h-max">
         <div className="col-span-4 flex flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 2xl:h-max">

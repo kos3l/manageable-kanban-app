@@ -1,18 +1,25 @@
 import { ReactNode } from "react";
-import { Link } from "react-router-dom";
+import { Link, useRouteLoaderData } from "react-router-dom";
 import { useMatch } from "react-router-dom";
+import { User } from "../../models/entities/User";
 interface IProps {
   content: string;
   icon: ReactNode;
   toPath: string;
+  param: string | undefined;
 }
 
 export default function NavigationButton(props: IProps) {
-  const { icon, content, toPath } = props;
+  const { icon, content, toPath, param } = props;
   const isCurrentPath = useMatch(toPath);
-
+  const user = useRouteLoaderData("userRoot") as User;
+  let pathWithParam = "";
+  // hacky way but thats how it is
+  if (param && param == ":id") {
+    pathWithParam = toPath + user._id;
+  }
   return (
-    <Link to={toPath}>
+    <Link to={param ? pathWithParam : toPath}>
       <button
         className={
           isCurrentPath

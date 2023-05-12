@@ -18,7 +18,7 @@ import { User } from "../../../models/entities/User";
 export const profileQuery = (
   getUserProfileQuery: () => Promise<AxiosResponse<User, any>>
 ) => ({
-  queryKey: ["profile", "user"],
+  queryKey: ["profile"],
   queryFn: async () => {
     const response = await getUserProfileQuery();
     if (response.status == 403) {
@@ -101,6 +101,7 @@ export default function UserRoot() {
                       content={item.name}
                       icon={item.icon}
                       toPath={item.path}
+                      param={item.param}
                     ></NavigationButton>
                   </div>
                 );
@@ -162,6 +163,7 @@ export default function UserRoot() {
                     content={item.name}
                     icon={item.icon}
                     toPath={item.path}
+                    param={item.param}
                   ></NavigationButton>
                 </div>
               );
