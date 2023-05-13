@@ -95,17 +95,39 @@ export default function TeamPage() {
             value={team.description}
           ></DisplayField>
         </div>
-        <Link to={"./addMemers"}>
-          <div className="w-full sm:w-56 xl:w-full">
+        <div className="flex w-full flex-wrap gap-4 md:flex-nowrap xl:flex-col">
+          <div className="grow basis-full md:basis-1/3">
+            <Link to={"./addMemers"}>
+              <ActionButton
+                color="indigo"
+                content={"Add members"}
+                icon={
+                  <UserPlusIcon className="w-5 text-indigo-500"></UserPlusIcon>
+                }
+              ></ActionButton>
+            </Link>{" "}
+          </div>
+          <div className="grow basis-full md:basis-1/3">
+            <Link to={"./edit"}>
+              <ActionButton
+                color="indigo"
+                content={"Edit Team"}
+                icon={
+                  <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+                }
+              ></ActionButton>
+            </Link>{" "}
+          </div>
+          <div className="grow basis-full md:basis-1/3">
             <ActionButton
-              color="indigo"
-              content={"Add members"}
+              color="red"
+              content={"Delete Team"}
               icon={
-                <UserPlusIcon className="w-5 text-indigo-500"></UserPlusIcon>
+                <PencilSquareIcon className="w-5 text-red-600"></PencilSquareIcon>
               }
             ></ActionButton>
           </div>
-        </Link>
+        </div>
       </div>
       <div className="flex w-full flex-wrap-reverse gap-4 sm:grow sm:flex-nowrap">
         <WrapperCard
