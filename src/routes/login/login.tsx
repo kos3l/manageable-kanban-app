@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthService from "../../hooks/service/useAuthService";
 import gradient from "../../assets/gradient.svg";
 
-export default function Login() {
+export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setAuth } = useAuth();
@@ -54,12 +54,14 @@ export default function Login() {
               </p>
               <div className="mt-4 flex h-max w-full flex-wrap gap-4">
                 <TextInput
+                  name="email"
                   icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
                   placeholder="Email.."
                   value={email}
                   onChange={(val) => setEmail(val)}
                 ></TextInput>
                 <TextInput
+                  name="password"
                   icon={<KeyIcon className="m-0 w-4 p-0"></KeyIcon>}
                   placeholder="Password.."
                   value={password}
@@ -69,6 +71,7 @@ export default function Login() {
             </div>
             <div className="w-full">
               <ActionButton
+                color="indigo"
                 content={"SIGN IN"}
                 onClick={() => {
                   mutation.mutate({

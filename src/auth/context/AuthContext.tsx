@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useRef, useState } from "react";
 
 export interface IAccessToken {
   accessToken: string | null;
@@ -19,7 +19,6 @@ const AuthContext = createContext<AuthState>({} as any);
 
 export const AuthProvider = ({ children }: IProviderProps) => {
   const [auth, setAuth] = useState<IAccessToken>(AccessToken);
-
   return (
     <AuthContext.Provider value={{ auth, setAuth }}>
       {children}

@@ -5,6 +5,7 @@ type NavListItem = {
   path: string;
   icon: ReactNode;
   sectionTitle?: string;
+  param?: string;
 };
 
 export { type NavListItem };

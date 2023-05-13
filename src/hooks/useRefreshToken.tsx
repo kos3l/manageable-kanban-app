@@ -12,7 +12,7 @@ const useRefreshToken = (axios: AxiosInstance) => {
       setAuth((prev) => {
         return { ...prev, accessToken: response.data.newAccessToken };
       });
-      return response.data.accessToken;
+      return response.data.newAccessToken;
     } catch (error) {
       return "";
     }

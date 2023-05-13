@@ -17,8 +17,9 @@ export default class NavigationItems {
     },
     {
       name: "My Profile",
-      path: "/user/profile",
+      path: "/user/profile/",
       icon: <UserIcon className="w-4 text-indigo-500"></UserIcon>,
+      param: ":id",
     },
     {
       name: "Overview",
@@ -28,14 +29,14 @@ export default class NavigationItems {
     },
     {
       name: "Create A Team",
-      path: "/user/team-create",
+      path: "/user/teams/create",
       icon: <PlusIcon className="w-4 text-indigo-500"></PlusIcon>,
     },
     {
       name: "Overview",
       path: "/user/projects-overview",
       icon: <Squares2X2Icon className="w-4 text-indigo-500"></Squares2X2Icon>,
-      sectionTitle: "TEAM",
+      sectionTitle: "PROJECT",
     },
     {
       name: "Kanban Boards",

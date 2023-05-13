@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 
-export default function UserDashboard() {
+export default function UserDashboardPage() {
   return (
     <>
       Hello logged in user!{" "}

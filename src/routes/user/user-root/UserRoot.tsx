@@ -1,7 +1,6 @@
-import { useQuery } from "react-query";
-import { Link, Outlet } from "react-router-dom";
+import { QueryClient, useQuery } from "react-query";
+import { Link, Outlet, useLoaderData } from "react-router-dom";
 import avatar from "../../../assets/avatar.png";
-import useUserService from "../../../hooks/service/useUserService";
 import useAuth from "../../../hooks/useAuth";
 import logo from "../../../assets/Logo.svg";
 import {
@@ -13,32 +12,50 @@ import NavigationButton from "../../../ui/buttons/NavigationButton";
 import NavigationItems from "../../../static/NavigationItems";
 import useAuthService from "../../../hooks/service/useAuthService";
 import { useState } from "react";
-export default function UserRoot() {
+import { AxiosResponse } from "axios";
+import { User } from "../../../models/entities/User";
+
+export const profileQuery = (
+  getUserProfileQuery: () => Promise<AxiosResponse<User, any>>
+) => ({
+  queryKey: ["profile"],
+  queryFn: async () => {
+    const response = await getUserProfileQuery();
+    if (response.status == 403) {
+      throw new Error("Token expired");
+    }
+    if (!response) {
+      throw new Response("", {
+        status: 404,
+        statusText: "Not Found",
+      });
+    }
+    return response.data;
+  },
+});
+
+export const loader =
+  (
+    queryClient: QueryClient,
+    getLoggedInUserProfile: () => Promise<AxiosResponse<User, any>>
+  ) =>
+  async () => {
+    const query = profileQuery(getLoggedInUserProfile);
+    const invalidated = queryClient.getQueryState(query.queryKey);
+    if (invalidated) {
+      return await queryClient.fetchQuery(query);
+    }
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    );
+  };
+
+export default function UserRootPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
-  const { getLoggedInUserProfile } = useUserService();
   const { auth, setAuth } = useAuth();
   const { logoutUser } = useAuthService();
-
-  const canFetchUser =
-    auth &&
-    auth.accessToken !== undefined &&
-    auth.accessToken !== null &&
-    auth.accessToken !== "";
-
-  const { isLoading, isError, data, error } = useQuery({
-    queryKey: ["logged-in-user"],
-    queryFn: async () => {
-      const response = await getLoggedInUserProfile();
-      if (response.status == 401 || response.status == 403) {
-        throw new Error("Token expired");
-      }
-      return response.data;
-    },
-    enabled: canFetchUser,
-    onError: (error: any) => {
-      // navigate("/login", { replace: true });
-    },
-  });
+  const user = useLoaderData() as User;
 
   const logout = useQuery({
     queryKey: ["logout"],
@@ -88,6 +105,7 @@ export default function UserRoot() {
                       content={item.name}
                       icon={item.icon}
                       toPath={item.path}
+                      param={item.param}
                     ></NavigationButton>
                   </div>
                 );
@@ -105,10 +123,10 @@ export default function UserRoot() {
           </button>
         </div>
         <div className="flex h-full grow flex-col-reverse  md:flex-col">
-          <div className="relative z-40 flex h-14 w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 md:justify-end md:border-t-0 md:border-b">
+          <div className="relative z-40 flex h-max w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 py-4 md:justify-end md:border-t-0 md:border-b md:py-[11px]">
             <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
               <p className="mt-1 font-serif text-sm">
-                {data?.firstName + " " + data?.lastName}
+                {user?.firstName + " " + user?.lastName}
               </p>
               <div className="w-8 overflow-hidden rounded-lg">
                 <img
@@ -125,14 +143,14 @@ export default function UserRoot() {
               <Bars3Icon className="w-6 text-neutral-200"></Bars3Icon>
             </div>
           </div>
-          <div className="w-full grow p-4">
+          <div className="flex w-full grow overflow-scroll p-4 2xl:justify-center">
             <Outlet />
           </div>
         </div>
         <div
           className={
             isMobileMenuOpen
-              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t  border-neutral-600 pt-2 opacity-100 transition-opacity md:hidden "
+              ? "absolute bottom-[4rem] z-30 h-max w-full w-screen border-t border-neutral-600 bg-neutral-900 pt-2 opacity-100 transition-opacity md:hidden "
               : "absolute bottom-full opacity-0 transition-opacity"
           }
         >
@@ -149,6 +167,7 @@ export default function UserRoot() {
                     content={item.name}
                     icon={item.icon}
                     toPath={item.path}
+                    param={item.param}
                   ></NavigationButton>
                 </div>
               );
