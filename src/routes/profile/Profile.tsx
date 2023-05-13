@@ -23,6 +23,8 @@ import TeamCard from "../../ui/cards/TeamCard";
 import { ReactNode, useEffect } from "react";
 import useUserService from "../../hooks/service/useUserService";
 import WrapperCard from "../../ui/cards/WrapperCard";
+import useTeamService from "../../hooks/service/useTeamService";
+import { Team } from "../../models/entities/Team";
 
 const projectsWithTeamsQuery = (
   getAllUserProjects: () => Promise<AxiosResponse<Project[], any>>
@@ -63,24 +65,32 @@ const profileQuery = (
   },
 });
 
+const getAllTeams = (
+  getAllUserTeams: () => Promise<AxiosResponse<Team[], any>>
+) => ({
+  queryKey: ["team"],
+  queryFn: async () => {
+    const response = await getAllUserTeams();
+    if (response.status == 401 || response.status == 403) {
+      throw new Error("Token expired");
+    }
+
+    return response.data;
+  },
+});
+
 export default function ProfilePage() {
   const { getAllUserProjects } = useProjectService();
   const { getLoggedInUserProfile } = useUserService();
+  const { getAllUserTeams } = useTeamService();
+
+  const { data: user } = useQuery(profileQuery(getLoggedInUserProfile));
 
   const { data: projects } = useQuery(
     projectsWithTeamsQuery(getAllUserProjects)
   );
-  const { data: user } = useQuery(profileQuery(getLoggedInUserProfile));
 
-  const distinctTeamOnProjects = projects
-    ? [
-        ...new Map(
-          projects.map((project) => [project.teamId.toString(), project])
-        ).values(),
-      ]
-    : [];
-
-  const teams = distinctTeamOnProjects.map((project) => project.team[0]);
+  const { data: teams } = useQuery(getAllTeams(getAllUserTeams));
 
   if (!user) {
     return <>Loading</>;
@@ -102,8 +112,8 @@ export default function ProfilePage() {
           ></ActionButton>
         </Link>
       </div>
-      <div className="flex grid w-full grow-0 grid-cols-4 gap-3 sm:grow 2xl:h-max">
-        <div className="col-span-4 flex flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 2xl:h-max">
+      <div className="flex grid h-max w-full grow-0 grid-cols-4 gap-3 sm:grow 2xl:h-max">
+        <div className="col-span-4 flex h-max flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 2xl:h-max">
           <h1 className="text-xl">{user.firstName + " " + user.lastName}</h1>
           <div className="flex h-max w-full flex-wrap items-start gap-2 sm:flex-nowrap">
             <div className="flex w-full sm:w-max sm:basis-24">
@@ -126,19 +136,20 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-        <div className="col-span-4 flex h-max max-h-full grow flex-col lg:col-span-2">
+        <div className="col-span-4 flex h-max max-h-full grow lg:col-span-2">
           <WrapperCard
             name={"Teams"}
-            displayEntities={teams}
+            displayEntities={teams ? teams : []}
             displayComponent={(team) => (
               <TeamCard
                 team={team}
+                key={team._id}
                 icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
               ></TeamCard>
             )}
           ></WrapperCard>
         </div>
-        <div className="col-span-4 flex h-max max-h-full grow flex-col gap-3 overflow-scroll lg:col-span-2">
+        <div className="col-span-4 flex h-max max-h-full grow  gap-3 overflow-scroll lg:col-span-2">
           <WrapperCard
             name={"Projects"}
             displayEntities={projects ? projects : []}
