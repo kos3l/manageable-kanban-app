@@ -54,12 +54,14 @@ export default function Login() {
               </p>
               <div className="mt-4 flex h-max w-full flex-wrap gap-4">
                 <TextInput
+                  name="email"
                   icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
                   placeholder="Email.."
                   value={email}
                   onChange={(val) => setEmail(val)}
                 ></TextInput>
                 <TextInput
+                  name="password"
                   icon={<KeyIcon className="m-0 w-4 p-0"></KeyIcon>}
                   placeholder="Password.."
                   value={password}

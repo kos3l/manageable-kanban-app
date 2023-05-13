@@ -86,7 +86,7 @@ export default function Profile() {
   }
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-4 sm:h-full sm:flex-nowrap">
+    <div className=" flex h-max w-full flex-wrap gap-4 sm:h-full sm:flex-nowrap 2xl:w-2/3">
       <div className="flex h-80 w-full grow-0 flex-col gap-3 sm:h-full sm:basis-96 md:basis-64 lg:basis-72">
         <div className="w-full overflow-hidden rounded-lg border border-neutral-600 sm:border-0 ">
           <img src={avatar} alt="" className="h-full w-full object-contain" />
@@ -104,8 +104,8 @@ export default function Profile() {
       <div className="flex grid w-full grow-0 grid-cols-4 gap-3 sm:grow 2xl:h-max">
         <div className="col-span-4 flex flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 2xl:h-max">
           <h1 className="text-xl">{user.firstName + " " + user.lastName}</h1>
-          <div className="flex w-full items-center gap-2">
-            <div className="flex basis-24">
+          <div className="flex h-max w-full flex-wrap items-start gap-2 sm:flex-nowrap">
+            <div className="flex w-full sm:w-max sm:basis-24">
               <DisplayField
                 label={"Birthday"}
                 icon={<CakeIcon className="w-5 text-neutral-300"></CakeIcon>}
@@ -116,7 +116,7 @@ export default function Profile() {
                 })}
               ></DisplayField>
             </div>
-            <div className="flex grow truncate">
+            <div className="mt-0.5 flex w-full sm:w-max sm:grow">
               <DisplayField
                 label={"Bio"}
                 placeholder="No description yet"

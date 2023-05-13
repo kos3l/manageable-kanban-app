@@ -17,7 +17,7 @@ export default class NavigationItems {
     },
     {
       name: "My Profile",
-      path: "/user/",
+      path: "/user/profile/",
       icon: <UserIcon className="w-4 text-indigo-500"></UserIcon>,
       param: ":id",
     },

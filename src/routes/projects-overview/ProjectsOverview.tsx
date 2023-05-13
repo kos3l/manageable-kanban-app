@@ -46,7 +46,7 @@ export default function ProjectsOverview() {
   });
 
   return (
-    <div className="grid w-full grid-cols-4 gap-2">
+    <div className="grid h-max w-full grid-cols-4 gap-2">
       <div className="col-span-1">
         <FilledButton
           content={"Create A Project"}
@@ -56,6 +56,7 @@ export default function ProjectsOverview() {
       <div className="col-span-3 flex flex-wrap gap-x-2 gap-y-4">
         <div className="flex h-max flex-auto items-center">
           <TextInput
+            name="search"
             placeholder={"Search..."}
             icon={
               <MagnifyingGlassIcon className="w-4 text-neutral-300"></MagnifyingGlassIcon>
@@ -75,7 +76,7 @@ export default function ProjectsOverview() {
           ></Dropdown>
         </div>
         {data ? (
-          <div className="grid w-full grid-cols-6 gap-2">
+          <div className="grid h-max w-full grid-cols-6 gap-2">
             {data.map((project, index) => {
               return (
                 <div

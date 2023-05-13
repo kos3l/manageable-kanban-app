@@ -44,9 +44,9 @@ const App = ({ queryClient }: any) => {
             loader={profileLoader(queryClient, getLoggedInUserProfile)}
             id="userRoot"
           >
-            <Route path=":id" element={<Profile />} />
+            <Route path="profile/:id" element={<Profile />} />
             <Route
-              path=":id/edit"
+              path="profile/:id/edit"
               element={<EditUser />}
               action={userUpdateAction(queryClient, updateUserProfile)}
             />
