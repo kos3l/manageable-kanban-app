@@ -40,7 +40,7 @@ export const action =
     return redirect(`/user/${params.id}`);
   };
 
-export default function EditUser() {
+export default function EditUserPage() {
   const user = useRouteLoaderData("userRoot") as User;
   const navigate = useNavigate();
 

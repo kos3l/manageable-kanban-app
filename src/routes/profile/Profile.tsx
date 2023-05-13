@@ -62,7 +62,7 @@ const profileQuery = (
   },
 });
 
-export default function Profile() {
+export default function ProfilePage() {
   const { getAllUserProjects } = useProjectService();
   const { getLoggedInUserProfile } = useUserService();
 

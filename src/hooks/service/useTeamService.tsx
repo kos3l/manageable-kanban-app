@@ -1,6 +1,4 @@
 import { AxiosResponse } from "axios";
-import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
-import { IAccessToken } from "../../auth/context/AuthContext";
 import useHttp from "../useHttp";
 import { Team } from "../../models/entities/Team";
 
@@ -12,7 +10,11 @@ const useTeamService = () => {
     return get<void, AxiosResponse<Team[]>>(bastPath);
   };
 
-  return { getAllUserTeams };
+  const getTeamById = (teamId: string) => {
+    return get<void, AxiosResponse<Team>>(bastPath + "/" + teamId);
+  };
+
+  return { getAllUserTeams, getTeamById };
 };
 
 export default useTeamService;

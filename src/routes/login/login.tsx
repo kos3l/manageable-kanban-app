@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthService from "../../hooks/service/useAuthService";
 import gradient from "../../assets/gradient.svg";
 
-export default function Login() {
+export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const { setAuth } = useAuth();

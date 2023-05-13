@@ -20,7 +20,7 @@ enum Sorting {
   OLDEST = "Oldest",
 }
 
-export default function TeamsOverview() {
+export default function TeamsOverviewPage() {
   const navigate = useNavigate();
   const { getAllUserTeams } = useTeamService();
   const [sortingOption, setSortingOption] = useState<string>(Sorting.AZ);

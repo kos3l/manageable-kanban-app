@@ -51,7 +51,7 @@ export const loader =
     );
   };
 
-export default function UserRoot() {
+export default function UserRootPage() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const { auth, setAuth } = useAuth();
   const { logoutUser } = useAuthService();

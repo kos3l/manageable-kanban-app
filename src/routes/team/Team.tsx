@@ -1,11 +1,46 @@
-import { PlusIcon, UsersIcon } from "@heroicons/react/24/solid";
+import { AxiosResponse } from "axios";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
-import ActionButton from "../../ui/buttons/ActionButton";
-import FilledButton from "../../ui/buttons/FilledButton";
-import TeamCard from "../../ui/cards/TeamCard";
+import { Team } from "../../models/entities/Team";
 
-export default function Team() {
-  return <div className="grid w-full grid-cols-6 gap-3">Team PAGEEE</div>;
+const teamByIdQuery = (
+  teamId: string,
+  getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>
+) => ({
+  queryKey: ["team", teamId],
+  queryFn: async () => {
+    const response = await getTeamById(teamId);
+    if (response.status == 403) {
+      throw new Error("Token expired");
+    }
+    if (!response) {
+      throw new Response("", {
+        status: 404,
+        statusText: "Not Found",
+      });
+    }
+    return response.data;
+  },
+});
+
+export default function TeamPage() {
+  const { id } = useParams();
+  const { getTeamById } = useTeamService();
+
+  if (!id) {
+    return <>No team id found</>;
+  }
+
+  const { data: team } = useQuery(teamByIdQuery(id, getTeamById));
+
+  return (
+    <div className=" flex w-full gap-3">
+      <div className="flex basis-80 flex-col rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
+        <h1 className="font-serif text-lg tracking-wider">{team?.name}</h1>
+      </div>
+      <div className="flex grow rounded-lg border border-neutral-600"></div>
+      <div className="flex grow rounded-lg border border-neutral-600"></div>
+    </div>
+  );
 }

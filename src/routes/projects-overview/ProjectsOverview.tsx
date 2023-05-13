@@ -24,7 +24,7 @@ enum Sorting {
   OLDEST = "Oldest",
 }
 
-export default function ProjectsOverview() {
+export default function ProjectsOverviewPage() {
   const navigate = useNavigate();
   const { getAllUserProjects } = useProjectService();
   const [sortingOption, setSortingOption] = useState<string>(Sorting.AZ);
