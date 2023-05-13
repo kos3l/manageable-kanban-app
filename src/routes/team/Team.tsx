@@ -151,6 +151,7 @@ export default function TeamPage() {
             <UserCard
               key={user._id}
               user={user}
+              isActionCard={false}
               icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
             ></UserCard>
           )}

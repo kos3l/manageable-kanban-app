@@ -14,13 +14,13 @@ import {
   useNavigate,
   useRouteLoaderData,
 } from "react-router-dom";
-import { IUpdateUserDTO } from "../../../models/dto/user/IUpdateUserDTO";
-import { User } from "../../../models/entities/User";
-import ActionButton from "../../../ui/buttons/ActionButton";
-import DateInput from "../../../ui/inputs/DateInput";
-import TextareaInput from "../../../ui/inputs/TextareaInput";
-import TextInput from "../../../ui/inputs/TextInput";
-import { DateHelper } from "../../../util/helpers/DateHelper";
+import { IUpdateUserDTO } from "../../models/dto/user/IUpdateUserDTO";
+import { User } from "../../models/entities/User";
+import ActionButton from "../../ui/buttons/ActionButton";
+import DateInput from "../../ui/inputs/DateInput";
+import TextareaInput from "../../ui/inputs/TextareaInput";
+import TextInput from "../../ui/inputs/TextInput";
+import { DateHelper } from "../../util/helpers/DateHelper";
 
 export const action =
   (

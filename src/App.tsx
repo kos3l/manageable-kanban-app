@@ -12,7 +12,7 @@ import PrivateRoutes from "./auth/components/ProtectedRoute";
 import { loader as profileLoader } from "./routes/user/user-root/UserRoot";
 import PageNotFound from "./routes/404/PageNotFound";
 import useUserService from "./hooks/service/useUserService";
-import { action as userUpdateAction } from "./routes/user/edit-user/EditUser";
+import { action as userUpdateAction } from "./routes/profile/EditUser";
 import TeamPage, { loader as teamLoader } from "./routes/team/Team";
 import HomePage from "./routes/home/home";
 import LoginPage from "./routes/login/login";
@@ -21,19 +21,21 @@ import ProjectPage from "./routes/project/Project";
 import ProjectsOverviewPage from "./routes/projects-overview/ProjectsOverview";
 import RegisterPage from "./routes/register/Register";
 import TeamsOverviewPage from "./routes/teams-overview/TeamsOverview";
-import EditUserPage from "./routes/user/edit-user/EditUser";
+import EditUserPage from "./routes/profile/EditUser";
 import UserDashboardPage from "./routes/user/user-dashboard/UserDashboard";
 import UserRootPage from "./routes/user/user-root/UserRoot";
 import useTeamService from "./hooks/service/useTeamService";
 import CreateTeam, {
   action as createTeamAction,
 } from "./routes/team/CreateTeam";
-import UpdateTeamMembersPage from "./routes/team/UpdateTeamMembers";
+import UpdateTeamMembersPage, {
+  action as updateTeamMembersAction,
+} from "./routes/team/UpdateTeamMembers";
 import TeamRoot from "./routes/team/TeamRoot";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
-  const { getTeamById, createNewTeam } = useTeamService();
+  const { getTeamById, createNewTeam, updateTeamMembers } = useTeamService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -71,7 +73,7 @@ const App = ({ queryClient }: any) => {
               ></Route>
               <Route
                 path="update-members"
-                // action={createTeamAction(queryClient, createNewTeam)}
+                action={updateTeamMembersAction(queryClient, updateTeamMembers)}
                 element={<UpdateTeamMembersPage />}
               />
             </Route>
