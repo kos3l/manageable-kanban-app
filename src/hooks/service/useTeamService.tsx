@@ -2,9 +2,10 @@ import { AxiosResponse } from "axios";
 import useHttp from "../useHttp";
 import { Team } from "../../models/entities/Team";
 import { ICreateTeamDTO } from "../../models/dto/team/ICreateTeamDTO";
+import { IUpdateTeamUsersDTO } from "../../models/dto/team/IUpdateTeamUsersDTO";
 
 const useTeamService = () => {
-  const { post, get } = useHttp();
+  const { post, get, put } = useHttp();
   const bastPath = "/api/team";
 
   const getAllUserTeams = () => {
@@ -25,7 +26,17 @@ const useTeamService = () => {
     });
   };
 
-  return { getAllUserTeams, getTeamById, createNewTeam };
+  const updateTeamMembers = (teamId: string, teamDto: IUpdateTeamUsersDTO) => {
+    return put<IUpdateTeamUsersDTO, AxiosResponse<void>>(
+      bastPath + "/" + teamId + "/UpdateMembers",
+      teamDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  return { getAllUserTeams, getTeamById, createNewTeam, updateTeamMembers };
 };
 
 export default useTeamService;

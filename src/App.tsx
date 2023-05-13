@@ -28,6 +28,8 @@ import useTeamService from "./hooks/service/useTeamService";
 import CreateTeam, {
   action as createTeamAction,
 } from "./routes/team/CreateTeam";
+import UpdateTeamMembersPage from "./routes/team/UpdateTeamMembers";
+import TeamRoot from "./routes/team/TeamRoot";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -57,10 +59,22 @@ const App = ({ queryClient }: any) => {
             <Route path="user-dashboard" element={<UserDashboardPage />} />
             <Route path="teams-overview" element={<TeamsOverviewPage />} />
             <Route
-              path="teams/:id"
-              element={<TeamPage />}
+              path="teams/:id/"
+              element={<TeamRoot />}
               loader={teamLoader(queryClient, getTeamById)}
-            />
+              id="selectedTeam"
+            >
+              <Route
+                path=""
+                element={<TeamPage />}
+                loader={teamLoader(queryClient, getTeamById)}
+              ></Route>
+              <Route
+                path="update-members"
+                // action={createTeamAction(queryClient, createNewTeam)}
+                element={<UpdateTeamMembersPage />}
+              />
+            </Route>
             <Route
               path="teams/create"
               action={createTeamAction(queryClient, createNewTeam)}

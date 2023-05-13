@@ -97,10 +97,10 @@ export default function TeamPage() {
         </div>
         <div className="flex w-full flex-wrap gap-4 md:flex-nowrap xl:flex-col">
           <div className="grow basis-full md:basis-1/3">
-            <Link to={"./addMemers"}>
+            <Link to={"./update-members"}>
               <ActionButton
                 color="indigo"
-                content={"Add members"}
+                content={"Edit members"}
                 icon={
                   <UserPlusIcon className="w-5 text-indigo-500"></UserPlusIcon>
                 }
