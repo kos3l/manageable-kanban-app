@@ -13,7 +13,7 @@ import { loader as profileLoader } from "./routes/user/user-root/UserRoot";
 import PageNotFound from "./routes/404/PageNotFound";
 import useUserService from "./hooks/service/useUserService";
 import { action as userUpdateAction } from "./routes/user/edit-user/EditUser";
-import TeamPage from "./routes/team/Team";
+import TeamPage, { loader as teamLoader } from "./routes/team/Team";
 import HomePage from "./routes/home/home";
 import LoginPage from "./routes/login/login";
 import ProfilePage from "./routes/profile/Profile";
@@ -24,9 +24,12 @@ import TeamsOverviewPage from "./routes/teams-overview/TeamsOverview";
 import EditUserPage from "./routes/user/edit-user/EditUser";
 import UserDashboardPage from "./routes/user/user-dashboard/UserDashboard";
 import UserRootPage from "./routes/user/user-root/UserRoot";
+import useTeamService from "./hooks/service/useTeamService";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
+  const { getTeamById } = useTeamService();
+
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="">
@@ -50,7 +53,11 @@ const App = ({ queryClient }: any) => {
             />
             <Route path="user-dashboard" element={<UserDashboardPage />} />
             <Route path="teams-overview" element={<TeamsOverviewPage />} />
-            <Route path="teams/:id" element={<TeamPage />} />
+            <Route
+              path="teams/:id"
+              element={<TeamPage />}
+              loader={teamLoader(queryClient, getTeamById)}
+            />
             <Route
               path="projects-overview"
               element={<ProjectsOverviewPage />}

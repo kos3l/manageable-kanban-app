@@ -7,16 +7,19 @@ import {
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { ReactNode } from "react";
-import { useQuery } from "react-query";
+import { QueryClient, useQuery } from "react-query";
 import { Link, useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
+import { User } from "../../models/entities/User";
 import ActionButton from "../../ui/buttons/ActionButton";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import UserCard from "../../ui/cards/UserCard";
 import WrapperCard from "../../ui/cards/WrapperCard";
 import DisplayField from "../../ui/display-field/DisplayField";
+import { profileQuery } from "../user/user-root/UserRoot";
 
+// move this to a loader
 const teamByIdQuery = (
   teamId: string,
   getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>
@@ -36,6 +39,23 @@ const teamByIdQuery = (
     return response.data;
   },
 });
+
+export const loader =
+  (
+    queryClient: QueryClient,
+    getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>
+  ) =>
+  async ({ params }: any) => {
+    const query = teamByIdQuery(params.id, getTeamById);
+    const invalidated = queryClient.getQueryState(query.queryKey);
+    if (invalidated) {
+      return await queryClient.fetchQuery(query);
+    }
+    return (
+      queryClient.getQueryData(query.queryKey) ??
+      (await queryClient.fetchQuery(query))
+    );
+  };
 
 export default function TeamPage() {
   const { id } = useParams();
@@ -57,7 +77,7 @@ export default function TeamPage() {
   team.projectModels = team.projectModels?.sort((a, b) => b.status - a.status);
 
   return (
-    <div className="flex w-full flex-wrap gap-3 xl:flex-nowrap">
+    <div className="flex h-max w-full flex-wrap gap-3 xl:flex-nowrap">
       <div className="flex h-max w-full flex-col gap-3 xl:basis-80 ">
         <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
           <h1 className="break-word font-serif text-lg tracking-wider">
@@ -75,7 +95,6 @@ export default function TeamPage() {
             value={team.description}
           ></DisplayField>
         </div>
-
         <Link to={"./addMemers"}>
           <div className="w-full sm:w-56 xl:w-full">
             <ActionButton
