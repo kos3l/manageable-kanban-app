@@ -32,6 +32,7 @@ import FilledButton from "../../ui/buttons/FilledButton";
 import { User } from "../../models/entities/User";
 import useUserService from "../../hooks/service/useUserService";
 import { IUpdateTeamUsersDTO } from "../../models/dto/team/IUpdateTeamUsersDTO";
+import DisplayField from "../../ui/display-field/DisplayField";
 
 export const action =
   (
@@ -94,17 +95,41 @@ export default function UpdateTeamMembersPage() {
     setSearchEnabled(true);
   }
 
+  function handleRemoveUser(user: User) {
+    let formData = new FormData();
+    const removedUser = team.users.filter((userId) => userId !== user._id);
+    formData.append("user", JSON.stringify(removedUser));
+    submit(formData, { method: "post" });
+  }
+
+  function handleAddUser(fetchedUser: User) {
+    let formData = new FormData();
+    const users = [...team.users, fetchedUser._id];
+    formData.append("user", JSON.stringify(users));
+    submit(formData, { method: "post" });
+  }
+
+  const teamCreator = team.userModels?.find(
+    (user) => user._id == team.createdBy
+  );
+
   return (
-    <div className="flex w-3/4 flex-wrap justify-center gap-3 md:justify-start 2xl:justify-center">
+    <div className="flex w-full flex-wrap justify-center gap-3 md:w-3/4 md:justify-start 2xl:justify-center">
       <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
         <div className="w-20 overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
           <img src={avatar} alt="" className="h-full w-full object-contain" />
         </div>
-        <div className="flex w-max flex-col">
-          <p className="font-serif text-lg font-medium leading-5 tracking-wider text-neutral-600">
-            Team:
-          </p>
-          <h1 className="font-serif text-xl tracking-wider">{team.name}</h1>
+        <div className="flex w-max flex-col gap-2">
+          <DisplayField
+            label={"Team:"}
+            value={team.name}
+            placeholder={""}
+          ></DisplayField>
+          <DisplayField
+            label={"Created By"}
+            value={teamCreator?.firstName + " " + teamCreator?.lastName}
+            placeholder={""}
+          ></DisplayField>
         </div>
       </div>
       <WrapperCard
@@ -112,17 +137,12 @@ export default function UpdateTeamMembersPage() {
         displayEntities={team.userModels ? team.userModels : []}
         displayComponent={(user) => (
           <UserCard
-            isActionCard={true}
+            isActionCard={team.createdBy !== user._id}
             key={user._id}
             user={user}
             color="red"
             onClick={() => {
-              let formData = new FormData();
-              const removedUser = team.users.filter(
-                (userId) => userId !== user._id
-              );
-              formData.append("user", JSON.stringify(removedUser));
-              submit(formData, { method: "post" });
+              handleRemoveUser(user);
             }}
             icon={<TrashIcon className="w-5 text-red-500"></TrashIcon>}
           ></UserCard>
@@ -133,8 +153,8 @@ export default function UpdateTeamMembersPage() {
           <p className="font-serif tracking-wider">Invite New Member..</p>
         </div>
         <div className="flex w-full flex-col gap-3">
-          <div className="flex w-full gap-2">
-            <div className="flex basis-56">
+          <div className="flex w-full flex-wrap gap-2 sm:flex-nowrap">
+            <div className="flex basis-full sm:basis-56 ">
               <TextInput
                 placeholder={"email"}
                 icon={<AtSymbolIcon className="w-5"></AtSymbolIcon>}
@@ -142,7 +162,7 @@ export default function UpdateTeamMembersPage() {
                 name={"email"}
               ></TextInput>
             </div>
-            <div className=" flex grow">
+            <div className="flex grow">
               <FilledButton
                 content={"Search"}
                 onClick={() => handleSearchClick()}
@@ -154,13 +174,10 @@ export default function UpdateTeamMembersPage() {
           </div>
           {fetchedUser && fetchedUser.data ? (
             <UserCard
-              isActionCard={true}
+              isActionCard={!team.users.includes(fetchedUser.data._id)}
               user={fetchedUser.data}
               onClick={() => {
-                let formData = new FormData();
-                const users = [...team.users, fetchedUser.data._id];
-                formData.append("user", JSON.stringify(users));
-                submit(formData, { method: "post" });
+                handleAddUser(fetchedUser.data);
               }}
               color="indigo"
               icon={<PlusIcon className="w-5 text-indigo-500"></PlusIcon>}
