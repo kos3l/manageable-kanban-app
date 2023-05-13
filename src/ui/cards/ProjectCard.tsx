@@ -7,6 +7,7 @@ import { colorIndex } from "../../models/util/ColorIndex";
 
 interface IProps {
   project: Project;
+  teamName?: string;
   icon: ReactNode;
 }
 
@@ -18,7 +19,7 @@ type colorVariants = {
 };
 
 export default function ProjectCard(props: IProps) {
-  const { icon, project } = props;
+  const { icon, project, teamName } = props;
 
   const labelVariants: colorIndex & colorVariants = {
     COMPLETED:
@@ -56,7 +57,7 @@ export default function ProjectCard(props: IProps) {
         <div className="flex-co flex h-max w-full">
           <p className="truncate font-serif text-lg leading-5 tracking-widest">
             <span className="truncate font-sans text-base tracking-normal text-neutral-500">
-              {project.team[0].name}
+              {teamName ? teamName : project.team[0].name}
             </span>
             <br />
             {project.name}
