@@ -116,6 +116,14 @@ export default function UpdateTeamMembersPage() {
             key={user._id}
             user={user}
             color="red"
+            onClick={() => {
+              let formData = new FormData();
+              const removedUser = team.users.filter(
+                (userId) => userId !== user._id
+              );
+              formData.append("user", JSON.stringify(removedUser));
+              submit(formData, { method: "post" });
+            }}
             icon={<TrashIcon className="w-5 text-red-500"></TrashIcon>}
           ></UserCard>
         )}
@@ -164,18 +172,6 @@ export default function UpdateTeamMembersPage() {
               </p>
             </div>
           )}
-          {/* {team && team.userModels ? (
-            team.userModels.map((user) => (
-              <UserCard
-                isActionCard={false}
-                key={user._id}
-                user={user}
-                icon={<TrashIcon className="w-5 text-red-500"></TrashIcon>}
-              ></UserCard>
-            ))
-          ) : (
-            <></>
-          )} */}
         </div>
       </div>
     </div>
