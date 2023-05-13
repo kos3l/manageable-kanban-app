@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Navigate, Outlet, Route } from "react-router-dom";
+import { Navigate, Outlet, Route, Router } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import useHttp from "../../hooks/useHttp";
 import useRefreshToken from "../../hooks/useRefreshToken";
@@ -21,7 +21,7 @@ const PrivateRoutes = () => {
   };
 
   useEffect(() => {
-    if (!auth?.accessToken) {
+    if (auth.accessToken == "") {
       verifyRefreshToken();
     } else {
       setIsLoading(false);

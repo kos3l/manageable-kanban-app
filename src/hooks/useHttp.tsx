@@ -90,7 +90,6 @@ const useHttp = () => {
         if (error?.response?.status === 401 && !prevRequest?.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
-          console.log(newAccessToken);
           prevRequest.headers["auth-token"] = newAccessToken;
           return http(prevRequest);
         }

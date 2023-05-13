@@ -1,5 +1,5 @@
 import { QueryClient, useQuery } from "react-query";
-import { Link, Outlet, useLoaderData } from "react-router-dom";
+import { Link, Outlet, redirect, useLoaderData } from "react-router-dom";
 import avatar from "../../../assets/avatar.png";
 import useAuth from "../../../hooks/useAuth";
 import logo from "../../../assets/Logo.svg";
@@ -65,7 +65,7 @@ export default function UserRootPage() {
     },
     onSuccess: (data: any) => {
       setAuth((prev) => {
-        return { accessToken: "" };
+        return { accessToken: null };
       });
     },
     enabled: false,

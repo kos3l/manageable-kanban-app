@@ -36,6 +36,7 @@ import TeamRoot, {
   action as deleteTeamAction,
 } from "./routes/team/TeamRoot";
 import EditTeam, { action as updateTeamAction } from "./routes/team/EditTeam";
+
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
   const {
