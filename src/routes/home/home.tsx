@@ -6,7 +6,7 @@ import {
 import { Link } from "react-router-dom";
 import LandingButton from "../../ui/buttons/LandingButton";
 import mock from "../../assets/demo.png";
-export default function Home() {
+export default function HomePage() {
   return (
     <>
       <div className="mt-20 flex grid grid-cols-6 gap-16">

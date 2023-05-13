@@ -1,7 +1,6 @@
 type ICreateTeamDTO = {
   name: string;
-  createdBy: string;
-  users: string[];
+  description?: string;
 };
 
 export { type ICreateTeamDTO };

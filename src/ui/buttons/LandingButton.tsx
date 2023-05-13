@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { colorIndex } from "../../models/util/ColorIndex";
 
 interface IProps {
   content: string;
@@ -6,24 +7,22 @@ interface IProps {
   color: string;
 }
 
-type test = {
+type colorVariants = {
   indigo: string;
   pink: string;
-};
-type testIndex = {
-  [key: string]: string;
+  white: string;
 };
 
 export default function LandingButton(props: IProps) {
   const { icon, content, color } = props;
-  const wrapperColorVariants: testIndex & test = {
+  const wrapperColorVariants: colorIndex & colorVariants = {
     indigo:
-      "flex w-full items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-4xl hover:transition",
-    pink: "flex w-full items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-pink-600 hover:drop-shadow-4xl hover:transition",
+      "flex w-full items-center gap-4 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-4xl hover:transition",
+    pink: "flex w-full items-center gap-4 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-pink-600 hover:drop-shadow-4xl hover:transition",
     white:
-      "flex w-full items-center gap-4 rounded-xl border-2 border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
+      "flex w-full items-center gap-4 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
   };
-  const boxColorVariants: testIndex & test = {
+  const boxColorVariants: colorIndex & colorVariants = {
     indigo:
       "flex h-10 w-10 items-center justify-center rounded-lg bg-indigo-600/30",
     pink: "flex h-10 w-10 items-center justify-center rounded-lg bg-pink-600/30",

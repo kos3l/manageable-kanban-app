@@ -16,7 +16,7 @@ import TextInput from "../../ui/inputs/TextInput";
 import { DateHelper } from "../../util/helpers/DateHelper";
 import gradient from "../../assets/gradient.svg";
 
-export default function Register() {
+export default function RegisterPage() {
   const [firstName, setFirstName] = useState<string>("");
   const [lastName, setLastName] = useState<string>("");
   const [birthday, setBirthday] = useState<Date>(new Date());
@@ -44,7 +44,7 @@ export default function Register() {
       <div className="relative z-20 flex grow">
         <div className="flex w-full items-center justify-center p-4">
           <div className="flex h-max w-full flex-col gap-6 pb-12 sm:w-2/3 md:w-[35rem] 2xl:w-2/3">
-            <div className="flex h-max w-full flex-col rounded-xl border-2 border-neutral-600 bg-neutral-800/50 p-4">
+            <div className="flex h-max w-full flex-col rounded-lg border border-neutral-600 bg-neutral-800/50 p-4">
               <h1 className="m-0 mb-1 font-serif text-2xl font-bold tracking-wider">
                 Let's start!
               </h1>
@@ -59,6 +59,7 @@ export default function Register() {
                   placeholder="First Name.."
                   value={firstName}
                   onChange={(val) => setFirstName(val)}
+                  name="firstName"
                 ></TextInput>
                 <TextInput
                   icon={
@@ -67,28 +68,33 @@ export default function Register() {
                   placeholder="Last Name.."
                   value={lastName}
                   onChange={(val) => setLastName(val)}
+                  name="lastName"
                 ></TextInput>
                 <DateInput
                   icon={<CakeIcon className="m-0 w-5 p-0"></CakeIcon>}
                   value={DateHelper.formatDateToString(birthday, "YYYY-MM-DD")}
                   onChange={(val) => setBirthday(new Date(val))}
+                  name="birthday"
                 ></DateInput>
                 <TextInput
                   icon={<AtSymbolIcon className="m-0 w-5 p-0"></AtSymbolIcon>}
                   placeholder="Email.."
                   value={email}
                   onChange={(val) => setEmail(val)}
+                  name="email"
                 ></TextInput>
                 <TextInput
                   icon={<KeyIcon className="m-0 w-4 p-0"></KeyIcon>}
                   placeholder="Password.."
                   value={password}
                   onChange={(val) => setPassword(val)}
+                  name="password"
                 ></TextInput>
               </div>
             </div>
             <div className="w-full">
               <ActionButton
+                color="indigo"
                 onClick={() => {
                   mutation.mutate({
                     firstName: firstName,

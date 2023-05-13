@@ -1,12 +1,17 @@
+import { Project } from "./Project";
+import { User } from "./User";
+
 type Team = {
-  id: string;
+  _id: string;
   name: string;
   createdBy: string;
+  description?: string;
   picture?: string;
   users: string[];
   projects?: string[];
-  isDeleted: boolean;
-  deletedAt?: Date;
+  createdAt: Date;
+  userModels?: User[];
+  projectModels?: Project[];
 };
 
 export { type Team };
