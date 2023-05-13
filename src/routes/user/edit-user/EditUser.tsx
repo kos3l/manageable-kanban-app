@@ -33,6 +33,9 @@ export const action =
   async ({ request, params }: any) => {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData) as IUpdateUserDTO;
+    if (updates.bio == "" || !updates.bio) {
+      delete updates.bio;
+    }
     await updateUser(params.id, updates);
     await queryClient.invalidateQueries({
       queryKey: ["profile"],
