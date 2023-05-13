@@ -10,7 +10,9 @@ const useProjectService = () => {
   const bastPath = "/api/project";
 
   const getAllUserProjects = () => {
-    return get<void, AxiosResponse<Project[]>>(bastPath + "/user");
+    return get<void, AxiosResponse<Project[]>>(bastPath + "/user", {
+      withCredentials: true,
+    });
   };
 
   return { getAllUserProjects };

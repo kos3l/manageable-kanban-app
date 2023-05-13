@@ -46,7 +46,7 @@ export default function ProjectsOverviewPage() {
   });
 
   return (
-    <div className="grid h-max w-full grid-cols-4 gap-2">
+    <div className="grid h-max w-full grid-cols-4 gap-2 2xl:w-3/4">
       <div className="col-span-1">
         <FilledButton
           content={"Create A Project"}
