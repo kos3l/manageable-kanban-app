@@ -77,7 +77,7 @@ export default function TeamPage() {
   team.projectModels = team.projectModels?.sort((a, b) => b.status - a.status);
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-3 xl:flex-nowrap">
+    <div className="flex h-max w-full flex-wrap gap-3 xl:flex-nowrap 2xl:w-3/4">
       <div className="flex h-max w-full flex-col gap-3 xl:basis-80 ">
         <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
           <h1 className="break-word font-serif text-lg tracking-wider">

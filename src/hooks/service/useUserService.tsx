@@ -17,7 +17,8 @@ const useUserService = () => {
   const updateUserProfile = (userId: string, userDto: IUpdateUserDTO) => {
     return put<IUpdateUserDTO, AxiosResponse<void>>(
       bastPath + "/" + userId,
-      userDto
+      userDto,
+      { withCredentials: true }
     );
   };
 

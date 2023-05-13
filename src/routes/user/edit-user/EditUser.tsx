@@ -37,7 +37,7 @@ export const action =
     await queryClient.invalidateQueries({
       queryKey: ["profile"],
     });
-    return redirect(`/user/${params.id}`);
+    return redirect(`/user/profile/${params.id}`);
   };
 
 export default function EditUserPage() {

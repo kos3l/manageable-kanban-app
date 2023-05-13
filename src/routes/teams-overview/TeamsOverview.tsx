@@ -42,7 +42,7 @@ export default function TeamsOverviewPage() {
   });
   console.log(Object.values(Sorting));
   return (
-    <div className="grid h-max w-full grid-cols-4 gap-2">
+    <div className="grid h-max w-full grid-cols-4 gap-2 2xl:w-3/4">
       <div className="col-span-1">
         <Link to={"../teams/create"}>
           <FilledButton
