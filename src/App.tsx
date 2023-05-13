@@ -13,7 +13,7 @@ import { loader as profileLoader } from "./routes/user/user-root/UserRoot";
 import PageNotFound from "./routes/404/PageNotFound";
 import useUserService from "./hooks/service/useUserService";
 import { action as userUpdateAction } from "./routes/profile/EditUser";
-import TeamPage, { loader as teamLoader } from "./routes/team/Team";
+import TeamPage from "./routes/team/Team";
 import HomePage from "./routes/home/home";
 import LoginPage from "./routes/login/login";
 import ProfilePage from "./routes/profile/Profile";
@@ -31,13 +31,20 @@ import CreateTeam, {
 import UpdateTeamMembersPage, {
   action as updateTeamMembersAction,
 } from "./routes/team/UpdateTeamMembers";
-import TeamRoot from "./routes/team/TeamRoot";
+import TeamRoot, {
+  loader as teamLoader,
+  action as deleteTeamAction,
+} from "./routes/team/TeamRoot";
 import EditTeam, { action as updateTeamAction } from "./routes/team/EditTeam";
-
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
-  const { getTeamById, createNewTeam, updateTeamMembers, updateTeam } =
-    useTeamService();
+  const {
+    getTeamById,
+    createNewTeam,
+    updateTeamMembers,
+    updateTeam,
+    deleteTeam,
+  } = useTeamService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -66,13 +73,10 @@ const App = ({ queryClient }: any) => {
               path="teams/:id/"
               element={<TeamRoot />}
               loader={teamLoader(queryClient, getTeamById)}
+              action={deleteTeamAction(queryClient, deleteTeam)}
               id="selectedTeam"
             >
-              <Route
-                path=""
-                element={<TeamPage />}
-                loader={teamLoader(queryClient, getTeamById)}
-              ></Route>
+              <Route path="" element={<TeamPage />}></Route>
               <Route
                 path="edit"
                 element={<EditTeam />}

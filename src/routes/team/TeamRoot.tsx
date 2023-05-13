@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import { QueryClient, useQuery } from "react-query";
-import { Outlet, useParams } from "react-router-dom";
+import { Outlet, redirect, useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
 
@@ -42,7 +42,20 @@ export const loader =
     );
   };
 
-export default function TeamPage() {
+export const action =
+  (
+    queryClient: QueryClient,
+    deleteTeam: (teamId: string) => Promise<AxiosResponse<void, any>>
+  ) =>
+  async ({ request, params }: any) => {
+    await deleteTeam(params.id);
+    await queryClient.invalidateQueries({
+      queryKey: ["team", "teams", "projects", "user", "profile", params.id],
+    });
+    return redirect(`/user/teams-overview`);
+  };
+
+export default function TeamRootPage() {
   const { id } = useParams();
   const { getTeamById } = useTeamService();
 

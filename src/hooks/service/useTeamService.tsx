@@ -6,7 +6,7 @@ import { IUpdateTeamUsersDTO } from "../../models/dto/team/IUpdateTeamUsersDTO";
 import { IUpdateTeamDTO } from "../../models/dto/team/IUpdateTeamDTO";
 
 const useTeamService = () => {
-  const { post, get, put } = useHttp();
+  const { post, get, put, remove } = useHttp();
   const bastPath = "/api/team";
 
   const getAllUserTeams = () => {
@@ -47,12 +47,19 @@ const useTeamService = () => {
     );
   };
 
+  const deleteTeam = (teamId: string) => {
+    return remove<void, AxiosResponse<void>>(bastPath + "/" + teamId, {
+      withCredentials: true,
+    });
+  };
+
   return {
     getAllUserTeams,
     getTeamById,
     createNewTeam,
     updateTeamMembers,
     updateTeam,
+    deleteTeam,
   };
 };
 

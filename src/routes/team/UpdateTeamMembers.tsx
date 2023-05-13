@@ -96,10 +96,15 @@ export default function UpdateTeamMembersPage() {
   }
 
   function handleRemoveUser(user: User) {
-    let formData = new FormData();
-    const removedUser = team.users.filter((userId) => userId !== user._id);
-    formData.append("user", JSON.stringify(removedUser));
-    submit(formData, { method: "post" });
+    const warning = confirm(
+      "If you remove this user, they will not be able to access projects and tasks on this team, do you confirm?"
+    );
+    if (warning) {
+      let formData = new FormData();
+      const removedUser = team.users.filter((userId) => userId !== user._id);
+      formData.append("user", JSON.stringify(removedUser));
+      submit(formData, { method: "post" });
+    }
   }
 
   function handleAddUser(fetchedUser: User) {
