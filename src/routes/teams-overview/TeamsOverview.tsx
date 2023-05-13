@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import FilledButton from "../../ui/buttons/FilledButton";
 import TeamCard from "../../ui/cards/TeamCard";
@@ -44,10 +44,12 @@ export default function TeamsOverviewPage() {
   return (
     <div className="grid h-max w-full grid-cols-4 gap-2">
       <div className="col-span-1">
-        <FilledButton
-          content={"Create A Team"}
-          icon={<PlusIcon className="w-4 text-neutral-300"></PlusIcon>}
-        ></FilledButton>
+        <Link to={"../teams/create"}>
+          <FilledButton
+            content={"Create A Team"}
+            icon={<PlusIcon className="w-4 text-neutral-300"></PlusIcon>}
+          ></FilledButton>
+        </Link>
       </div>
       <div className="col-span-3 flex flex-wrap gap-x-2 gap-y-4">
         <div className="flex h-max flex-auto items-center">

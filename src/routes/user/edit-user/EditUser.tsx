@@ -32,7 +32,7 @@ export const action =
   ) =>
   async ({ request, params }: any) => {
     const formData = await request.formData();
-    const updates = Object.fromEntries(formData);
+    const updates = Object.fromEntries(formData) as IUpdateUserDTO;
     await updateUser(params.id, updates);
     await queryClient.invalidateQueries({
       queryKey: ["profile"],
@@ -55,7 +55,7 @@ export default function EditUserPage() {
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"
       >
-        <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 p-3">
+        <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
           <h1 className="font-serif text-lg tracking-wider">Edit User</h1>
           <TextInput
             icon={

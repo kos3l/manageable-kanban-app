@@ -29,7 +29,7 @@ export default class NavigationItems {
     },
     {
       name: "Create A Team",
-      path: "/user/team-create",
+      path: "/user/teams/create",
       icon: <PlusIcon className="w-4 text-indigo-500"></PlusIcon>,
     },
     {

@@ -25,10 +25,13 @@ import EditUserPage from "./routes/user/edit-user/EditUser";
 import UserDashboardPage from "./routes/user/user-dashboard/UserDashboard";
 import UserRootPage from "./routes/user/user-root/UserRoot";
 import useTeamService from "./hooks/service/useTeamService";
+import CreateTeam, {
+  action as createTeamAction,
+} from "./routes/team/CreateTeam";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
-  const { getTeamById } = useTeamService();
+  const { getTeamById, createNewTeam } = useTeamService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -57,6 +60,11 @@ const App = ({ queryClient }: any) => {
               path="teams/:id"
               element={<TeamPage />}
               loader={teamLoader(queryClient, getTeamById)}
+            />
+            <Route
+              path="teams/create"
+              action={createTeamAction(queryClient, createNewTeam)}
+              element={<CreateTeam />}
             />
             <Route
               path="projects-overview"

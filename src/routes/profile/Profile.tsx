@@ -20,8 +20,9 @@ import { Project } from "../../models/entities/Project";
 import useProjectService from "../../hooks/service/useProjectService";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import useUserService from "../../hooks/service/useUserService";
+import WrapperCard from "../../ui/cards/WrapperCard";
 
 const projectsWithTeamsQuery = (
   getAllUserProjects: () => Promise<AxiosResponse<Project[], any>>
@@ -87,8 +88,8 @@ export default function ProfilePage() {
 
   return (
     <div className=" flex h-max w-full flex-wrap gap-4 sm:h-full sm:flex-nowrap 2xl:w-2/3">
-      <div className="flex h-80 w-full grow-0 flex-col gap-3 sm:h-full sm:basis-96 md:basis-64 lg:basis-72">
-        <div className="w-full overflow-hidden rounded-lg border border-neutral-600 sm:border-0 ">
+      <div className="flex h-80 w-full grow-0 flex-col gap-3  sm:h-full sm:basis-96 md:basis-64 lg:basis-72">
+        <div className="w-full overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
           <img src={avatar} alt="" className="h-full w-full object-contain" />
         </div>
         <Link to={"./edit"}>
@@ -125,49 +126,32 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-        <div className="col-span-4 flex h-max max-h-full grow flex-col gap-3 rounded-lg border border-neutral-600 p-3 lg:col-span-2">
-          <div className="flex w-full items-center justify-between">
-            <p className="font-serif tracking-wider">Teams</p>
-            <p className="text-xl font-medium text-indigo-500">
-              {teams?.length}
-            </p>
-          </div>
-          <div className="flex w-full flex-col gap-3">
-            {teams.map((team, index) => {
-              return (
-                <div
-                  className="col-span-6 sm:col-span-3 md:col-span-2"
-                  key={index}
-                >
-                  <TeamCard
-                    team={team}
-                    icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
-                  ></TeamCard>
-                </div>
-              );
-            })}
-          </div>
+        <div className="col-span-4 flex h-max max-h-full grow flex-col lg:col-span-2">
+          <WrapperCard
+            name={"Teams"}
+            displayEntities={teams}
+            displayComponent={(team) => (
+              <TeamCard
+                team={team}
+                icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
+              ></TeamCard>
+            )}
+          ></WrapperCard>
         </div>
-        <div className="col-span-4 flex h-max max-h-full grow flex-col gap-3 overflow-scroll rounded-lg border border-neutral-600 p-3 lg:col-span-2">
-          <div className="flex w-full items-center justify-between">
-            <p className="font-serif tracking-wider">Projects</p>
-            <p className="text-xl font-medium text-indigo-500">
-              {projects?.length}
-            </p>
-          </div>
-          <div className="flex w-full flex-col gap-3">
-            {projects?.map((project, index) => {
-              return (
-                <ProjectCard
-                  key={index}
-                  project={project}
-                  icon={
-                    <ClipboardDocumentListIcon className="w-6 text-indigo-500"></ClipboardDocumentListIcon>
-                  }
-                ></ProjectCard>
-              );
-            })}
-          </div>
+        <div className="col-span-4 flex h-max max-h-full grow flex-col gap-3 overflow-scroll lg:col-span-2">
+          <WrapperCard
+            name={"Projects"}
+            displayEntities={projects ? projects : []}
+            displayComponent={(project) => (
+              <ProjectCard
+                key={project._id}
+                project={project}
+                icon={
+                  <ClipboardDocumentListIcon className="w-6 text-indigo-500"></ClipboardDocumentListIcon>
+                }
+              ></ProjectCard>
+            )}
+          ></WrapperCard>
         </div>
       </div>
     </div>
