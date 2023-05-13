@@ -149,6 +149,7 @@ export default function TeamPage() {
           displayEntities={team.userModels ? team.userModels : []}
           displayComponent={(user) => (
             <UserCard
+              color="white"
               key={user._id}
               user={user}
               isActionCard={false}

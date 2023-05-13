@@ -32,10 +32,12 @@ import UpdateTeamMembersPage, {
   action as updateTeamMembersAction,
 } from "./routes/team/UpdateTeamMembers";
 import TeamRoot from "./routes/team/TeamRoot";
+import EditTeam, { action as updateTeamAction } from "./routes/team/EditTeam";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
-  const { getTeamById, createNewTeam, updateTeamMembers } = useTeamService();
+  const { getTeamById, createNewTeam, updateTeamMembers, updateTeam } =
+    useTeamService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -70,6 +72,11 @@ const App = ({ queryClient }: any) => {
                 path=""
                 element={<TeamPage />}
                 loader={teamLoader(queryClient, getTeamById)}
+              ></Route>
+              <Route
+                path="edit"
+                element={<EditTeam />}
+                action={updateTeamAction(queryClient, updateTeam)}
               ></Route>
               <Route
                 path="update-members"

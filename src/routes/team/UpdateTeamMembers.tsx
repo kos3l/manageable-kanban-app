@@ -50,7 +50,7 @@ export const action =
 
     await updateTeamMembers(params.id, usersDto);
     await queryClient.invalidateQueries({
-      queryKey: ["team"],
+      queryKey: ["team", "teams", "projects", "user", "profile"],
     });
     return true;
   };
