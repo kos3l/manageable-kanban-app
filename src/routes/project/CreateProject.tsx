@@ -2,12 +2,15 @@ import {
   IdentificationIcon,
   CheckCircleIcon,
   XMarkIcon,
+  ClockIcon,
+  PlusIcon,
 } from "@heroicons/react/24/solid";
 import Bars3CenterLeftIcon from "@heroicons/react/24/solid/Bars3CenterLeftIcon";
 import { useState } from "react";
 import { Form, useNavigate } from "react-router-dom";
 import { Team } from "../../models/entities/Team";
 import ActionButton from "../../ui/buttons/ActionButton";
+import ActionInput from "../../ui/inputs/ActionInput";
 import DateInput from "../../ui/inputs/DateInput";
 import TextareaInput from "../../ui/inputs/TextareaInput";
 import TextInput from "../../ui/inputs/TextInput";
@@ -46,9 +49,7 @@ export default function CreateProject() {
             <div className="flex w-full gap-2">
               <div className="flex grow">
                 <DateInput
-                  icon={
-                    <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
-                  }
+                  icon={<ClockIcon className="m-0 w-5 p-0"></ClockIcon>}
                   onChange={(newVal) => setStartDate(new Date(newVal))}
                   name={"startDate"}
                   value={DateHelper.formatDateToString(startDate, "YYYY-MM-DD")}
@@ -57,7 +58,7 @@ export default function CreateProject() {
               <div className="flex grow">
                 <DateInput
                   icon={
-                    <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+                    <CheckCircleIcon className="m-0 w-5 p-0"></CheckCircleIcon>
                   }
                   onChange={(newVal) => setEndDate(new Date(newVal))}
                   name={"endDate"}
@@ -65,6 +66,16 @@ export default function CreateProject() {
                 ></DateInput>
               </div>
             </div>
+            {/* dropdown */}
+            <TextInput
+              icon={
+                <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+              }
+              placeholder="Choose a team.."
+              value={name}
+              onChange={(val) => setName(val)}
+              name="name"
+            ></TextInput>
             <TextareaInput
               icon={
                 <Bars3CenterLeftIcon className="m-0 w-4 p-0"></Bars3CenterLeftIcon>
@@ -77,14 +88,15 @@ export default function CreateProject() {
           </div>
           <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
             <p className="font-serif text-lg tracking-wider">Tech Stack</p>
-            <TextInput
+            <ActionInput
               icon={
-                <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
+                <PlusIcon className="m-0 w-5 p-0 text-indigo-500"></PlusIcon>
               }
               placeholder="Add more to the stack.."
               value={newTech}
               onChange={(val) => setNewTech(val)}
-            ></TextInput>
+              onClick={() => {}}
+            ></ActionInput>
           </div>
           <div></div>
         </div>
