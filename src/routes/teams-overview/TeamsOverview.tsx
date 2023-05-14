@@ -42,15 +42,7 @@ export default function TeamsOverviewPage() {
   });
   console.log(Object.values(Sorting));
   return (
-    <div className="grid h-max w-full grid-cols-4 gap-2">
-      <div className="col-span-1">
-        <Link to={"../teams/create"}>
-          <FilledButton
-            content={"Create A Team"}
-            icon={<PlusIcon className="w-4 text-neutral-300"></PlusIcon>}
-          ></FilledButton>
-        </Link>
-      </div>
+    <div className="grid h-max w-full grid-cols-4 gap-2 2xl:w-3/4">
       <div className="col-span-3 flex flex-wrap gap-x-2 gap-y-4">
         <div className="flex h-max flex-auto items-center">
           <TextInput

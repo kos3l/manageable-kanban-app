@@ -1,6 +1,6 @@
 type IUpdateTeamDTO = {
-  name?: string;
-  users?: string[];
+  name: string;
+  description?: string;
 };
 
 export { type IUpdateTeamDTO };

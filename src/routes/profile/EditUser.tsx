@@ -14,13 +14,13 @@ import {
   useNavigate,
   useRouteLoaderData,
 } from "react-router-dom";
-import { IUpdateUserDTO } from "../../../models/dto/user/IUpdateUserDTO";
-import { User } from "../../../models/entities/User";
-import ActionButton from "../../../ui/buttons/ActionButton";
-import DateInput from "../../../ui/inputs/DateInput";
-import TextareaInput from "../../../ui/inputs/TextareaInput";
-import TextInput from "../../../ui/inputs/TextInput";
-import { DateHelper } from "../../../util/helpers/DateHelper";
+import { IUpdateUserDTO } from "../../models/dto/user/IUpdateUserDTO";
+import { User } from "../../models/entities/User";
+import ActionButton from "../../ui/buttons/ActionButton";
+import DateInput from "../../ui/inputs/DateInput";
+import TextareaInput from "../../ui/inputs/TextareaInput";
+import TextInput from "../../ui/inputs/TextInput";
+import { DateHelper } from "../../util/helpers/DateHelper";
 
 export const action =
   (
@@ -33,11 +33,14 @@ export const action =
   async ({ request, params }: any) => {
     const formData = await request.formData();
     const updates = Object.fromEntries(formData) as IUpdateUserDTO;
+    if (updates.bio == "" || !updates.bio) {
+      delete updates.bio;
+    }
     await updateUser(params.id, updates);
     await queryClient.invalidateQueries({
       queryKey: ["profile"],
     });
-    return redirect(`/user/${params.id}`);
+    return redirect(`/user/profile/${params.id}`);
   };
 
 export default function EditUserPage() {
