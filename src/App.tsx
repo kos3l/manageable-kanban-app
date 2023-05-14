@@ -36,6 +36,7 @@ import TeamRoot, {
   action as deleteTeamAction,
 } from "./routes/team/TeamRoot";
 import EditTeam, { action as updateTeamAction } from "./routes/team/EditTeam";
+import CreateProject from "./routes/project/CreateProject";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -99,6 +100,7 @@ const App = ({ queryClient }: any) => {
               element={<ProjectsOverviewPage />}
             />
             <Route path="projects/:id" element={<ProjectPage />} />
+            <Route path="projects/create" element={<CreateProject />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />

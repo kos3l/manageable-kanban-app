@@ -5,7 +5,7 @@ interface IProps {
   icon: ReactNode;
   value?: string;
   onChange: (newValue: string) => void;
-  name: string;
+  name?: string;
 }
 
 export default function TextInput(props: IProps) {

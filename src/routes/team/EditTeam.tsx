@@ -73,20 +73,22 @@ export default function EditTeam() {
             name="description"
           ></TextareaInput>
         </div>
-        <ActionButton
-          content={"Save"}
-          color="indigo"
-          isSubmitBtn
-          icon={
-            <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
-          }
-        ></ActionButton>
-        <ActionButton
-          onClick={() => navigate(-1)}
-          content={"Cancel"}
-          color="red"
-          icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
-        ></ActionButton>
+        <div className="flex gap-2">
+          <ActionButton
+            content={"Save"}
+            color="indigo"
+            isSubmitBtn
+            icon={
+              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+            }
+          ></ActionButton>
+          <ActionButton
+            onClick={() => navigate(-1)}
+            content={"Cancel"}
+            color="red"
+            icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
+          ></ActionButton>
+        </div>
       </Form>
     </div>
   );
