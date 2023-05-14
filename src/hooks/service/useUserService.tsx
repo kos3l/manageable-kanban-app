@@ -14,6 +14,12 @@ const useUserService = () => {
     });
   };
 
+  const getUserByEmail = (email: string) => {
+    return get<void, AxiosResponse<User>>(bastPath + "/email/" + email, {
+      withCredentials: true,
+    });
+  };
+
   const updateUserProfile = (userId: string, userDto: IUpdateUserDTO) => {
     return put<IUpdateUserDTO, AxiosResponse<void>>(
       bastPath + "/" + userId,
@@ -22,6 +28,6 @@ const useUserService = () => {
     );
   };
 
-  return { getLoggedInUserProfile, updateUserProfile };
+  return { getLoggedInUserProfile, updateUserProfile, getUserByEmail };
 };
 export default useUserService;

@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useMutation } from "react-query";
-import { Link } from "react-router-dom";
+import { Link, Navigate, redirect } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
@@ -21,20 +21,21 @@ export default function LoginPage() {
   const { setAuth } = useAuth();
   const { loginUser } = useAuthService();
 
-  const navigate = useNavigate();
-
   const mutation = useMutation({
     mutationFn: (newUser: ICreateLoginDTO) => {
       return loginUser(newUser);
     },
     onSuccess: (data, variables, context) => {
       const accessToken = data.data.accessToken;
-      setAuth({ accessToken });
+      setAuth({ accessToken: accessToken });
       setEmail("");
       setPassword("");
-      navigate("/user/user-dashboard", { replace: true });
     },
   });
+
+  if (mutation.isSuccess) {
+    return <Navigate to={"/user/user-dashboard"}></Navigate>;
+  }
 
   return (
     <>

@@ -11,7 +11,7 @@ type Team = {
   projects?: string[];
   createdAt: Date;
   userModels?: User[];
-  projectModels?: Project[];
+  projectModels: Project[];
 };
 
 export { type Team };

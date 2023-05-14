@@ -8,18 +8,15 @@ import {
 import { AxiosResponse } from "axios";
 import { ReactNode } from "react";
 import { QueryClient, useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useSubmit } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
-import { User } from "../../models/entities/User";
 import ActionButton from "../../ui/buttons/ActionButton";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import UserCard from "../../ui/cards/UserCard";
 import WrapperCard from "../../ui/cards/WrapperCard";
 import DisplayField from "../../ui/display-field/DisplayField";
-import { profileQuery } from "../user/user-root/UserRoot";
 
-// move this to a loader
 const teamByIdQuery = (
   teamId: string,
   getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>
@@ -40,26 +37,10 @@ const teamByIdQuery = (
   },
 });
 
-export const loader =
-  (
-    queryClient: QueryClient,
-    getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>
-  ) =>
-  async ({ params }: any) => {
-    const query = teamByIdQuery(params.id, getTeamById);
-    const invalidated = queryClient.getQueryState(query.queryKey);
-    if (invalidated) {
-      return await queryClient.fetchQuery(query);
-    }
-    return (
-      queryClient.getQueryData(query.queryKey) ??
-      (await queryClient.fetchQuery(query))
-    );
-  };
-
 export default function TeamPage() {
   const { id } = useParams();
   const { getTeamById } = useTeamService();
+  const submit = useSubmit();
 
   if (!id) {
     return <>No team id found</>;
@@ -95,17 +76,47 @@ export default function TeamPage() {
             value={team.description}
           ></DisplayField>
         </div>
-        <Link to={"./addMemers"}>
-          <div className="w-full sm:w-56 xl:w-full">
+        <div className="flex w-full flex-wrap gap-4 md:flex-nowrap xl:flex-col">
+          <div className="grow basis-full md:basis-1/3">
+            <Link to={"./update-members"}>
+              <ActionButton
+                color="indigo"
+                content={"Edit members"}
+                icon={
+                  <UserPlusIcon className="w-5 text-indigo-500"></UserPlusIcon>
+                }
+              ></ActionButton>
+            </Link>{" "}
+          </div>
+          <div className="grow basis-full md:basis-1/3">
+            <Link to={"./edit"}>
+              <ActionButton
+                color="indigo"
+                content={"Edit Team"}
+                icon={
+                  <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+                }
+              ></ActionButton>
+            </Link>{" "}
+          </div>
+          <div className="grow basis-full md:basis-1/3">
             <ActionButton
-              color="indigo"
-              content={"Add members"}
+              color="red"
+              content={"Delete Team"}
+              onClick={() => {
+                const warning = confirm(
+                  "Are you sure you want to delete this team?"
+                );
+                if (warning) {
+                  submit(null, { method: "delete" });
+                }
+              }}
               icon={
-                <UserPlusIcon className="w-5 text-indigo-500"></UserPlusIcon>
+                <PencilSquareIcon className="w-5 text-red-600"></PencilSquareIcon>
               }
             ></ActionButton>
           </div>
-        </Link>
+        </div>
       </div>
       <div className="flex w-full flex-wrap-reverse gap-4 sm:grow sm:flex-nowrap">
         <WrapperCard
@@ -127,8 +138,10 @@ export default function TeamPage() {
           displayEntities={team.userModels ? team.userModels : []}
           displayComponent={(user) => (
             <UserCard
+              color="white"
               key={user._id}
               user={user}
+              isActionCard={false}
               icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
             ></UserCard>
           )}

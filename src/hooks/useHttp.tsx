@@ -86,11 +86,11 @@ const useHttp = () => {
       (response) => response,
       async (error) => {
         const { response } = error;
-        const prevRequest = error?.config;
-        if (error?.response?.status === 401 && !prevRequest?.sent) {
+        console.log(response);
+        const prevRequest = error.config;
+        if (error.response.status == 401 && !prevRequest.sent) {
           prevRequest.sent = true;
           const newAccessToken = await refresh();
-          console.log(newAccessToken);
           prevRequest.headers["auth-token"] = newAccessToken;
           return http(prevRequest);
         }
