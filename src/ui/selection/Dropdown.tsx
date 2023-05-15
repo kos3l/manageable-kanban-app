@@ -9,6 +9,7 @@ interface IProps<T> {
   dropdownValues: T[];
   displayProperty?: string;
   placeholder: string;
+  name?: string;
 }
 
 type colorVariants = {
@@ -25,6 +26,7 @@ export default function Dropdown<T>(props: IProps<T>) {
     placeholder,
     dropdownValues,
     displayProperty,
+    name,
   } = props;
 
   const boxColorVariants: colorIndex & colorVariants = {
@@ -52,19 +54,20 @@ export default function Dropdown<T>(props: IProps<T>) {
         }
       >
         <div className="text-md flex h-12 flex-auto grow cursor-pointer items-center gap-2 bg-transparent px-1 font-sans font-thin tracking-normal text-neutral-400">
-          <p className="mt-0.5 tracking-wider text-neutral-400">
-            {value ? (
-              displayProperty ? (
-                (value as { [key in string]: any })[displayProperty]
-              ) : (
-                value
-              )
-            ) : (
-              <span className="mb-2 font-normal tracking-normal text-neutral-600">
-                {placeholder}
-              </span>
-            )}
-          </p>
+          <input
+            type="text"
+            name={name}
+            readOnly
+            className="text-md h-full grow bg-transparent pl-0.5 pr-2 pt-0.5 font-sans font-thin tracking-normal text-neutral-400 placeholder:font-thin placeholder:tracking-wide placeholder:text-neutral-600 focus:outline-none"
+            placeholder={placeholder}
+            value={
+              value
+                ? displayProperty
+                  ? (value as { [key in string]: any })[displayProperty]
+                  : value
+                : ""
+            }
+          />
         </div>
         <div className={`${boxColorVariants[color]}`}>{icon}</div>
         <div

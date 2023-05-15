@@ -36,7 +36,10 @@ import TeamRoot, {
   action as deleteTeamAction,
 } from "./routes/team/TeamRoot";
 import EditTeam, { action as updateTeamAction } from "./routes/team/EditTeam";
-import CreateProject from "./routes/project/CreateProject";
+import CreateProject, {
+  action as createProjectAction,
+} from "./routes/project/CreateProject";
+import useProjectService from "./hooks/service/useProjectService";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -47,6 +50,7 @@ const App = ({ queryClient }: any) => {
     updateTeam,
     deleteTeam,
   } = useTeamService();
+  const { createNewProject } = useProjectService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -100,7 +104,11 @@ const App = ({ queryClient }: any) => {
               element={<ProjectsOverviewPage />}
             />
             <Route path="projects/:id" element={<ProjectPage />} />
-            <Route path="projects/create" element={<CreateProject />} />
+            <Route
+              path="projects/create"
+              action={createProjectAction(queryClient, createNewProject)}
+              element={<CreateProject />}
+            />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />

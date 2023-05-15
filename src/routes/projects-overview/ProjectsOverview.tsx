@@ -62,6 +62,7 @@ export default function ProjectsOverviewPage() {
           <Dropdown
             placeholder="Select a team.."
             color="indigo"
+            name="sorting"
             value={sortingOption}
             onSelectValue={(val) => setSortingOption(val)}
             icon={

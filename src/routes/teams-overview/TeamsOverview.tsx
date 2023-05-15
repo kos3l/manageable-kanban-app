@@ -57,6 +57,7 @@ export default function TeamsOverviewPage() {
         <div className="flex h-max w-[32.7%] items-center">
           <Dropdown
             color="indigo"
+            name="sorting"
             value={sortingOption}
             onSelectValue={(val) => setSortingOption(val)}
             icon={

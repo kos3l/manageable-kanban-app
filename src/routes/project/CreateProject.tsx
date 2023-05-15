@@ -9,9 +9,10 @@ import {
 import Bars3CenterLeftIcon from "@heroicons/react/24/solid/Bars3CenterLeftIcon";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
-import { useQuery } from "react-query";
-import { Form, useNavigate } from "react-router-dom";
+import { QueryClient, useQuery } from "react-query";
+import { Form, redirect, useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
+import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 import { Team } from "../../models/entities/Team";
 import ActionButton from "../../ui/buttons/ActionButton";
 import ActionInput from "../../ui/inputs/ActionInput";
@@ -34,6 +35,25 @@ const getAllTeams = (
     return response.data;
   },
 });
+
+export const action =
+  (
+    queryClient: QueryClient,
+    createProject: (
+      teamDto: ICreateProjectDTO
+    ) => Promise<AxiosResponse<Team, any>>
+  ) =>
+  async ({ request }: any) => {
+    const formData = await request.formData();
+    let project = Object.fromEntries(formData);
+    const techStack = project.techStack;
+    project.techStack = JSON.parse(techStack);
+    const newProject = await createProject(project as ICreateProjectDTO);
+    await queryClient.invalidateQueries({
+      queryKey: ["team", "teams", "projects", "profile"],
+    });
+    return redirect(`/user/projects/${newProject.data._id}`);
+  };
 
 export default function CreateProject() {
   const [name, setName] = useState<string>("");
@@ -112,6 +132,7 @@ export default function CreateProject() {
             ) : (
               <></>
             )}
+            <input type="hidden" name="teamId" value={team ? team._id : ""} />
             <TextareaInput
               icon={
                 <Bars3CenterLeftIcon className="m-0 w-4 p-0"></Bars3CenterLeftIcon>
@@ -139,12 +160,18 @@ export default function CreateProject() {
               onChange={(val) => setNewTech(val)}
               onClick={() => handleAddNewTech()}
             ></ActionInput>
+            <input
+              type="hidden"
+              name="techStack"
+              value={JSON.stringify(techStack)}
+            />
             {techStack && techStack.length > 0 ? (
               <div className="mt-2 flex h-max w-full flex-wrap gap-2 rounded-lg border border-neutral-600 bg-neutral-900 p-2">
                 <>
-                  {techStack.map((tech) => {
+                  {techStack.map((tech, index) => {
                     return (
                       <div
+                        key={index}
                         onClick={() =>
                           setTechStack(
                             techStack.filter(

@@ -4,6 +4,7 @@ import { IAccessToken } from "../../auth/context/AuthContext";
 import useHttp from "../useHttp";
 import { Team } from "../../models/entities/Team";
 import { Project } from "../../models/entities/Project";
+import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 
 const useProjectService = () => {
   const { post, get } = useHttp();
@@ -15,7 +16,13 @@ const useProjectService = () => {
     });
   };
 
-  return { getAllUserProjects };
+  const createNewProject = (projectDto: ICreateProjectDTO) => {
+    return post<ICreateProjectDTO, AxiosResponse<Team>>(bastPath, projectDto, {
+      withCredentials: true,
+    });
+  };
+
+  return { getAllUserProjects, createNewProject };
 };
 
 export default useProjectService;
