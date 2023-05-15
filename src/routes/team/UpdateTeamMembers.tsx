@@ -169,6 +169,7 @@ export default function UpdateTeamMembersPage() {
             </div>
             <div className="flex grow">
               <FilledButton
+                removeBackground={false}
                 content={"Search"}
                 onClick={() => handleSearchClick()}
                 icon={

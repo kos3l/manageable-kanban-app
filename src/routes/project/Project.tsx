@@ -118,6 +118,17 @@ export default function ProjectPage() {
             </Link>
           </div>
           <div className="grow basis-full md:basis-1/3">
+            <Link to={"./kanban"}>
+              <ActionButton
+                color="indigo"
+                content={"Kanban"}
+                icon={
+                  <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+                }
+              ></ActionButton>
+            </Link>{" "}
+          </div>
+          <div className="grow basis-full md:basis-1/3">
             <Link to={"./edit"}>
               <ActionButton
                 color="indigo"

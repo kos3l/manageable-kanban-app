@@ -55,7 +55,7 @@ export default function ProjectRoot() {
   }
 
   return (
-    <div className="w-full">
+    <div className="relative w-full">
       <Outlet />
     </div>
   );

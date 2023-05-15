@@ -46,6 +46,7 @@ import ProjectRoot, {
 import EditProjectPage, {
   action as updateProjectAction,
 } from "./routes/project/EditProject";
+import KanbanPage from "./routes/project/Kanban";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -122,6 +123,7 @@ const App = ({ queryClient }: any) => {
                 action={updateProjectAction(queryClient, updateProject)}
                 element={<EditProjectPage />}
               />
+              <Route path="kanban" element={<KanbanPage />} />
             </Route>
             <Route
               path="projects-overview"

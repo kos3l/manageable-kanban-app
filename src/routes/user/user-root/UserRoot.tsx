@@ -82,7 +82,7 @@ export default function UserRootPage() {
 
   return (
     <>
-      <div className="relative flex h-screen overflow-hidden text-neutral-200 md:overflow-scroll">
+      <div className="max-w-screen relative flex h-screen overflow-hidden text-neutral-200">
         <div className="relative hidden h-full grow-0 flex-col border-r border-neutral-700 md:flex md:min-w-[10rem] lg:min-w-[15rem] 2xl:min-w-[20rem]">
           <div className="flex h-14 items-center p-2">
             <Link to={"/"}>
@@ -130,7 +130,7 @@ export default function UserRootPage() {
             <p className="mt-1 text-sm tracking-wide">Log out</p>
           </button>
         </div>
-        <div className="flex h-full grow flex-col-reverse  md:flex-col">
+        <div className=" flex h-full grow flex-col-reverse md:flex-col">
           <div className="relative z-40 flex h-max w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 py-4 md:justify-end md:border-t-0 md:border-b md:py-[11px]">
             <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
               <p className="mt-1 font-serif text-sm">
@@ -151,7 +151,7 @@ export default function UserRootPage() {
               <Bars3Icon className="w-6 text-neutral-200"></Bars3Icon>
             </div>
           </div>
-          <div className="flex w-full grow overflow-scroll p-4 2xl:justify-center">
+          <div className="flex w-full grow p-4 2xl:justify-center">
             <Outlet />
           </div>
         </div>
