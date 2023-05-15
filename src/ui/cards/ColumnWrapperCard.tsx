@@ -9,7 +9,12 @@ import {
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
-import { QueryClient, useQuery } from "react-query";
+import {
+  QueryClient,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "react-query";
 import { Form, useParams } from "react-router-dom";
 import useTaskService from "../../hooks/service/useTaskService";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
@@ -28,6 +33,24 @@ interface IProps {
   column: Column;
 }
 
+export const action =
+  (
+    queryClient: QueryClient,
+    createTask: (
+      projectId: string,
+      taskDto: ICreateTaskDTO
+    ) => Promise<AxiosResponse<Task, any>>
+  ) =>
+  async ({ request, params }: any) => {
+    const formData = await request.formData();
+    const task = Object.fromEntries(formData) as ICreateTaskDTO;
+    const newTask = await createTask(params.id, task);
+    await queryClient.invalidateQueries({
+      queryKey: ["task", params.id, "projects", "project", "tasks"],
+    });
+    return null;
+  };
+
 const tasksFromColumnQuery = (
   projectId: string,
   columnId: string,
@@ -36,7 +59,7 @@ const tasksFromColumnQuery = (
     projectId: string
   ) => Promise<AxiosResponse<Task[], any>>
 ) => ({
-  queryKey: ["task", "column", projectId, columnId],
+  queryKey: ["task", "column", "project", projectId, columnId],
   queryFn: async () => {
     const response = await getTasksByColumnId(columnId, projectId);
     if (response.status == 403) {
@@ -54,15 +77,29 @@ const tasksFromColumnQuery = (
 
 export default function ColumnWrapperCard(props: IProps) {
   const { column } = props;
-  const { getTasksByColumnId } = useTaskService();
+
+  const { getTasksByColumnId, createNewTask } = useTaskService();
   const { id } = useParams();
   if (!id) {
     return <p>Loading</p>;
   }
+  const queryClient = useQueryClient();
+
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [endDate, setEndDate] = useState<Date>(new Date());
+
+  const mutation = useMutation({
+    mutationFn: (taskDto: ICreateTaskDTO) => {
+      return createNewTask(id, taskDto);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", "column", "project", id, column._id],
+      });
+    },
+  });
 
   const { data: tasks } = useQuery(
     tasksFromColumnQuery(id, column._id, getTasksByColumnId)
@@ -85,51 +122,50 @@ export default function ColumnWrapperCard(props: IProps) {
       ></FilledButton>
       <div className="flex w-full flex-col">
         <div className="mb-3 w-full rounded-lg border border-neutral-600 bg-neutral-800/30 p-2">
-          <Form
-            method="post"
-            action="../"
-            className="flex w-full flex-col gap-3"
-          >
-            <TextInput
-              placeholder={"Title.."}
-              value={title}
-              icon={<TagIcon className="w-5 text-neutral-300"></TagIcon>}
-              onChange={(newVal) => setTitle(newVal)}
-              name="title"
-            ></TextInput>
-            <DateInput
-              icon={<ClockIcon className="w-5 text-neutral-300"></ClockIcon>}
-              onChange={(newVal) => setStartDate(new Date(newVal))}
-              value={DateHelper.formatDateToString(startDate, "YYYY-MM-DD")}
-              name={"startDate"}
-            ></DateInput>
-            <DateInput
-              icon={
-                <CheckCircleIcon className="w-5 text-neutral-300"></CheckCircleIcon>
-              }
-              onChange={(newVal) => setEndDate(new Date(newVal))}
-              value={DateHelper.formatDateToString(endDate, "YYYY-MM-DD")}
-              name={"endDate"}
-            ></DateInput>
-            <div className="flex h-max w-full gap-2">
-              <div className="grow">
-                <button
-                  type="submit"
-                  className="w-full rounded border border-indigo-500 bg-neutral-900 py-1.5 px-3 text-sm text-indigo-500  transition hover:border-neutral-400"
-                >
-                  <p className="mt-0.5 tracking-wider">SAVE</p>
-                </button>
-              </div>
-              <div className="grow">
-                <button
-                  type="button"
-                  className="w-full rounded border border-neutral-600 bg-neutral-900 py-1.5 px-3 text-sm text-neutral-500 transition hover:border-neutral-400"
-                >
-                  <p className="mt-0.5 tracking-wider">CANCEL</p>
-                </button>
-              </div>
+          <TextInput
+            placeholder={"Title.."}
+            value={title}
+            icon={<TagIcon className="w-5 text-neutral-300"></TagIcon>}
+            onChange={(newVal) => setTitle(newVal)}
+            name="title"
+          ></TextInput>
+          <DateInput
+            icon={<ClockIcon className="w-5 text-neutral-300"></ClockIcon>}
+            onChange={(newVal) => setStartDate(new Date(newVal))}
+            value={DateHelper.formatDateToString(startDate, "YYYY-MM-DD")}
+            name={"startDate"}
+          ></DateInput>
+          <input type="hidden" value={column._id} name="columnId" />
+          <DateInput
+            icon={
+              <CheckCircleIcon className="w-5 text-neutral-300"></CheckCircleIcon>
+            }
+            onChange={(newVal) => setEndDate(new Date(newVal))}
+            value={DateHelper.formatDateToString(endDate, "YYYY-MM-DD")}
+            name={"endDate"}
+          ></DateInput>
+          <div className="flex h-max w-full gap-2">
+            <div className="grow">
+              <button
+                onClick={() =>
+                  mutation.mutate({
+                    title: title,
+                    startDate: startDate,
+                    endDate: endDate,
+                    columnId: column._id,
+                  })
+                }
+                className="w-full rounded border border-indigo-500 bg-neutral-900 py-1.5 px-3 text-sm text-indigo-500  transition hover:border-neutral-400"
+              >
+                <p className="mt-0.5 tracking-wider">SAVE</p>
+              </button>
             </div>
-          </Form>
+            <div className="grow">
+              <button className="w-full rounded border border-neutral-600 bg-neutral-900 py-1.5 px-3 text-sm text-neutral-500 transition hover:border-neutral-400">
+                <p className="mt-0.5 tracking-wider">CANCEL</p>
+              </button>
+            </div>
+          </div>
         </div>
         {tasks && tasks.length > 0 ? (
           tasks.map((task, index) => {

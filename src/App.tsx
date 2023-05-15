@@ -46,8 +46,7 @@ import ProjectRoot, {
 import EditProjectPage, {
   action as updateProjectAction,
 } from "./routes/project/EditProject";
-import KanbanPage, { action as kanbanActions } from "./routes/project/Kanban";
-import useTaskService from "./hooks/service/useTaskService";
+import KanbanPage from "./routes/project/Kanban";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -60,7 +59,6 @@ const App = ({ queryClient }: any) => {
   } = useTeamService();
   const { createNewProject, getProjectById, updateProject } =
     useProjectService();
-  const { createNewTask } = useTaskService();
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="">
@@ -116,7 +114,6 @@ const App = ({ queryClient }: any) => {
               path="projects/:id"
               element={<ProjectRoot />}
               loader={projectByIdLoader(queryClient, getProjectById)}
-              action={kanbanActions(queryClient, createNewTask)}
               id="selectedProject"
             >
               <Route index path="" element={<ProjectPage />} />

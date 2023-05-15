@@ -6,30 +6,13 @@ import {
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { QueryClient } from "react-query";
-import { useRouteLoaderData } from "react-router-dom";
+import { redirect, useRouteLoaderData } from "react-router-dom";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
 import FilledButton from "../../ui/buttons/FilledButton";
 import ColumnWrapperCard from "../../ui/cards/ColumnWrapperCard";
 import DisplayField from "../../ui/display-field/DisplayField";
-
-export const action =
-  (
-    queryClient: QueryClient,
-    createTask: (
-      projectId: string,
-      taskDto: ICreateTaskDTO
-    ) => Promise<AxiosResponse<Task, any>>
-  ) =>
-  async ({ request, params }: any) => {
-    const formData = await request.formData();
-    const task = Object.fromEntries(formData) as ICreateTaskDTO;
-    await createTask(params.id, task);
-    await queryClient.invalidateQueries({
-      queryKey: ["task", "team", "projects", "project", "tasks"],
-    });
-  };
 
 export default function KanbanPage() {
   const project = useRouteLoaderData("selectedProject") as Project;
