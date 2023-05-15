@@ -60,9 +60,10 @@ export default function ProjectsOverviewPage() {
         </div>
         <div className="flex h-max w-[32.7%] items-center">
           <Dropdown
+            placeholder="Select a team.."
             color="indigo"
             value={sortingOption}
-            onChange={(val) => setSortingOption(val)}
+            onSelectValue={(val) => setSortingOption(val)}
             icon={
               <ChevronUpDownIcon className="w-4 text-indigo-600"></ChevronUpDownIcon>
             }
