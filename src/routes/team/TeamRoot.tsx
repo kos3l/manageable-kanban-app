@@ -4,7 +4,6 @@ import { Outlet, redirect, useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
 
-// move this to a loader
 const teamByIdQuery = (
   teamId: string,
   getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>

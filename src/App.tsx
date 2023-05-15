@@ -40,6 +40,9 @@ import CreateProject, {
   action as createProjectAction,
 } from "./routes/project/CreateProject";
 import useProjectService from "./hooks/service/useProjectService";
+import ProjectRoot, {
+  loader as projectByIdLoader,
+} from "./routes/project/ProjectRoot";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -50,7 +53,7 @@ const App = ({ queryClient }: any) => {
     updateTeam,
     deleteTeam,
   } = useTeamService();
-  const { createNewProject } = useProjectService();
+  const { createNewProject, getProjectById } = useProjectService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -73,7 +76,11 @@ const App = ({ queryClient }: any) => {
               element={<EditUserPage />}
               action={userUpdateAction(queryClient, updateUserProfile)}
             />
-            <Route path="user-dashboard" element={<UserDashboardPage />} />
+            <Route
+              index
+              path="user-dashboard"
+              element={<UserDashboardPage />}
+            />
             <Route path="teams-overview" element={<TeamsOverviewPage />} />
             <Route
               path="teams/:id/"
@@ -82,7 +89,7 @@ const App = ({ queryClient }: any) => {
               action={deleteTeamAction(queryClient, deleteTeam)}
               id="selectedTeam"
             >
-              <Route path="" element={<TeamPage />}></Route>
+              <Route index path="" element={<TeamPage />}></Route>
               <Route
                 path="edit"
                 element={<EditTeam />}
@@ -100,10 +107,16 @@ const App = ({ queryClient }: any) => {
               element={<CreateTeam />}
             />
             <Route
+              path="projects/:id"
+              element={<ProjectRoot />}
+              loader={projectByIdLoader(queryClient, getProjectById)}
+            >
+              <Route index path="" element={<ProjectPage />} />
+            </Route>
+            <Route
               path="projects-overview"
               element={<ProjectsOverviewPage />}
             />
-            <Route path="projects/:id" element={<ProjectPage />} />
             <Route
               path="projects/create"
               action={createProjectAction(queryClient, createNewProject)}

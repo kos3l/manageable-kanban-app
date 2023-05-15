@@ -13,7 +13,7 @@ export default function DisplayField(props: IProps) {
   return (
     <div className="flex h-max w-full items-center gap-2">
       {icon && (
-        <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-neutral-600/70">
+        <div className="flex h-9 w-9 items-center justify-center rounded-md bg-neutral-600/70">
           {icon}
         </div>
       )}

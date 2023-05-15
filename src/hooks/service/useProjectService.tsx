@@ -16,13 +16,19 @@ const useProjectService = () => {
     });
   };
 
+  const getProjectById = (projectId: string) => {
+    return get<void, AxiosResponse<Project>>(bastPath + "/" + projectId, {
+      withCredentials: true,
+    });
+  };
+
   const createNewProject = (projectDto: ICreateProjectDTO) => {
     return post<ICreateProjectDTO, AxiosResponse<Team>>(bastPath, projectDto, {
       withCredentials: true,
     });
   };
 
-  return { getAllUserProjects, createNewProject };
+  return { getAllUserProjects, createNewProject, getProjectById };
 };
 
 export default useProjectService;
