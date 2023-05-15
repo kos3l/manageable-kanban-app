@@ -5,9 +5,10 @@ import useHttp from "../useHttp";
 import { Team } from "../../models/entities/Team";
 import { Project } from "../../models/entities/Project";
 import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
+import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
 
 const useProjectService = () => {
-  const { post, get } = useHttp();
+  const { post, get, put } = useHttp();
   const bastPath = "/api/project";
 
   const getAllUserProjects = () => {
@@ -28,7 +29,22 @@ const useProjectService = () => {
     });
   };
 
-  return { getAllUserProjects, createNewProject, getProjectById };
+  const updateProject = (projectId: string, projectDto: IUpdateProjectDTO) => {
+    return put<IUpdateProjectDTO, AxiosResponse<void>>(
+      bastPath + "/" + projectId,
+      projectDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  return {
+    getAllUserProjects,
+    createNewProject,
+    getProjectById,
+    updateProject,
+  };
 };
 
 export default useProjectService;

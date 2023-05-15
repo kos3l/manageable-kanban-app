@@ -2,6 +2,7 @@ import {
   ClipboardDocumentListIcon,
   ClockIcon,
   PencilSquareIcon,
+  TrashIcon,
   UserPlusIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
@@ -111,9 +112,7 @@ export default function TeamPage() {
                   submit(null, { method: "delete" });
                 }
               }}
-              icon={
-                <PencilSquareIcon className="w-5 text-red-600"></PencilSquareIcon>
-              }
+              icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
             ></ActionButton>
           </div>
         </div>

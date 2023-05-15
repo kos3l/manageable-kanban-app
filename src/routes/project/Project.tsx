@@ -1,6 +1,9 @@
 import {
   CheckCircleIcon,
+  CheckIcon,
   ClockIcon,
+  PencilSquareIcon,
+  TrashIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
@@ -104,49 +107,37 @@ export default function ProjectPage() {
             value={project.description}
           ></DisplayField>
         </div>
-        <div className="flex w-full flex-wrap gap-4 md:flex-nowrap xl:flex-col">
+        <div className="flex w-full flex-wrap gap-3 md:flex-nowrap xl:flex-col">
           <div className="grow basis-full md:basis-1/3">
             <Link to={"./update-members"}>
               <ActionButton
                 color="indigo"
-                content={"Edit members"}
+                content={"Complete"}
+                icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
+              ></ActionButton>
+            </Link>
+          </div>
+          <div className="grow basis-full md:basis-1/3">
+            <Link to={"./edit"}>
+              <ActionButton
+                color="indigo"
+                content={"Edit Project"}
                 icon={
-                  <UserPlusIcon className="w-5 text-indigo-500"></UserPlusIcon>
+                  <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
                 }
               ></ActionButton>
             </Link>{" "}
           </div>
-          {/* <div className="grow basis-full md:basis-1/3">
-        <Link to={"./edit"}>
-          <ActionButton
-            color="indigo"
-            content={"Edit Team"}
-            icon={
-              <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
-            }
-          ></ActionButton>
-        </Link>{" "}
-      </div>
-      <div className="grow basis-full md:basis-1/3">
-        <ActionButton
-          color="red"
-          content={"Delete Team"}
-          onClick={() => {
-            const warning = confirm(
-              "Are you sure you want to delete this team?"
-            );
-            if (warning) {
-              submit(null, { method: "delete" });
-            }
-          }}
-          icon={
-            <PencilSquareIcon className="w-5 text-red-600"></PencilSquareIcon>
-          }
-        ></ActionButton>
-      </div> */}
+          <div className="grow basis-full md:basis-1/3">
+            <ActionButton
+              color="red"
+              content={"Delete Project"}
+              icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
+            ></ActionButton>
+          </div>
         </div>
       </div>
-      <div className="flex w-full flex-wrap-reverse gap-4 rounded-lg border border-neutral-800 sm:grow sm:flex-nowrap">
+      <div className="flex h-max w-full flex-col gap-2 rounded-lg border border-neutral-800 sm:grow sm:flex-nowrap">
         <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
           <div className="w-20 overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
             <img src={avatar} alt="" className="h-full w-full object-contain" />
@@ -159,33 +150,36 @@ export default function ProjectPage() {
             ></DisplayField>
           </div>
         </div>
-        {/* <WrapperCard
-      name={"Projects"}
-      displayEntities={team.projectModels ? team.projectModels : []}
-      displayComponent={(project) => (
-        <ProjectCard
-          project={project}
-          teamName={team.name}
-          key={project._id}
-          icon={
-            <ClipboardDocumentListIcon className="w-6 text-indigo-500"></ClipboardDocumentListIcon>
-          }
-        ></ProjectCard>
-      )}
-    ></WrapperCard>
-    <WrapperCard
-      name={"Members"}
-      displayEntities={team.userModels ? team.userModels : []}
-      displayComponent={(user) => (
-        <UserCard
-          color="white"
-          key={user._id}
-          user={user}
-          isActionCard={false}
-          icon={<UsersIcon className="w-6 text-pink-500"></UsersIcon>}
-        ></UserCard>
-      )}
-    ></WrapperCard> */}
+        {project.techStack && project.techStack.length > 0 ? (
+          <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2">
+            <>
+              <p className="ml-2 mt-1 tracking-wider text-neutral-500">
+                Tools stack
+              </p>
+              {project.techStack.map((tech, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
+                  >
+                    <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
+                  </div>
+                );
+              })}
+            </>
+          </div>
+        ) : (
+          <></>
+        )}
+        {/* Tasks */}
+        <div className="flex h-max w-full items-center gap-2">
+          <div className="flex h-max grow items-center gap-2">
+            <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2"></div>
+          </div>
+          <div className="flex h-max grow items-center gap-2">
+            <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2"></div>
+          </div>
+        </div>
       </div>
     </div>
   );

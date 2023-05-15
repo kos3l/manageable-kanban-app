@@ -43,6 +43,9 @@ import useProjectService from "./hooks/service/useProjectService";
 import ProjectRoot, {
   loader as projectByIdLoader,
 } from "./routes/project/ProjectRoot";
+import EditProjectPage, {
+  action as updateProjectAction,
+} from "./routes/project/EditProject";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -53,7 +56,8 @@ const App = ({ queryClient }: any) => {
     updateTeam,
     deleteTeam,
   } = useTeamService();
-  const { createNewProject, getProjectById } = useProjectService();
+  const { createNewProject, getProjectById, updateProject } =
+    useProjectService();
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -110,8 +114,14 @@ const App = ({ queryClient }: any) => {
               path="projects/:id"
               element={<ProjectRoot />}
               loader={projectByIdLoader(queryClient, getProjectById)}
+              id="selectedProject"
             >
               <Route index path="" element={<ProjectPage />} />
+              <Route
+                path="edit"
+                action={updateProjectAction(queryClient, updateProject)}
+                element={<EditProjectPage />}
+              />
             </Route>
             <Route
               path="projects-overview"
