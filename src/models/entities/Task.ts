@@ -7,6 +7,7 @@ type Task = {
   columnId: string;
   projectId: string;
   userIds: string[];
+  createdAt: Date;
   //   labels: string;
 };
 

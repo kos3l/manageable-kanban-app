@@ -5,6 +5,7 @@ import {
   PlusIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
+import { useState } from "react";
 import { QueryClient } from "react-query";
 import { redirect, useRouteLoaderData } from "react-router-dom";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
@@ -50,7 +51,7 @@ export default function KanbanPage() {
           ></DisplayField>
         </div>
       </div>
-      <div className="absolute top-20 flex h-full w-max justify-center gap-3 md:justify-start 2xl:justify-center">
+      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-3  md:justify-start 2xl:justify-center">
         {project.columns.map((col, index) => {
           return (
             <div key={index} className="flex h-full w-72">
