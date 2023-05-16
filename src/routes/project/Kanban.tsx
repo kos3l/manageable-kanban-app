@@ -51,7 +51,7 @@ export default function KanbanPage() {
           ></DisplayField>
         </div>
       </div>
-      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-3  md:justify-start 2xl:justify-center">
+      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4  md:justify-start 2xl:justify-center">
         {project.columns.map((col, index) => {
           return (
             <div key={index} className="flex h-full w-72">

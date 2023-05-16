@@ -82,7 +82,7 @@ export default function UserRootPage() {
 
   return (
     <>
-      <div className="max-w-screen relative flex h-screen overflow-hidden text-neutral-200">
+      <div className="max-w-screen  relative flex h-screen overflow-hidden text-neutral-200">
         <div className="relative hidden h-full grow-0 flex-col border-r border-neutral-700 md:flex md:min-w-[10rem] lg:min-w-[15rem] 2xl:min-w-[20rem]">
           <div className="flex h-14 items-center p-2">
             <Link to={"/"}>
@@ -151,7 +151,7 @@ export default function UserRootPage() {
               <Bars3Icon className="w-6 text-neutral-200"></Bars3Icon>
             </div>
           </div>
-          <div className="flex w-full grow p-4 2xl:justify-center">
+          <div className="flex w-full grow bg-hero-pattern p-4 2xl:justify-center">
             <Outlet />
           </div>
         </div>

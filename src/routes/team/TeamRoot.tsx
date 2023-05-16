@@ -68,7 +68,7 @@ export default function TeamRootPage() {
   }
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-3 xl:flex-nowrap 2xl:w-3/4">
+    <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 xl:flex-nowrap 2xl:w-3/4">
       <Outlet />
     </div>
   );

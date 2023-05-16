@@ -91,7 +91,7 @@ export default function ColumnWrapperCard(props: IProps) {
 
   return (
     <div className="flex h-full w-full flex-col gap-2 ">
-      <div className="min-h-16 flex h-16 w-full items-center justify-between rounded-lg border border-neutral-600 px-3">
+      <div className="min-h-16 mb-1.5 flex h-16 w-full items-center  justify-between rounded-lg border border-neutral-600  px-3">
         <p className="neutral-500 font-serif text-base tracking-wider">
           {column.name + " | " + tasks?.length}
         </p>
@@ -105,7 +105,7 @@ export default function ColumnWrapperCard(props: IProps) {
         icon={<PlusIcon className="w-5 text-neutral-300"></PlusIcon>}
         onClick={() => setShowCreate(true)}
       ></FilledButton>
-      <div className="flex h-full w-full flex-col  overflow-scroll">
+      <div className="flex h-full w-full flex-col overflow-scroll rounded-lg border border-neutral-700 p-2">
         <CreateTaskCard
           column={column}
           project={project}
@@ -113,7 +113,7 @@ export default function ColumnWrapperCard(props: IProps) {
           showCreate={showCreate}
           createTask={(dto) => mutation.mutate(dto)}
         ></CreateTaskCard>
-        <div className="flex w-full flex-col gap-2  rounded-lg">
+        <div className="flex w-full flex-col gap-2 ">
           {tasks && tasks.length > 0 ? (
             tasks.map((task, index) => {
               return (
