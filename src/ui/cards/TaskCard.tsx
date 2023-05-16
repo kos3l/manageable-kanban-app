@@ -9,7 +9,7 @@ export default function TaskCard(props: IProps) {
   const { task } = props;
 
   return (
-    <div className="h-max w-full gap-2 rounded-lg border border-neutral-600 bg-neutral-800/60 p-2">
+    <div className="h-max w-full cursor-pointer gap-2 rounded-lg border border-neutral-600 bg-neutral-800/60 p-2">
       <div></div>
       <div className="flex h-max w-full items-center gap-2">
         <div className="flex h-7 w-7 items-center justify-center rounded-md bg-neutral-600/70">

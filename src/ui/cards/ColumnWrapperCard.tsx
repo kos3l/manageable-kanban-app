@@ -20,6 +20,7 @@ import TaskCard from "./TaskCard";
 interface IProps {
   column: Column;
   project: Project;
+  taskClicked: (task: Task) => void;
 }
 
 export const action =
@@ -65,7 +66,7 @@ const tasksFromColumnQuery = (
 });
 
 export default function ColumnWrapperCard(props: IProps) {
-  const { column, project } = props;
+  const { column, project, taskClicked } = props;
   const { getTasksByColumnId, createNewTask } = useTaskService();
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -90,7 +91,7 @@ export default function ColumnWrapperCard(props: IProps) {
   );
 
   return (
-    <div className="flex h-full w-full flex-col gap-2 ">
+    <div className="flex h-max max-h-full w-full flex-col gap-2 ">
       <div className="min-h-14 mb-0.5 flex h-14 w-full items-center  justify-between rounded-lg border border-neutral-600  px-3">
         <p className="neutral-500 font-serif text-base tracking-wider">
           {column.name + " | " + tasks?.length}
@@ -117,7 +118,13 @@ export default function ColumnWrapperCard(props: IProps) {
           {tasks && tasks.length > 0 ? (
             tasks.map((task, index) => {
               return (
-                <div key={index} className="w-full">
+                <div
+                  key={index}
+                  className="w-full"
+                  onClick={() => {
+                    taskClicked(task);
+                  }}
+                >
                   <TaskCard task={task}></TaskCard>
                 </div>
               );

@@ -12,6 +12,7 @@ interface IProps {
   onClick?: () => void;
   isActionCard: boolean;
   color: string;
+  noEmail: boolean;
 }
 
 type colorVariants = {
@@ -20,7 +21,7 @@ type colorVariants = {
 };
 
 export default function UserCard(props: IProps) {
-  const { icon, user, onClick, isActionCard, color } = props;
+  const { icon, user, noEmail, onClick, isActionCard, color } = props;
 
   const boxColorVariants: colorIndex & colorVariants = {
     indigo:
@@ -48,8 +49,8 @@ export default function UserCard(props: IProps) {
             <p className="mt-1 grow truncate">
               <span className="opacity-70">
                 {user.firstName + " " + user.lastName}
-              </span>{" "}
-              - {user.email}
+              </span>
+              {noEmail ? "" : " - " + user.email}
             </p>
           </div>
 
@@ -77,7 +78,7 @@ export default function UserCard(props: IProps) {
                 <span className="opacity-70">
                   {user.firstName + " " + user.lastName}
                 </span>{" "}
-                - {user.email}
+                {noEmail ? "" : " - " + user.email}
               </p>
             </div>
           </div>

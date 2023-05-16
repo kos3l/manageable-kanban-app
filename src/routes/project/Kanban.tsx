@@ -1,30 +1,37 @@
 import {
+  BellAlertIcon,
+  BellIcon,
   CheckCircleIcon,
   ClockIcon,
   EllipsisHorizontalIcon,
+  PencilSquareIcon,
   PlusIcon,
+  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
 import { QueryClient } from "react-query";
-import { redirect, useRouteLoaderData } from "react-router-dom";
+import { Link, redirect, useRouteLoaderData } from "react-router-dom";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
 import FilledButton from "../../ui/buttons/FilledButton";
 import ColumnWrapperCard from "../../ui/cards/ColumnWrapperCard";
+import SelectedTaskCard from "../../ui/cards/SelectedTaskCard";
+import UserCard from "../../ui/cards/UserCard";
 import DisplayField from "../../ui/display-field/DisplayField";
 
 export default function KanbanPage() {
   const project = useRouteLoaderData("selectedProject") as Project;
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
 
   if (!project) {
     return <>Loading</>;
   }
 
   return (
-    <div className="relative flex h-full w-full overflow-scroll py-3 pl-3">
-      <div className="flex h-14 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4">
+    <div className="relative flex h-full w-full overflow-scroll py-3">
+      <div className="flex h-14 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pl-4 pl-4 pr-4">
         <div className="mr-40 w-max">
           <h1 className="truncate font-serif text-lg leading-5 tracking-widest">
             <span className="truncate font-sans text-sm tracking-normal text-neutral-500">
@@ -51,13 +58,14 @@ export default function KanbanPage() {
           ></DisplayField>
         </div>
       </div>
-      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 pb-3  md:justify-start 2xl:justify-center">
+      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 pl-4 pb-3  md:justify-start 2xl:justify-center">
         {project.columns.map((col, index) => {
           return (
             <div key={index} className="flex h-full w-72">
               <ColumnWrapperCard
                 project={project}
                 column={col}
+                taskClicked={(task) => setSelectedTask(task)}
               ></ColumnWrapperCard>
             </div>
           );
@@ -70,6 +78,16 @@ export default function KanbanPage() {
           ></FilledButton>
         </div>
       </div>
+      {selectedTask !== null ? (
+        <div className="absolute top-0 flex h-full w-full justify-start bg-neutral-900/90 pl-4 pt-4">
+          <SelectedTaskCard
+            selectedTask={selectedTask}
+            onClose={() => setSelectedTask(null)}
+          ></SelectedTaskCard>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }
