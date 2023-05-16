@@ -1,12 +1,4 @@
-import {
-  BellIcon,
-  CheckCircleIcon,
-  CheckIcon,
-  ClockIcon,
-  EllipsisHorizontalIcon,
-  PlusIcon,
-  TagIcon,
-} from "@heroicons/react/24/solid";
+import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
 import {
@@ -15,22 +7,19 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { Form, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import useTaskService from "../../hooks/service/useTaskService";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { Column } from "../../models/entities/Column";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
-import { DateHelper } from "../../util/helpers/DateHelper";
-import ActionButton from "../buttons/ActionButton";
 import FilledButton from "../buttons/FilledButton";
-import DateInput from "../inputs/DateInput";
-import TextareaInput from "../inputs/TextareaInput";
-import TextInput from "../inputs/TextInput";
+import CreateTaskCard from "./CreateTaskCard";
 import TaskCard from "./TaskCard";
 
 interface IProps {
   column: Column;
+  project: Project;
 }
 
 export const action =
@@ -71,25 +60,20 @@ const tasksFromColumnQuery = (
         statusText: "Not Found",
       });
     }
-    return response.data;
+    return response.data.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   },
 });
 
 export default function ColumnWrapperCard(props: IProps) {
-  const { column } = props;
-
+  const { column, project } = props;
   const { getTasksByColumnId, createNewTask } = useTaskService();
   const { id } = useParams();
+  const queryClient = useQueryClient();
   if (!id) {
     return <p>Loading</p>;
   }
-  const queryClient = useQueryClient();
 
-  const [title, setTitle] = useState<string>("");
-  const [startDate, setStartDate] = useState<Date>(new Date());
-  const [endDate, setEndDate] = useState<Date>(new Date());
   const [showCreate, setShowCreate] = useState<boolean>(false);
-
   const mutation = useMutation({
     mutationFn: (taskDto: ICreateTaskDTO) => {
       return createNewTask(id, taskDto);
@@ -98,12 +82,13 @@ export default function ColumnWrapperCard(props: IProps) {
       queryClient.invalidateQueries({
         queryKey: ["task", "column", "project", id, column._id],
       });
+      setShowCreate(false);
     },
   });
-
   const { data: tasks } = useQuery(
     tasksFromColumnQuery(id, column._id, getTasksByColumnId)
   );
+
   return (
     <div className="flex h-full w-full flex-col gap-2 ">
       <div className="min-h-16 flex h-16 w-full items-center justify-between rounded-lg border border-neutral-600 px-3">
@@ -121,70 +106,22 @@ export default function ColumnWrapperCard(props: IProps) {
         onClick={() => setShowCreate(true)}
       ></FilledButton>
       <div className="flex h-full w-full flex-col  overflow-scroll">
-        {showCreate ? (
-          <div className="mb-3 flex w-full flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-2">
-            <TextInput
-              placeholder={"Title.."}
-              value={title}
-              icon={<TagIcon className="w-5 text-neutral-300"></TagIcon>}
-              onChange={(newVal) => setTitle(newVal)}
-              name="title"
-            ></TextInput>
-            <DateInput
-              icon={<ClockIcon className="w-5 text-neutral-300"></ClockIcon>}
-              onChange={(newVal) => setStartDate(new Date(newVal))}
-              value={DateHelper.formatDateToString(startDate, "YYYY-MM-DD")}
-              name={"startDate"}
-            ></DateInput>
-            <input type="hidden" value={column._id} name="columnId" />
-            <DateInput
-              icon={
-                <CheckCircleIcon className="w-5 text-neutral-300"></CheckCircleIcon>
-              }
-              onChange={(newVal) => setEndDate(new Date(newVal))}
-              value={DateHelper.formatDateToString(endDate, "YYYY-MM-DD")}
-              name={"endDate"}
-            ></DateInput>
-            <div className="flex h-max w-full gap-2">
-              <div className="grow">
-                <button
-                  onClick={() =>
-                    mutation.mutate({
-                      title: title,
-                      startDate: startDate,
-                      endDate: endDate,
-                      columnId: column._id,
-                    })
-                  }
-                  className="w-full rounded border border-indigo-500 bg-neutral-900 py-1.5 px-3 text-sm text-indigo-500  transition hover:border-neutral-400"
-                >
-                  <p className="mt-0.5 tracking-wider">SAVE</p>
-                </button>
-              </div>
-              <div className="grow">
-                <button
-                  onClick={() => setShowCreate(false)}
-                  className="w-full rounded border border-neutral-600 bg-neutral-900 py-1.5 px-3 text-sm text-neutral-500 transition hover:border-neutral-400"
-                >
-                  <p className="mt-0.5 tracking-wider">CANCEL</p>
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
+        <CreateTaskCard
+          column={column}
+          project={project}
+          onClose={() => setShowCreate(false)}
+          showCreate={showCreate}
+          createTask={(dto) => mutation.mutate(dto)}
+        ></CreateTaskCard>
         <div className="flex w-full flex-col gap-2  rounded-lg">
           {tasks && tasks.length > 0 ? (
-            tasks
-              .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1))
-              .map((task, index) => {
-                return (
-                  <div key={index} className="w-full">
-                    <TaskCard task={task}></TaskCard>
-                  </div>
-                );
-              })
+            tasks.map((task, index) => {
+              return (
+                <div key={index} className="w-full">
+                  <TaskCard task={task}></TaskCard>
+                </div>
+              );
+            })
           ) : (
             <></>
           )}

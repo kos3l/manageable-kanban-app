@@ -55,7 +55,10 @@ export default function KanbanPage() {
         {project.columns.map((col, index) => {
           return (
             <div key={index} className="flex h-full w-72">
-              <ColumnWrapperCard column={col}></ColumnWrapperCard>
+              <ColumnWrapperCard
+                project={project}
+                column={col}
+              ></ColumnWrapperCard>
             </div>
           );
         })}
