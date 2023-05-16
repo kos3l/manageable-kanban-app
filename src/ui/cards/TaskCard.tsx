@@ -45,9 +45,9 @@ export default function TaskCard(props: IProps) {
       </div>
       {task.users && task.users.length > 0 ? (
         <div className="mt-1.5 flex w-full flex-wrap gap-2">
-          {task.users.map((user) => {
+          {task.users.map((user, index) => {
             return (
-              <div className="basis-7 overflow-hidden rounded-lg">
+              <div key={index} className="basis-7 overflow-hidden rounded-lg">
                 <img
                   src={avatar}
                   alt=""

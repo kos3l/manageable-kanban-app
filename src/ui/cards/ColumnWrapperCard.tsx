@@ -23,24 +23,6 @@ interface IProps {
   taskClicked: (task: Task) => void;
 }
 
-export const action =
-  (
-    queryClient: QueryClient,
-    createTask: (
-      projectId: string,
-      taskDto: ICreateTaskDTO
-    ) => Promise<AxiosResponse<Task, any>>
-  ) =>
-  async ({ request, params }: any) => {
-    const formData = await request.formData();
-    const task = Object.fromEntries(formData) as ICreateTaskDTO;
-    const newTask = await createTask(params.id, task);
-    await queryClient.invalidateQueries({
-      queryKey: ["task", params.id, "projects", "project", "tasks"],
-    });
-    return null;
-  };
-
 const tasksFromColumnQuery = (
   projectId: string,
   columnId: string,
