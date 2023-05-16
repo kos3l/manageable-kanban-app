@@ -92,7 +92,7 @@ export default function ColumnWrapperCard(props: IProps) {
 
   return (
     <div className="flex h-max max-h-full w-full flex-col gap-2 ">
-      <div className="min-h-14 mb-0.5 flex h-14 w-full items-center  justify-between rounded-lg border border-neutral-600  px-3">
+      <div className="mb-0.5 flex min-h-[3.5rem] w-full basis-14 items-center justify-between rounded-lg border border-neutral-600 px-3">
         <p className="neutral-500 font-serif text-base tracking-wider">
           {column.name + " | " + tasks?.length}
         </p>
@@ -100,7 +100,7 @@ export default function ColumnWrapperCard(props: IProps) {
           <EllipsisHorizontalIcon></EllipsisHorizontalIcon>
         </div>
       </div>
-      <div className="flex h-full w-full flex-col gap-1.5 overflow-scroll rounded-lg border border-neutral-600 p-2">
+      <div className="flex w-full grow flex-col gap-1.5 overflow-scroll rounded-lg border border-neutral-600 p-2">
         <FilledButton
           content={"New Task"}
           removeBackground={false}

@@ -30,8 +30,14 @@ export default function KanbanPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full overflow-scroll py-3">
-      <div className="flex h-14 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pl-4 pl-4 pr-4">
+    <div
+      className={
+        selectedTask
+          ? "relative flex h-full w-full overflow-hidden py-3"
+          : "relative flex h-full w-full overflow-scroll py-3"
+      }
+    >
+      <div className="ml-3 flex h-14 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4">
         <div className="mr-40 w-max">
           <h1 className="truncate font-serif text-lg leading-5 tracking-widest">
             <span className="truncate font-sans text-sm tracking-normal text-neutral-500">
@@ -58,7 +64,8 @@ export default function KanbanPage() {
           ></DisplayField>
         </div>
       </div>
-      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 pl-4 pb-3  md:justify-start 2xl:justify-center">
+
+      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 overflow-scroll pl-3 pb-3  md:justify-start 2xl:justify-center">
         {project.columns.map((col, index) => {
           return (
             <div key={index} className="flex h-full w-72">
@@ -78,6 +85,7 @@ export default function KanbanPage() {
           ></FilledButton>
         </div>
       </div>
+
       {selectedTask !== null ? (
         <div className="absolute top-0 flex h-full w-full justify-start bg-neutral-900/90 pl-4 pt-4">
           <SelectedTaskCard

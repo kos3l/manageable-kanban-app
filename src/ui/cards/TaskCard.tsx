@@ -30,7 +30,7 @@ export default function TaskCard(props: IProps) {
         </div>
       </div>
       <div className="word-break mt-2 flex h-max w-full flex-col leading-4">
-        <p className="font-serif text-base">{task.title}</p>
+        <p className="break-all font-serif text-base">{task.title}</p>
       </div>
       <div></div>
     </div>

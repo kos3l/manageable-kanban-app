@@ -23,10 +23,10 @@ export default function SelectedtTaskCard(props: IProps) {
   const { selectedTask, onClose } = props;
 
   return (
-    <div className="relative flex h-max w-[95vw] flex-col overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900 pb-4 md:w-[550px] lg:w-[700px]">
+    <div className="relative flex h-max w-[95vw] flex-col overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900 pb-4 md:w-[550px] lg:w-[700px] 2xl:w-1/2">
       <div className="h-44 w-full bg-pink-900/20"></div>
       <div className="flex w-full flex-col gap-3 p-4">
-        <div className="flex w-full items-center justify-between">
+        <div className="flex w-full items-start justify-between gap-2">
           <p className="max-w-2/4 break-all font-serif text-xl tracking-wider">
             {selectedTask.title}
           </p>

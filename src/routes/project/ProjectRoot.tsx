@@ -55,7 +55,7 @@ export default function ProjectRoot() {
   }
 
   return (
-    <div className="relative w-full bg-gradient-to-b from-neutral-900">
+    <div className="relative w-full  bg-gradient-to-b  from-neutral-900 ">
       <Outlet />
     </div>
   );
