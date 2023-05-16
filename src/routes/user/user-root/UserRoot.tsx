@@ -151,7 +151,7 @@ export default function UserRootPage() {
               <Bars3Icon className="w-6 text-neutral-200"></Bars3Icon>
             </div>
           </div>
-          <div className="flex w-full grow bg-hero-pattern 2xl:justify-center">
+          <div className="relative flex w-full grow overflow-scroll bg-hero-pattern 2xl:justify-center">
             <Outlet />
           </div>
         </div>

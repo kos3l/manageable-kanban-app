@@ -20,6 +20,12 @@ const useUserService = () => {
     });
   };
 
+  const getUsersByTeamId = (teamId: string) => {
+    return get<void, AxiosResponse<User[]>>(bastPath + "/team/" + teamId, {
+      withCredentials: true,
+    });
+  };
+
   const updateUserProfile = (userId: string, userDto: IUpdateUserDTO) => {
     return put<IUpdateUserDTO, AxiosResponse<void>>(
       bastPath + "/" + userId,
@@ -28,6 +34,11 @@ const useUserService = () => {
     );
   };
 
-  return { getLoggedInUserProfile, updateUserProfile, getUserByEmail };
+  return {
+    getLoggedInUserProfile,
+    updateUserProfile,
+    getUserByEmail,
+    getUsersByTeamId,
+  };
 };
 export default useUserService;

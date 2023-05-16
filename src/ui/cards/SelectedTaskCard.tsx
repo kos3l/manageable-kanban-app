@@ -8,6 +8,7 @@ import {
   TagIcon,
   ClockIcon,
   Bars3CenterLeftIcon,
+  UsersIcon,
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import { Task } from "../../models/entities/Task";
@@ -23,6 +24,7 @@ import { DateHelper } from "../../util/helpers/DateHelper";
 import DateInput from "../inputs/DateInput";
 import TextareaInput from "../inputs/TextareaInput";
 import { AxiosResponse } from "axios";
+import { IUpdateUserToTask } from "../../models/dto/project/IUpdateUserToTask";
 
 interface IProps {
   selectedTask: Task;
@@ -31,7 +33,13 @@ interface IProps {
 
 export default function SelectedtTaskCard(props: IProps) {
   const { selectedTask, onClose } = props;
-  const { updateTask, getTaskById, deleteTask } = useTaskService();
+  const {
+    updateTask,
+    getTaskById,
+    deleteTask,
+    addUserToTask,
+    removeUserFromTask,
+  } = useTaskService();
   const queryClient = useQueryClient();
   const mainRef = useRef<any>(null);
 
@@ -94,6 +102,46 @@ export default function SelectedtTaskCard(props: IProps) {
   const deleteMutation = useMutation({
     mutationFn: () => {
       return deleteTask(selectedTask._id);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", "column", selectedTask._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          "task",
+          "column",
+          "project",
+          selectedTask.projectId,
+          selectedTask.columnId,
+        ],
+      });
+    },
+  });
+
+  const addUserMutation = useMutation({
+    mutationFn: (userDto: IUpdateUserToTask) => {
+      return addUserToTask(selectedTask._id, userDto);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", "column", selectedTask._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          "task",
+          "column",
+          "project",
+          selectedTask.projectId,
+          selectedTask.columnId,
+        ],
+      });
+    },
+  });
+
+  const removeUserMutation = useMutation({
+    mutationFn: (userDto: IUpdateUserToTask) => {
+      return removeUserFromTask(selectedTask._id, userDto);
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({

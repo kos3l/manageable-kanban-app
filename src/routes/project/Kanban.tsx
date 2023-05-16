@@ -9,7 +9,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { QueryClient } from "react-query";
 import { Link, redirect, useRouteLoaderData } from "react-router-dom";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
@@ -24,7 +24,7 @@ import DisplayField from "../../ui/display-field/DisplayField";
 export default function KanbanPage() {
   const project = useRouteLoaderData("selectedProject") as Project;
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-
+  const test = useRef<any>(null);
   if (!project) {
     return <>Loading</>;
   }
@@ -33,7 +33,7 @@ export default function KanbanPage() {
     <div
       className={
         selectedTask
-          ? "relative flex h-full w-full overflow-hidden py-3"
+          ? "flex h-full w-full overflow-hidden py-3"
           : "relative flex h-full w-full overflow-scroll py-3"
       }
     >
@@ -74,7 +74,9 @@ export default function KanbanPage() {
               <ColumnWrapperCard
                 project={project}
                 column={col}
-                taskClicked={(task) => setSelectedTask(task)}
+                taskClicked={(task) => {
+                  setSelectedTask(task);
+                }}
               ></ColumnWrapperCard>
             </div>
           );

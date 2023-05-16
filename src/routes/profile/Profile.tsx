@@ -95,7 +95,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-4 bg-gradient-to-b from-neutral-900 p-4 sm:h-full sm:flex-nowrap 2xl:w-2/3">
+    <div className="relative flex h-max w-full flex-wrap gap-4 bg-gradient-to-b from-neutral-900 p-4 sm:h-full sm:flex-nowrap sm:overflow-scroll 2xl:w-2/3">
       <div className="flex h-80 w-full grow-0 flex-col gap-3  sm:h-full sm:basis-96 md:basis-64 lg:basis-72">
         <div className="w-full overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
           <img src={avatar} alt="" className="h-full w-full object-contain" />
@@ -136,7 +136,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-        <div className="col-span-4 flex max-h-full grow  lg:col-span-2">
+        <div className="col-span-4 flex max-h-full grow  overflow-scroll lg:col-span-2">
           <WrapperCard
             name={"Teams"}
             displayEntities={teams ? teams : []}
@@ -149,7 +149,7 @@ export default function ProfilePage() {
             )}
           ></WrapperCard>
         </div>
-        <div className="col-span-4 flex  max-h-full grow  gap-3 lg:col-span-2">
+        <div className="col-span-4 flex max-h-full grow gap-3  overflow-scroll lg:col-span-2">
           <WrapperCard
             name={"Projects"}
             displayEntities={
