@@ -209,7 +209,7 @@ export default function SelectedtTaskCard(props: IProps) {
   return (
     <div
       ref={mainRef}
-      className="relative flex h-max w-[95vw] flex-wrap overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900 pb-4 md:w-[550px] lg:w-[800px] 2xl:w-1/2"
+      className="relative flex h-max w-[95vw] flex-wrap overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900 pb-2 md:w-[550px] lg:w-[800px] 2xl:w-1/2"
     >
       <div className="h-44 w-full bg-pink-900/20"></div>
       <div className="absolute right-0 top-2">
@@ -346,7 +346,7 @@ export default function SelectedtTaskCard(props: IProps) {
                   name="description"
                 ></TextareaInput>
                 <p className="mt-2 tracking-wider opacity-70">Manage users</p>
-                <div className="flex w-full gap-2">
+                <div className="flex w-full flex-wrap gap-2">
                   {users && users.length > 0 ? (
                     <>
                       {users.map((user) => {
@@ -354,12 +354,16 @@ export default function SelectedtTaskCard(props: IProps) {
                           <div
                             key={user._id}
                             onClick={() => {
-                              addUserMutation.mutate({ userId: user._id });
+                              data.userIds.includes(user._id)
+                                ? removeUserMutation.mutate({
+                                    userId: user._id,
+                                  })
+                                : addUserMutation.mutate({ userId: user._id });
                             }}
                             className={
                               data.userIds.includes(user._id)
-                                ? "flex h-12 w-max items-center justify-between gap-2 overflow-scroll rounded-lg border border-pink-600 bg-pink-800/10 pl-2 pr-4"
-                                : "flex h-12 w-max items-center justify-between gap-2 overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50 pl-2 pr-4 transition hover:border-pink-600 "
+                                ? "flex h-12 w-max cursor-pointer items-center justify-between gap-2 overflow-scroll rounded-lg border border-pink-600 bg-pink-800/10 pl-2 pr-4"
+                                : "flex h-12 w-max cursor-pointer items-center justify-between gap-2 overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50 pl-2 pr-4 transition hover:border-pink-600 "
                             }
                           >
                             <div className="flex w-max gap-2">

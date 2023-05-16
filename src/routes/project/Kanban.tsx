@@ -91,7 +91,7 @@ export default function KanbanPage() {
       </div>
 
       {selectedTask !== null ? (
-        <div className="absolute top-0 flex h-full w-full justify-start bg-neutral-900/90 pl-4 pt-4">
+        <div className="absolute top-0 flex h-max min-h-full w-full justify-start bg-neutral-900/90 pb-12 pl-4 pt-4">
           <SelectedTaskCard
             teamId={project.teamId}
             selectedTask={selectedTask}
