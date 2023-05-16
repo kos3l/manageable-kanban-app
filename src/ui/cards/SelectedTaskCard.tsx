@@ -94,6 +94,16 @@ export default function SelectedtTaskCard(props: IProps) {
   const handleClickOutside = (event: MouseEvent) => {
     if (mainRef.current && !mainRef.current.contains(event.target)) {
       onClose();
+      clearState();
+    }
+  };
+
+  const clearState = () => {
+    if (data) {
+      setTitle(data.title);
+      setStartDate(data.startDate);
+      setEndDate(data.endDate);
+      setDescription(data.description);
     }
   };
 
@@ -110,7 +120,7 @@ export default function SelectedtTaskCard(props: IProps) {
       <div className="flex w-full flex-col gap-3 p-4">
         <div className="flex w-full items-start justify-between gap-2">
           {isEditOn ? (
-            <div>
+            <div className="grow">
               <TextInput
                 placeholder={"Title"}
                 icon={<TagIcon className="w-5 text-neutral-300"></TagIcon>}
@@ -119,11 +129,11 @@ export default function SelectedtTaskCard(props: IProps) {
               ></TextInput>
             </div>
           ) : (
-            <p className="max-w-2/4 break-all font-serif text-xl tracking-wider">
+            <p className="max-w-2/4 break-word font-serif text-xl tracking-wider">
               {data.title}
             </p>
           )}
-          <div className="flex justify-end gap-2">
+          <div className="flex w-max  justify-end gap-2 ">
             {isEditOn ? (
               <button
                 onClick={() => {
@@ -135,7 +145,7 @@ export default function SelectedtTaskCard(props: IProps) {
                   });
                   setIsEditOn(false);
                 }}
-                className="flex w-max items-center gap-1 rounded border  border-indigo-600 py-1 px-2 transition hover:bg-indigo-700/10"
+                className="flex grow items-center gap-1 rounded border border-indigo-600 py-1 px-3 transition hover:bg-indigo-700/10"
               >
                 <CheckCircleIcon className="w-4 rounded text-indigo-600"></CheckCircleIcon>
                 <p className="mt-0.5 text-sm tracking-wider text-indigo-500">
@@ -144,25 +154,35 @@ export default function SelectedtTaskCard(props: IProps) {
               </button>
             ) : (
               <>
-                <button
-                  onClick={() => setIsEditOn(true)}
-                  className="flex w-max items-center gap-1 rounded bg-indigo-600/20 py-1 px-2 transition hover:bg-indigo-600/40"
-                >
-                  <PencilSquareIcon className="w-4 rounded text-indigo-600"></PencilSquareIcon>
-                  <p className="mt-0.5 text-sm tracking-wider text-indigo-500">
-                    Edit
-                  </p>
-                </button>
                 <button className="flex w-max items-center gap-1 rounded bg-red-900/20 py-1 px-2 transition hover:bg-red-900/40">
                   <TrashIcon className="w-4 rounded text-red-800"></TrashIcon>
                   <p className="mt-0.5 text-sm tracking-wider text-red-800">
                     Delete
                   </p>
                 </button>
+                <button
+                  onClick={() => setIsEditOn(true)}
+                  className="flex w-max items-center gap-1 rounded bg-indigo-600/20 py-1 px-4 transition hover:bg-indigo-600/40"
+                >
+                  <PencilSquareIcon className="w-4 rounded text-indigo-600"></PencilSquareIcon>
+                  <p className="mt-0.5 text-sm tracking-wider text-indigo-500">
+                    Edit
+                  </p>
+                </button>
               </>
             )}
             <button
-              onClick={isEditOn ? () => setIsEditOn(false) : () => onClose()}
+              onClick={
+                isEditOn
+                  ? () => {
+                      setIsEditOn(false);
+                      clearState();
+                    }
+                  : () => {
+                      onClose();
+                      clearState();
+                    }
+              }
               className="flex w-max  min-w-[2rem] items-center justify-center rounded bg-neutral-700/40 p-1 transition hover:bg-neutral-700/60"
             >
               <XMarkIcon className="w-5 rounded text-neutral-400"></XMarkIcon>
