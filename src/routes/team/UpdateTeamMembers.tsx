@@ -126,11 +126,13 @@ export default function UpdateTeamMembersPage() {
         </div>
         <div className="flex w-max flex-col gap-2">
           <DisplayField
+            color="white"
             label={"Team:"}
             value={team.name}
             placeholder={""}
           ></DisplayField>
           <DisplayField
+            color="white"
             label={"Created By"}
             value={teamCreator?.firstName + " " + teamCreator?.lastName}
             placeholder={""}
@@ -142,6 +144,7 @@ export default function UpdateTeamMembersPage() {
         displayEntities={team.userModels ? team.userModels : []}
         displayComponent={(user) => (
           <UserCard
+            noEmail={false}
             isActionCard={team.createdBy !== user._id}
             key={user._id}
             user={user}
@@ -180,6 +183,7 @@ export default function UpdateTeamMembersPage() {
           </div>
           {fetchedUser && fetchedUser.data ? (
             <UserCard
+              noEmail={false}
               isActionCard={!team.users.includes(fetchedUser.data._id)}
               user={fetchedUser.data}
               onClick={() => {

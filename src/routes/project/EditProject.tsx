@@ -79,6 +79,7 @@ export default function EditProjectPage() {
                 Edit Project
               </h1>
               <DisplayField
+                color="white"
                 label={"Start Date"}
                 placeholder={"Date not found"}
                 value={new Date(project.startDate).toLocaleDateString()}

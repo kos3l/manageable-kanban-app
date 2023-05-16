@@ -14,7 +14,7 @@ export default function TextInput(props: IProps) {
   return (
     <div className="flex h-12 w-full items-center rounded-lg border border-neutral-600 bg-neutral-900 px-2">
       {icon && (
-        <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700">
+        <div className="flex h-7 w-7 min-w-[1.8rem] items-center justify-center rounded-lg bg-neutral-700">
           {icon}
         </div>
       )}

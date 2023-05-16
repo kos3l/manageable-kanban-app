@@ -3,16 +3,13 @@ import {
   XMarkIcon,
   BellIcon,
   BellAlertIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
-import { ReactNode } from "react";
 import { Link } from "react-router-dom";
-import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
-import { ProjectStatus } from "../../models/enum/ProjectStatus";
-import { ProjectStatusText } from "../../models/enum/ProjectStatusText";
-import { colorIndex } from "../../models/util/ColorIndex";
 import DisplayField from "../display-field/DisplayField";
 import avatar from "../../assets/avatar.png";
+import { useRef, useEffect } from "react";
 
 interface IProps {
   selectedTask: Task;
@@ -21,9 +18,26 @@ interface IProps {
 
 export default function SelectedtTaskCard(props: IProps) {
   const { selectedTask, onClose } = props;
+  const mainRef = useRef<any>(null);
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (mainRef.current && !mainRef.current.contains(event.target)) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className="relative flex h-max w-[95vw] flex-col overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900 pb-4 md:w-[550px] lg:w-[700px] 2xl:w-1/2">
+    <div
+      ref={mainRef}
+      className="relative flex h-max w-[95vw] flex-col overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900 pb-4 md:w-[550px] lg:w-[700px] 2xl:w-1/2"
+    >
       <div className="h-44 w-full bg-pink-900/20"></div>
       <div className="flex w-full flex-col gap-3 p-4">
         <div className="flex w-full items-start justify-between gap-2">
@@ -37,33 +51,50 @@ export default function SelectedtTaskCard(props: IProps) {
                 Edit
               </p>
             </button>
+            <button className="flex w-max items-center gap-1 rounded bg-red-900/20 py-1 px-2 transition hover:bg-red-900/40">
+              <TrashIcon className="w-4 rounded text-red-800"></TrashIcon>
+              <p className="mt-0.5 text-sm tracking-wider text-red-800">
+                Delete
+              </p>
+            </button>
             <button
               onClick={() => onClose()}
-              className="flex w-max  min-w-[2rem] items-center justify-center rounded bg-red-900/20 p-1 transition hover:bg-red-900/40"
+              className="flex w-max  min-w-[2rem] items-center justify-center rounded bg-neutral-700/40 p-1 transition hover:bg-neutral-700/60"
             >
-              <XMarkIcon className="w-5 rounded text-red-800"></XMarkIcon>
+              <XMarkIcon className="w-5 rounded text-neutral-400"></XMarkIcon>
             </button>
           </div>
         </div>
         <div className="flex w-max gap-4">
           <DisplayField
+            color="white"
             label={"Start Date"}
             placeholder={"Date not found"}
             value={new Date(selectedTask.startDate).toLocaleDateString()}
             icon={<BellIcon className="w-6 text-neutral-300"></BellIcon>}
           ></DisplayField>
           <DisplayField
+            color={
+              new Date() > new Date(selectedTask.endDate) ? "red" : "white"
+            }
             label={"End Date"}
             placeholder={"Date not found"}
             icon={
-              <BellAlertIcon className="w-6 text-neutral-300"></BellAlertIcon>
+              <BellAlertIcon
+                className={
+                  new Date() > new Date(selectedTask.endDate)
+                    ? "w-6 text-red-700"
+                    : "w-6 text-neutral-300"
+                }
+              ></BellAlertIcon>
             }
             value={new Date(selectedTask.endDate).toLocaleDateString()}
           ></DisplayField>
         </div>
-        <div className="mt-2 flex h-max w-full gap-2 ">
-          <div className="flex grow border-r border-neutral-600 pr-2">
+        <div className="mt-2 flex h-max w-full gap-2">
+          <div className="mr-1 flex grow border-r border-neutral-600 pr-2">
             <DisplayField
+              color="white"
               label="Description"
               value={selectedTask.description}
               placeholder={"No Description"}
@@ -104,7 +135,7 @@ export default function SelectedtTaskCard(props: IProps) {
                 })}
               </div>
             ) : (
-              <></>
+              <p className="text-sm text-neutral-700">No users added..</p>
             )}
           </div>
         </div>

@@ -49,12 +49,14 @@ export default function KanbanPage() {
         </div>
         <div className="flex w-max gap-6">
           <DisplayField
+            color="white"
             label={"Start Date"}
             placeholder={"Date not found"}
             value={new Date(project.startDate).toLocaleDateString()}
             icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
           ></DisplayField>
           <DisplayField
+            color="white"
             label={"End Date"}
             placeholder={"Date not found"}
             icon={

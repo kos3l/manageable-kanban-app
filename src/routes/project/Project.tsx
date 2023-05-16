@@ -88,12 +88,14 @@ export default function ProjectPage() {
             {project.name}
           </h1>
           <DisplayField
+            color="white"
             label={"Start Date"}
             placeholder={"Date not found"}
             value={new Date(project.startDate).toLocaleDateString()}
             icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
           ></DisplayField>
           <DisplayField
+            color="white"
             label={"End Date"}
             placeholder={"Date not found"}
             icon={
@@ -102,6 +104,7 @@ export default function ProjectPage() {
             value={new Date(project.endDate).toLocaleDateString()}
           ></DisplayField>
           <DisplayField
+            color="white"
             label={"Description"}
             placeholder={"No Description"}
             value={project.description}
@@ -155,6 +158,7 @@ export default function ProjectPage() {
           </div>
           <div className="flex w-max flex-col gap-2">
             <DisplayField
+              color="white"
               label={"Team:"}
               value={project.team[0].name}
               placeholder={""}

@@ -116,6 +116,7 @@ export default function ProfilePage() {
           <div className="flex h-max w-full flex-wrap items-start gap-2 sm:flex-nowrap">
             <div className="flex w-full sm:min-w-[rem] sm:basis-72">
               <DisplayField
+                color="white"
                 label={"Birthday"}
                 icon={<CakeIcon className="w-5 text-neutral-300"></CakeIcon>}
                 placeholder="Missing data"
@@ -127,6 +128,7 @@ export default function ProfilePage() {
             </div>
             <div className="mt-0.5 flex w-full sm:w-max sm:grow">
               <DisplayField
+                color="white"
                 label={"Bio"}
                 placeholder="No description yet"
                 value={user.bio}
