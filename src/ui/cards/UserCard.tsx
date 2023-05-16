@@ -53,7 +53,6 @@ export default function UserCard(props: IProps) {
               {noEmail ? "" : " - " + user.email}
             </p>
           </div>
-
           <div onClick={onClick} className={`${boxColorVariants[color]}`}>
             {icon}
           </div>

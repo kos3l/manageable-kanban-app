@@ -93,6 +93,7 @@ export default function KanbanPage() {
       {selectedTask !== null ? (
         <div className="absolute top-0 flex h-full w-full justify-start bg-neutral-900/90 pl-4 pt-4">
           <SelectedTaskCard
+            teamId={project.teamId}
             selectedTask={selectedTask}
             onClose={() => setSelectedTask(null)}
           ></SelectedTaskCard>
