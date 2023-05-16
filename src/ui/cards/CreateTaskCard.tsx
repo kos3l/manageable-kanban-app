@@ -50,7 +50,7 @@ export default function CreateTaskCard(props: IProps) {
       {showCreate ? (
         <div
           ref={mainRef}
-          className="mb-3 flex w-full flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-2"
+          className="flex w-full flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-2"
         >
           <TextInput
             placeholder={"Title.."}

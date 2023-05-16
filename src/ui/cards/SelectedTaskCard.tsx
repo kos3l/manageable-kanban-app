@@ -31,7 +31,7 @@ interface IProps {
 
 export default function SelectedtTaskCard(props: IProps) {
   const { selectedTask, onClose } = props;
-  const { updateTask, getTaskById } = useTaskService();
+  const { updateTask, getTaskById, deleteTask } = useTaskService();
   const queryClient = useQueryClient();
   const mainRef = useRef<any>(null);
 
@@ -91,6 +91,26 @@ export default function SelectedtTaskCard(props: IProps) {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => {
+      return deleteTask(selectedTask._id);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["task", "column", selectedTask._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [
+          "task",
+          "column",
+          "project",
+          selectedTask.projectId,
+          selectedTask.columnId,
+        ],
+      });
+    },
+  });
+
   const handleClickOutside = (event: MouseEvent) => {
     if (mainRef.current && !mainRef.current.contains(event.target)) {
       onClose();
@@ -104,6 +124,15 @@ export default function SelectedtTaskCard(props: IProps) {
       setStartDate(data.startDate);
       setEndDate(data.endDate);
       setDescription(data.description);
+    }
+  };
+
+  const handleDeleteTask = () => {
+    const warning = confirm(
+      "This action will delete the task. Do you want to proceed?"
+    );
+    if (warning) {
+      deleteMutation.mutate();
     }
   };
 
@@ -154,7 +183,10 @@ export default function SelectedtTaskCard(props: IProps) {
               </button>
             ) : (
               <>
-                <button className="flex w-max items-center gap-1 rounded bg-red-900/20 py-1 px-2 transition hover:bg-red-900/40">
+                <button
+                  onClick={() => handleDeleteTask()}
+                  className="flex w-max items-center gap-1 rounded bg-red-900/20 py-1 px-2 transition hover:bg-red-900/40"
+                >
                   <TrashIcon className="w-4 rounded text-red-800"></TrashIcon>
                   <p className="mt-0.5 text-sm tracking-wider text-red-800">
                     Delete

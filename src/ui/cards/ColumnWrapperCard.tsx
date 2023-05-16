@@ -83,22 +83,25 @@ export default function ColumnWrapperCard(props: IProps) {
         </div>
       </div>
       <div className="flex w-full grow flex-col gap-1.5 overflow-scroll rounded-lg border border-neutral-600 p-2">
-        <FilledButton
-          content={"New Task"}
-          removeBackground={false}
-          icon={<PlusIcon className="w-5 text-neutral-300"></PlusIcon>}
-          onClick={() => setShowCreate(true)}
-        ></FilledButton>
-        <CreateTaskCard
-          column={column}
-          project={project}
-          onClose={() => setShowCreate(false)}
-          showCreate={showCreate}
-          createTask={(dto) => mutation.mutate(dto)}
-        ></CreateTaskCard>
-        <div className="flex w-full flex-col gap-1.5">
-          {tasks && tasks.length > 0 ? (
-            tasks.map((task, index) => {
+        <div className="flex h-max w-full flex-col gap-2 ">
+          <FilledButton
+            content={"New Task"}
+            removeBackground={false}
+            icon={<PlusIcon className="w-5 text-neutral-300"></PlusIcon>}
+            onClick={() => setShowCreate(true)}
+          ></FilledButton>
+          <CreateTaskCard
+            column={column}
+            project={project}
+            onClose={() => setShowCreate(false)}
+            showCreate={showCreate}
+            createTask={(dto) => mutation.mutate(dto)}
+          ></CreateTaskCard>
+        </div>
+
+        {tasks && tasks.length > 0 ? (
+          <div className="mt-1 flex w-full flex-col gap-1.5">
+            {tasks.map((task, index) => {
               return (
                 <div
                   key={index}
@@ -110,11 +113,11 @@ export default function ColumnWrapperCard(props: IProps) {
                   <TaskCard task={task}></TaskCard>
                 </div>
               );
-            })
-          ) : (
-            <></>
-          )}
-        </div>
+            })}
+          </div>
+        ) : (
+          <></>
+        )}
       </div>
     </div>
   );
