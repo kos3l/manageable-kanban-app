@@ -23,8 +23,8 @@ export default function KanbanPage() {
   }
 
   return (
-    <div className="relative flex h-full w-full overflow-scroll">
-      <div className="flex h-16 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4">
+    <div className="relative flex h-full w-full overflow-scroll py-3 pl-3">
+      <div className="flex h-14 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4">
         <div className="mr-40 w-max">
           <h1 className="truncate font-serif text-lg leading-5 tracking-widest">
             <span className="truncate font-sans text-sm tracking-normal text-neutral-500">
@@ -51,7 +51,7 @@ export default function KanbanPage() {
           ></DisplayField>
         </div>
       </div>
-      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4  md:justify-start 2xl:justify-center">
+      <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 pb-3  md:justify-start 2xl:justify-center">
         {project.columns.map((col, index) => {
           return (
             <div key={index} className="flex h-full w-72">

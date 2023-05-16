@@ -67,7 +67,7 @@ export default function EditProjectPage() {
   }
 
   return (
-    <div className="flex w-full justify-center md:justify-start 2xl:justify-center">
+    <div className="flex w-full justify-center p-4 md:justify-start 2xl:justify-center">
       <Form
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3  xl:w-5/6"

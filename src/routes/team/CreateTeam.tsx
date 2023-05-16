@@ -35,7 +35,7 @@ export default function CreateTeam() {
   const [description, setDescription] = useState<string>("");
 
   return (
-    <div className="flex w-full justify-center bg-gradient-to-b from-neutral-900 md:justify-start 2xl:justify-center">
+    <div className="flex w-full justify-center bg-gradient-to-b from-neutral-900 p-4 md:justify-start 2xl:justify-center">
       <Form
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"

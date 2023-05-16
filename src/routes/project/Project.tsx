@@ -70,7 +70,7 @@ export default function ProjectPage() {
   };
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-3  xl:flex-nowrap 2xl:w-3/4">
+    <div className="flex h-max w-full flex-wrap gap-3 p-4  xl:flex-nowrap 2xl:w-3/4">
       <div className="flex h-max w-full flex-col gap-3 xl:basis-96">
         <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
           <div className={`${labelVariants[ProjectStatus[project.status]]}`}>

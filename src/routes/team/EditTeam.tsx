@@ -47,7 +47,7 @@ export default function EditTeam() {
   );
 
   return (
-    <div className="flex w-full justify-center md:justify-start 2xl:justify-center">
+    <div className=" flex w-full justify-center md:justify-start 2xl:justify-center">
       <Form
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"

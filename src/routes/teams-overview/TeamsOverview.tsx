@@ -42,7 +42,7 @@ export default function TeamsOverviewPage() {
   });
   console.log(Object.values(Sorting));
   return (
-    <div className="grid h-max w-full grid-cols-4 gap-2 bg-gradient-to-b from-neutral-900 2xl:w-3/4">
+    <div className="grid h-max w-full grid-cols-4 gap-2 bg-gradient-to-b from-neutral-900 p-4 2xl:w-3/4">
       <div className="col-span-3 flex flex-wrap gap-x-2 gap-y-4">
         <div className="flex h-max flex-auto items-center">
           <TextInput
