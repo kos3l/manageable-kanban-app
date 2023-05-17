@@ -36,6 +36,18 @@ import TeamRoot, {
   action as deleteTeamAction,
 } from "./routes/team/TeamRoot";
 import EditTeam, { action as updateTeamAction } from "./routes/team/EditTeam";
+import CreateProject, {
+  action as createProjectAction,
+} from "./routes/project/CreateProject";
+import useProjectService from "./hooks/service/useProjectService";
+import ProjectRoot, {
+  loader as projectByIdLoader,
+} from "./routes/project/ProjectRoot";
+import EditProjectPage, {
+  action as updateProjectAction,
+} from "./routes/project/EditProject";
+import KanbanPage, { action as kanbanActions } from "./routes/project/Kanban";
+import KanbanOverview from "./routes/kanban-overview/KanbanOverview";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -46,7 +58,15 @@ const App = ({ queryClient }: any) => {
     updateTeam,
     deleteTeam,
   } = useTeamService();
-
+  const {
+    createNewProject,
+    getProjectById,
+    updateProject,
+    addColumnToProject,
+    updateColumn,
+    deleteColumn,
+    changeColumnOrder,
+  } = useProjectService();
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="">
@@ -68,7 +88,11 @@ const App = ({ queryClient }: any) => {
               element={<EditUserPage />}
               action={userUpdateAction(queryClient, updateUserProfile)}
             />
-            <Route path="user-dashboard" element={<UserDashboardPage />} />
+            <Route
+              index
+              path="user-dashboard"
+              element={<UserDashboardPage />}
+            />
             <Route path="teams-overview" element={<TeamsOverviewPage />} />
             <Route
               path="teams/:id/"
@@ -77,7 +101,7 @@ const App = ({ queryClient }: any) => {
               action={deleteTeamAction(queryClient, deleteTeam)}
               id="selectedTeam"
             >
-              <Route path="" element={<TeamPage />}></Route>
+              <Route index path="" element={<TeamPage />}></Route>
               <Route
                 path="edit"
                 element={<EditTeam />}
@@ -95,10 +119,36 @@ const App = ({ queryClient }: any) => {
               element={<CreateTeam />}
             />
             <Route
+              path="projects/:id"
+              element={<ProjectRoot />}
+              loader={projectByIdLoader(queryClient, getProjectById)}
+              id="selectedProject"
+              action={kanbanActions(
+                queryClient,
+                addColumnToProject,
+                updateColumn,
+                deleteColumn,
+                changeColumnOrder
+              )}
+            >
+              <Route index path="" element={<ProjectPage />} />
+              <Route
+                path="edit"
+                action={updateProjectAction(queryClient, updateProject)}
+                element={<EditProjectPage />}
+              />
+              <Route path="kanban" element={<KanbanPage />} />
+            </Route>
+            <Route
               path="projects-overview"
               element={<ProjectsOverviewPage />}
             />
-            <Route path="projects/:id" element={<ProjectPage />} />
+            <Route
+              path="projects/create"
+              action={createProjectAction(queryClient, createNewProject)}
+              element={<CreateProject />}
+            />
+            <Route path="kanban-overview" element={<KanbanOverview />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />

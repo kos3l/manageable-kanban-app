@@ -4,7 +4,6 @@ import { Outlet, redirect, useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
 
-// move this to a loader
 const teamByIdQuery = (
   teamId: string,
   getTeamById: (teamId: string) => Promise<AxiosResponse<Team, any>>
@@ -69,7 +68,7 @@ export default function TeamRootPage() {
   }
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-3 xl:flex-nowrap 2xl:w-3/4">
+    <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 p-4 xl:flex-nowrap 2xl:w-3/4">
       <Outlet />
     </div>
   );

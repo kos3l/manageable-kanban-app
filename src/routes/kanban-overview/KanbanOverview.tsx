@@ -2,6 +2,7 @@ import {
   ChevronUpDownIcon,
   ClipboardDocumentIcon,
   ClipboardDocumentListIcon,
+  ListBulletIcon,
   MagnifyingGlassIcon,
   PlusIcon,
   UsersIcon,
@@ -12,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
 import useTeamService from "../../hooks/service/useTeamService";
 import FilledButton from "../../ui/buttons/FilledButton";
+import KanbanCard from "../../ui/cards/KanbanCard";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
 import TextInput from "../../ui/inputs/TextInput";
@@ -24,7 +26,7 @@ enum Sorting {
   OLDEST = "Oldest",
 }
 
-export default function ProjectsOverviewPage() {
+export default function KanbanOverview() {
   const navigate = useNavigate();
   const { getAllUserProjects } = useProjectService();
   const [sortingOption, setSortingOption] = useState<string>(Sorting.AZ);
@@ -79,12 +81,12 @@ export default function ProjectsOverviewPage() {
                   className="col-span-6 sm:col-span-3 md:col-span-2"
                   key={index}
                 >
-                  <ProjectCard
+                  <KanbanCard
                     project={project}
                     icon={
-                      <ClipboardDocumentListIcon className="w-6 text-indigo-500"></ClipboardDocumentListIcon>
+                      <ListBulletIcon className="w-6 text-neutral-400"></ListBulletIcon>
                     }
-                  ></ProjectCard>
+                  ></KanbanCard>
                 </div>
               );
             })}
