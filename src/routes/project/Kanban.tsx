@@ -36,36 +36,38 @@ export default function KanbanPage() {
           : "relative flex h-full w-full overflow-scroll py-3"
       }
     >
-      <div className="ml-3 flex h-14 w-max items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4">
-        <div className="mr-40 w-max">
-          <h1 className="truncate font-serif text-lg leading-5 tracking-widest">
-            <span className="truncate font-sans text-sm tracking-normal text-neutral-500">
-              {project.team[0].name ? project.team[0].name : ""}
-            </span>
-            <br />
-            {project.name}
-          </h1>
+      {" "}
+      <Link to={"../"}>
+        <div className="ml-3 flex h-14 w-[37rem] items-center justify-between gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4 transition hover:bg-neutral-800/40">
+          <div className="w-max">
+            <h1 className="truncate font-serif text-lg leading-5 tracking-widest">
+              <span className="truncate font-sans text-sm tracking-normal text-neutral-500">
+                {project.team[0].name ? project.team[0].name : ""}
+              </span>
+              <br />
+              {project.name}
+            </h1>
+          </div>
+          <div className="flex w-max gap-6">
+            <DisplayField
+              color="white"
+              label={"Start Date"}
+              placeholder={"Date not found"}
+              value={new Date(project.startDate).toLocaleDateString()}
+              icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
+            ></DisplayField>
+            <DisplayField
+              color="white"
+              label={"End Date"}
+              placeholder={"Date not found"}
+              icon={
+                <CheckCircleIcon className="w-6 text-neutral-300"></CheckCircleIcon>
+              }
+              value={new Date(project.endDate).toLocaleDateString()}
+            ></DisplayField>
+          </div>
         </div>
-        <div className="flex w-max gap-6">
-          <DisplayField
-            color="white"
-            label={"Start Date"}
-            placeholder={"Date not found"}
-            value={new Date(project.startDate).toLocaleDateString()}
-            icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
-          ></DisplayField>
-          <DisplayField
-            color="white"
-            label={"End Date"}
-            placeholder={"Date not found"}
-            icon={
-              <CheckCircleIcon className="w-6 text-neutral-300"></CheckCircleIcon>
-            }
-            value={new Date(project.endDate).toLocaleDateString()}
-          ></DisplayField>
-        </div>
-      </div>
-
+      </Link>
       <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 overflow-scroll pl-3 pb-3  md:justify-start 2xl:justify-center">
         {project.columns.map((col, index) => {
           return (

@@ -2,6 +2,7 @@ import {
   CheckCircleIcon,
   CheckIcon,
   ClockIcon,
+  ListBulletIcon,
   PencilSquareIcon,
   TrashIcon,
   UserPlusIcon,
@@ -126,7 +127,7 @@ export default function ProjectPage() {
                 color="indigo"
                 content={"Kanban"}
                 icon={
-                  <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+                  <ListBulletIcon className="w-5 text-indigo-500"></ListBulletIcon>
                 }
               ></ActionButton>
             </Link>{" "}

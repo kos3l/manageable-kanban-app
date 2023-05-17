@@ -24,6 +24,7 @@ import DateInput from "../inputs/DateInput";
 import TextareaInput from "../inputs/TextareaInput";
 import { IUpdateUserToTask } from "../../models/dto/project/IUpdateUserToTask";
 import useUserService from "../../hooks/service/useUserService";
+import { User } from "../../models/entities/User";
 
 interface IProps {
   selectedTask: Task;
@@ -201,6 +202,21 @@ export default function SelectedtTaskCard(props: IProps) {
     }
   };
 
+  const handleOnUserTagClik = (task: Task, user: User) => {
+    if (addUserMutation.isLoading || removeUserMutation.isLoading) {
+      return;
+    }
+    if (task.userIds.includes(user._id)) {
+      removeUserMutation.mutate({
+        userId: user._id,
+      });
+    } else {
+      addUserMutation.mutate({
+        userId: user._id,
+      });
+    }
+  };
+
   if (!data) {
     return <p>Loading</p>;
   }
@@ -352,15 +368,12 @@ export default function SelectedtTaskCard(props: IProps) {
                         return (
                           <div
                             key={user._id}
-                            onClick={() => {
-                              data.userIds.includes(user._id)
-                                ? removeUserMutation.mutate({
-                                    userId: user._id,
-                                  })
-                                : addUserMutation.mutate({ userId: user._id });
-                            }}
+                            onClick={() => handleOnUserTagClik(data, user)}
                             className={
-                              data.userIds.includes(user._id)
+                              addUserMutation.isLoading ||
+                              removeUserMutation.isLoading
+                                ? "flex h-12 w-max cursor-pointer items-center justify-between gap-2 overflow-scroll rounded-lg border border-neutral-700 bg-neutral-900/10 pl-2 pr-4 opacity-20"
+                                : data.userIds.includes(user._id)
                                 ? "flex h-12 w-max cursor-pointer items-center justify-between gap-2 overflow-scroll rounded-lg border border-pink-600 bg-pink-800/10 pl-2 pr-4"
                                 : "flex h-12 w-max cursor-pointer items-center justify-between gap-2 overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50 pl-2 pr-4 transition hover:border-pink-600 "
                             }
