@@ -11,19 +11,36 @@ import {
 import { AxiosResponse } from "axios";
 import { useRef, useState } from "react";
 import { QueryClient } from "react-query";
-import { Link, redirect, useRouteLoaderData } from "react-router-dom";
-import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
+import { Form, Link, redirect, useRouteLoaderData } from "react-router-dom";
+import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
+import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
-import FilledButton from "../../ui/buttons/FilledButton";
 import ColumnWrapperCard from "../../ui/cards/ColumnWrapperCard";
 import SelectedTaskCard from "../../ui/cards/SelectedTaskCard";
 import DisplayField from "../../ui/display-field/DisplayField";
 
+export const action =
+  (
+    queryClient: QueryClient,
+    addNewColumn: (
+      projectId: string,
+      columnDto: IUpdateAddColumn
+    ) => Promise<AxiosResponse<void, any>>
+  ) =>
+  async ({ request, params }: any) => {
+    let column = { name: "New Column" };
+    await addNewColumn(params.id, column as IUpdateAddColumn);
+    await queryClient.invalidateQueries({
+      queryKey: ["project", params.id],
+    });
+    return redirect(`./kanban`);
+  };
+
 export default function KanbanPage() {
   const project = useRouteLoaderData("selectedProject") as Project;
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
-  const test = useRef<any>(null);
+
   if (!project) {
     return <>Loading</>;
   }
@@ -36,7 +53,6 @@ export default function KanbanPage() {
           : "relative flex h-full w-full overflow-scroll py-3"
       }
     >
-      {" "}
       <Link to={"../"}>
         <div className="ml-3 flex h-14 w-[37rem] items-center justify-between gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2 pr-4 transition hover:bg-neutral-800/40">
           <div className="w-max">
@@ -69,26 +85,44 @@ export default function KanbanPage() {
         </div>
       </Link>
       <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 overflow-scroll pl-3 pb-3  md:justify-start 2xl:justify-center">
-        {project.columns.map((col, index) => {
-          return (
-            <div key={index} className="flex h-full w-72">
-              <ColumnWrapperCard
-                project={project}
-                column={col}
-                taskClicked={(task) => {
-                  setSelectedTask(task);
-                }}
-              ></ColumnWrapperCard>
+        {project.columns
+          .sort((a, b) => a.order - b.order)
+          .map((col, index) => {
+            return (
+              <div key={index} className="flex h-full w-72">
+                <ColumnWrapperCard
+                  project={project}
+                  column={col}
+                  taskClicked={(task) => {
+                    setSelectedTask(task);
+                  }}
+                ></ColumnWrapperCard>
+              </div>
+            );
+          })}
+        <Form
+          action="../"
+          method="post"
+          className="flex h-full w-72 flex-col gap-2 overflow-scroll "
+        >
+          <button
+            type={"submit"}
+            className={
+              "flex h-14 w-full items-center gap-4 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-2 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition"
+            }
+          >
+            <div
+              className={
+                "flex h-8 w-8 items-center justify-center rounded-lg bg-neutral-200/20"
+              }
+            >
+              <PlusIcon className="w-5 text-neutral-300"></PlusIcon>
             </div>
-          );
-        })}
-        <div className="flex h-full w-72 flex-col gap-2 overflow-scroll ">
-          <FilledButton
-            content={"Add Column"}
-            icon={<PlusIcon className="w-5 text-neutral-300"></PlusIcon>}
-            removeBackground
-          ></FilledButton>
-        </div>
+            <p className="m-0 font-serif text-sm font-semibold tracking-wider">
+              Add Column
+            </p>
+          </button>
+        </Form>
       </div>
       {selectedTask !== null ? (
         <div className="absolute top-0 flex h-max min-h-full w-full justify-start bg-neutral-900/90 pb-12 pl-4 pt-4">

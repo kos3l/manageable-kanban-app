@@ -78,9 +78,6 @@ export default function ColumnWrapperCard(props: IProps) {
         <p className="neutral-500 font-serif text-base tracking-wider">
           {column.name + " | " + tasks?.length}
         </p>
-        <div className="flex h-7 w-7 cursor-pointer items-center justify-center">
-          <EllipsisHorizontalIcon></EllipsisHorizontalIcon>
-        </div>
       </div>
       <div className="flex w-full grow flex-col gap-1.5 overflow-scroll rounded-lg border border-neutral-600 p-2">
         <div className="flex h-max w-full flex-col gap-2 ">
@@ -98,7 +95,6 @@ export default function ColumnWrapperCard(props: IProps) {
             createTask={(dto) => mutation.mutate(dto)}
           ></CreateTaskCard>
         </div>
-
         {tasks && tasks.length > 0 ? (
           <div className="mt-1 flex w-full flex-col gap-1.5">
             {tasks.map((task, index) => {

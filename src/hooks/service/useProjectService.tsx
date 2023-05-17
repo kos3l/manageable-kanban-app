@@ -6,6 +6,7 @@ import { Team } from "../../models/entities/Team";
 import { Project } from "../../models/entities/Project";
 import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
+import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
 
 const useProjectService = () => {
   const { post, get, put } = useHttp();
@@ -39,11 +40,25 @@ const useProjectService = () => {
     );
   };
 
+  const addColumnToProject = (
+    projectId: string,
+    columnDto: IUpdateAddColumn
+  ) => {
+    return put<IUpdateAddColumn, AxiosResponse<void>>(
+      bastPath + "/" + projectId + "/AddColumn",
+      columnDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
   return {
     getAllUserProjects,
     createNewProject,
     getProjectById,
     updateProject,
+    addColumnToProject,
   };
 };
 
