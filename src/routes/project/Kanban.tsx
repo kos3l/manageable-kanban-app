@@ -1,19 +1,14 @@
 import {
-  BellAlertIcon,
-  BellIcon,
   CheckCircleIcon,
   ClockIcon,
-  EllipsisHorizontalIcon,
-  PencilSquareIcon,
   PlusIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { QueryClient } from "react-query";
 import { Form, Link, redirect, useRouteLoaderData } from "react-router-dom";
 import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
-import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
+import { IUpdateColumnDTO } from "../../models/dto/column/IUpdateColumn";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
 import ColumnWrapperCard from "../../ui/cards/ColumnWrapperCard";
@@ -26,14 +21,31 @@ export const action =
     addNewColumn: (
       projectId: string,
       columnDto: IUpdateAddColumn
-    ) => Promise<AxiosResponse<void, any>>
+    ) => Promise<AxiosResponse<void, any>> | null,
+    updateColumn: (
+      projectId: string,
+      columnDto: IUpdateColumnDTO
+    ) => Promise<AxiosResponse<void, any>> | null
   ) =>
   async ({ request, params }: any) => {
-    let column = { name: "New Column" };
-    await addNewColumn(params.id, column as IUpdateAddColumn);
-    await queryClient.invalidateQueries({
-      queryKey: ["project", params.id],
-    });
+    const formData = await request.formData();
+    const formId = formData.get("form-id");
+
+    if (formId == "addColumnForm") {
+      let column = { name: "New Column" };
+
+      await addNewColumn(params.id, column as IUpdateAddColumn);
+      await queryClient.invalidateQueries({
+        queryKey: ["project", params.id],
+      });
+    } else if (formId == "updateColumnForm") {
+      formData.delete("form-id");
+      let columnDto = Object.fromEntries(formData);
+      await updateColumn(params.id, columnDto as IUpdateColumnDTO);
+      await queryClient.invalidateQueries({
+        queryKey: ["project", params.id],
+      });
+    }
     return redirect(`./kanban`);
   };
 
@@ -105,6 +117,7 @@ export default function KanbanPage() {
           method="post"
           className="flex h-full w-72 flex-col gap-2 overflow-scroll "
         >
+          <input name="form-id" hidden defaultValue="addColumnForm" />
           <button
             type={"submit"}
             className={

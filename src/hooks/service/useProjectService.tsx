@@ -7,6 +7,7 @@ import { Project } from "../../models/entities/Project";
 import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
 import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
+import { IUpdateColumnDTO } from "../../models/dto/column/IUpdateColumn";
 
 const useProjectService = () => {
   const { post, get, put } = useHttp();
@@ -53,12 +54,23 @@ const useProjectService = () => {
     );
   };
 
+  const updateColumn = (projectId: string, columnDto: IUpdateColumnDTO) => {
+    return put<IUpdateColumnDTO, AxiosResponse<void>>(
+      bastPath + "/" + projectId + "/column",
+      columnDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
   return {
     getAllUserProjects,
     createNewProject,
     getProjectById,
     updateProject,
     addColumnToProject,
+    updateColumn,
   };
 };
 

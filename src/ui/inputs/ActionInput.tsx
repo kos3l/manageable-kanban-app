@@ -7,10 +7,11 @@ interface IProps {
   onChange: (newValue: string) => void;
   onClick: () => void;
   name?: string;
+  isSubmit?: boolean;
 }
 
 export default function ActionInput(props: IProps) {
-  const { icon, placeholder, value, onChange, onClick, name } = props;
+  const { icon, isSubmit, placeholder, value, onChange, onClick, name } = props;
 
   return (
     <div className="flex h-12 w-full items-center rounded-lg border border-neutral-600 bg-neutral-900 px-2">
@@ -22,12 +23,13 @@ export default function ActionInput(props: IProps) {
         placeholder={placeholder}
         className="text-md h-full grow bg-transparent px-1 pt-0.5 font-sans font-thin tracking-normal text-neutral-400 placeholder:font-thin placeholder:tracking-wide placeholder:text-neutral-600 focus:outline-none"
       />
-      <div
+      <button
+        type={isSubmit ? "submit" : "button"}
         onClick={onClick}
         className="flex h-7 w-7 cursor-pointer items-center justify-center rounded-lg bg-indigo-600/30"
       >
         {icon}
-      </div>
+      </button>
     </div>
   );
 }

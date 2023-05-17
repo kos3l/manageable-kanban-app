@@ -63,6 +63,7 @@ const App = ({ queryClient }: any) => {
     getProjectById,
     updateProject,
     addColumnToProject,
+    updateColumn,
   } = useProjectService();
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -120,7 +121,11 @@ const App = ({ queryClient }: any) => {
               element={<ProjectRoot />}
               loader={projectByIdLoader(queryClient, getProjectById)}
               id="selectedProject"
-              action={kanbanActions(queryClient, addColumnToProject)}
+              action={kanbanActions(
+                queryClient,
+                addColumnToProject,
+                updateColumn
+              )}
             >
               <Route index path="" element={<ProjectPage />} />
               <Route

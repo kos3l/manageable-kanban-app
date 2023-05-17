@@ -1,4 +1,11 @@
-import { EllipsisHorizontalIcon, PlusIcon } from "@heroicons/react/24/solid";
+import {
+  CheckCircleIcon,
+  EllipsisHorizontalIcon,
+  PencilIcon,
+  PencilSquareIcon,
+  PlusIcon,
+  TrashIcon,
+} from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
 import {
@@ -7,13 +14,15 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { useParams } from "react-router-dom";
+import { Form, useParams } from "react-router-dom";
 import useTaskService from "../../hooks/service/useTaskService";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { Column } from "../../models/entities/Column";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
 import FilledButton from "../buttons/FilledButton";
+import ActionInput from "../inputs/ActionInput";
+import TextInput from "../inputs/TextInput";
 import CreateTaskCard from "./CreateTaskCard";
 import TaskCard from "./TaskCard";
 
@@ -57,6 +66,9 @@ export default function ColumnWrapperCard(props: IProps) {
   }
 
   const [showCreate, setShowCreate] = useState<boolean>(false);
+  const [isEditOn, setIsEditOn] = useState<boolean>(false);
+  const [name, setName] = useState<string>("");
+
   const mutation = useMutation({
     mutationFn: (taskDto: ICreateTaskDTO) => {
       return createNewTask(id, taskDto);
@@ -74,11 +86,54 @@ export default function ColumnWrapperCard(props: IProps) {
 
   return (
     <div className="flex h-max max-h-full w-full flex-col gap-2 ">
-      <div className="mb-0.5 flex min-h-[3.5rem] w-full basis-14 items-center justify-between rounded-lg border border-neutral-600 px-3">
-        <p className="neutral-500 font-serif text-base tracking-wider">
-          {column.name + " | " + tasks?.length}
-        </p>
-      </div>
+      {isEditOn ? (
+        <div className="flex min-h-[3.5rem] w-full basis-14 items-center">
+          <Form
+            action="../"
+            method="post"
+            className="flex w-full items-center gap-1"
+            onSubmit={() => setIsEditOn(false)}
+          >
+            <input name="form-id" hidden defaultValue="updateColumnForm" />
+            <input name="id" hidden defaultValue={column._id} />
+            <div className="h-max w-full">
+              <ActionInput
+                placeholder={"Name.."}
+                value={name}
+                name="name"
+                isSubmit={true}
+                onChange={(newVal) => setName(newVal)}
+                icon={
+                  <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+                }
+                onClick={() => {}}
+              ></ActionInput>
+            </div>
+          </Form>
+          {/* <div className="flex w-max items-center gap-2">
+              <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-red-900/30">
+                <TrashIcon className="w-5 text-red-700"></TrashIcon>
+              </div>
+            </div> */}
+        </div>
+      ) : (
+        <div className="mb-0.5 flex min-h-[3.5rem] w-full basis-14 items-center justify-between rounded-lg border border-neutral-600 ">
+          <p className="neutral-500 ml-3 font-serif text-base tracking-wider">
+            {column.name + " | " + tasks?.length}
+          </p>
+          <div className="mr-3 flex w-max items-center gap-2">
+            <div
+              onClick={() => {
+                setIsEditOn(true);
+                setName(column.name);
+              }}
+              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-neutral-700/60"
+            >
+              <PencilSquareIcon className="w-5 text-neutral-300"></PencilSquareIcon>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex w-full grow flex-col gap-1.5 overflow-scroll rounded-lg border border-neutral-600 p-2">
         <div className="flex h-max w-full flex-col gap-2 ">
           <FilledButton
