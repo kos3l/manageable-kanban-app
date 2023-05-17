@@ -18,7 +18,6 @@ import { Task } from "../../models/entities/Task";
 import FilledButton from "../../ui/buttons/FilledButton";
 import ColumnWrapperCard from "../../ui/cards/ColumnWrapperCard";
 import SelectedTaskCard from "../../ui/cards/SelectedTaskCard";
-import UserCard from "../../ui/cards/UserCard";
 import DisplayField from "../../ui/display-field/DisplayField";
 
 export default function KanbanPage() {
@@ -89,7 +88,6 @@ export default function KanbanPage() {
           ></FilledButton>
         </div>
       </div>
-
       {selectedTask !== null ? (
         <div className="absolute top-0 flex h-max min-h-full w-full justify-start bg-neutral-900/90 pb-12 pl-4 pt-4">
           <SelectedTaskCard

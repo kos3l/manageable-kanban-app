@@ -47,6 +47,7 @@ import EditProjectPage, {
   action as updateProjectAction,
 } from "./routes/project/EditProject";
 import KanbanPage from "./routes/project/Kanban";
+import KanbanOverview from "./routes/kanban-overview/KanbanOverview";
 
 const App = ({ queryClient }: any) => {
   const { getLoggedInUserProfile, updateUserProfile } = useUserService();
@@ -133,6 +134,7 @@ const App = ({ queryClient }: any) => {
               action={createProjectAction(queryClient, createNewProject)}
               element={<CreateProject />}
             />
+            <Route path="kanban-overview" element={<KanbanOverview />} />
           </Route>
         </Route>
         <Route path="*" element={<PageNotFound />} />

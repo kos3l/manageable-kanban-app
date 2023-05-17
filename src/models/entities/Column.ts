@@ -4,7 +4,7 @@ type Column = {
   _id: string;
   name: string;
   order: number;
-  tasks: Task[];
+  tasks: string[];
 };
 
 export { type Column };

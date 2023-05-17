@@ -48,6 +48,7 @@ export default function SelectedtTaskCard(props: IProps) {
     queryKey: ["task", "column", selectedTask._id],
     queryFn: async () => {
       const response = await getTaskById(selectedTask._id);
+      console.log(response);
       if (response.status == 403) {
         throw new Error("Token expired");
       }
@@ -123,9 +124,6 @@ export default function SelectedtTaskCard(props: IProps) {
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: ["task", "column", selectedTask._id],
-      });
-      queryClient.invalidateQueries({
         queryKey: [
           "task",
           "column",
@@ -134,6 +132,7 @@ export default function SelectedtTaskCard(props: IProps) {
           selectedTask.columnId,
         ],
       });
+      onClose();
     },
   });
 

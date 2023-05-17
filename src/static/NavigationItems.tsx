@@ -40,7 +40,7 @@ export default class NavigationItems {
     },
     {
       name: "Kanban Boards",
-      path: "/user/kanban-boards",
+      path: "/user/kanban-overview",
       icon: <ListBulletIcon className="w-4 text-indigo-500"></ListBulletIcon>,
     },
     {
