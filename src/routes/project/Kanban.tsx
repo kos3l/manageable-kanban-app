@@ -12,6 +12,7 @@ import { QueryClient } from "react-query";
 import { Form, Link, redirect, useRouteLoaderData } from "react-router-dom";
 import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
 import { IUpdateColumnDTO } from "../../models/dto/column/IUpdateColumn";
+import { IUpdateColumnOrderDTO } from "../../models/dto/column/IUpdateColumnOrderDTO";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
 import ActionButton from "../../ui/buttons/ActionButton";
@@ -33,6 +34,10 @@ export const action =
     deleteColumn: (
       projectId: string,
       columnId: string
+    ) => Promise<AxiosResponse<void, any>>,
+    changeColumnOrder: (
+      projectId: string,
+      columnOrderDto: IUpdateColumnOrderDTO
     ) => Promise<AxiosResponse<void, any>>
   ) =>
   async ({ request, params }: any) => {
@@ -57,6 +62,13 @@ export const action =
       formData.delete("form-id");
       let columnId = Object.fromEntries(formData);
       await deleteColumn(params.id, columnId.id);
+      await queryClient.invalidateQueries({
+        queryKey: ["project", params.id],
+      });
+    } else if (formId == "updateColumnOrder") {
+      formData.delete("form-id");
+      let data = Object.fromEntries(formData);
+      await changeColumnOrder(params.id, data as IUpdateColumnOrderDTO);
       await queryClient.invalidateQueries({
         queryKey: ["project", params.id],
       });

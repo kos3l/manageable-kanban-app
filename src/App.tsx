@@ -65,6 +65,7 @@ const App = ({ queryClient }: any) => {
     addColumnToProject,
     updateColumn,
     deleteColumn,
+    changeColumnOrder,
   } = useProjectService();
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -126,7 +127,8 @@ const App = ({ queryClient }: any) => {
                 queryClient,
                 addColumnToProject,
                 updateColumn,
-                deleteColumn
+                deleteColumn,
+                changeColumnOrder
               )}
             >
               <Route index path="" element={<ProjectPage />} />

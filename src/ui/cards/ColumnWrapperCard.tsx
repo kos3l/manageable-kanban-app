@@ -15,7 +15,7 @@ import {
   useQuery,
   useQueryClient,
 } from "react-query";
-import { Form, useParams } from "react-router-dom";
+import { Form, useParams, useSubmit } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
 import useTaskService from "../../hooks/service/useTaskService";
 import { IUpdateColumnOrderDTO } from "../../models/dto/column/IUpdateColumnOrderDTO";
@@ -63,7 +63,7 @@ const tasksFromColumnQuery = (
 export default function ColumnWrapperCard(props: IProps) {
   const { column, project, taskClicked, isManageColumnsOn } = props;
   const { getTasksByColumnId, createNewTask } = useTaskService();
-  const { changeColumnOrder } = useProjectService();
+  const submit = useSubmit();
   const { id } = useParams();
   const queryClient = useQueryClient();
   const columnRef = useRef<any>(null);
@@ -86,17 +86,6 @@ export default function ColumnWrapperCard(props: IProps) {
         queryKey: ["task", "column", "project", id, column._id],
       });
       setShowCreate(false);
-    },
-  });
-
-  const columnOrderMutation = useMutation({
-    mutationFn: (columnOrderDto: IUpdateColumnOrderDTO) => {
-      return changeColumnOrder(id, columnOrderDto);
-    },
-    onSuccess: (data, variables, context) => {
-      queryClient.invalidateQueries({
-        queryKey: ["task", "column", "project", id, column._id],
-      });
     },
   });
 
@@ -131,11 +120,16 @@ export default function ColumnWrapperCard(props: IProps) {
   const handleColumnStopDrag = (ev: any) => {
     if (xPosition) {
       const newPosition = Math.floor(xPosition / 304);
-      console.log(newPosition < -1 ? column.order - 1 : column.order + 1);
+
       if (newPosition !== 0 && newPosition !== -1) {
-        columnOrderMutation.mutate({
-          columnId: column._id,
-          order: newPosition < -1 ? column.order - 1 : column.order + 1,
+        const newOrder = newPosition < -1 ? column.order - 1 : column.order + 1;
+        let formData = new FormData();
+        formData.append("columnId", column._id);
+        formData.append("order", newOrder.toString());
+        formData.append("form-id", "updateColumnOrder");
+        submit(formData, {
+          method: "post",
+          action: "/user/projects/" + id,
         });
       }
     }
