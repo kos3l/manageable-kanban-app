@@ -416,33 +416,35 @@ export default function SelectedtTaskCard(props: IProps) {
             </p>
             {data.users && data.users.length > 0 ? (
               <div className="mt-1 flex w-full flex-col gap-2">
-                {data.users.map((user, index) => {
-                  return (
-                    <Link to={"/users/profile/" + user._id} key={index}>
-                      <div
-                        key={user._id}
-                        className={
-                          "flex h-max w-full max-w-[10rem] items-center justify-between gap-2 overflow-scroll  transition hover:text-pink-500"
-                        }
-                      >
-                        <div className="flex grow gap-2 truncate">
-                          <div className="basis-7 overflow-hidden rounded-lg">
-                            <img
-                              src={avatar}
-                              alt=""
-                              className="h-full w-full object-contain"
-                            />
+                {data.users
+                  .sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
+                  .map((user, index) => {
+                    return (
+                      <Link to={"/users/profile/" + user._id} key={index}>
+                        <div
+                          key={user._id}
+                          className={
+                            "flex h-max w-full max-w-[10rem] items-center justify-between gap-2 overflow-scroll  transition hover:text-pink-500"
+                          }
+                        >
+                          <div className="flex grow gap-2 truncate">
+                            <div className="basis-7 overflow-hidden rounded-lg">
+                              <img
+                                src={avatar}
+                                alt=""
+                                className="h-full w-full object-contain"
+                              />
+                            </div>
+                            <p className="mt-2 grow truncate">
+                              <span className="opacity-70">
+                                {user.firstName + " " + user.lastName}
+                              </span>
+                            </p>
                           </div>
-                          <p className="mt-2 grow truncate">
-                            <span className="opacity-70">
-                              {user.firstName + " " + user.lastName}
-                            </span>
-                          </p>
                         </div>
-                      </div>
-                    </Link>
-                  );
-                })}
+                      </Link>
+                    );
+                  })}
               </div>
             ) : (
               <p className="text-sm text-neutral-700">No users added..</p>

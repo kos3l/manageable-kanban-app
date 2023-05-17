@@ -6,7 +6,8 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useRef, useState } from "react";
+import Draggable, { ControlPosition } from "react-draggable";
 import { QueryClient } from "react-query";
 import { Form, Link, redirect, useRouteLoaderData } from "react-router-dom";
 import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";

@@ -8,9 +8,10 @@ import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
 import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
 import { IUpdateColumnDTO } from "../../models/dto/column/IUpdateColumn";
+import { IUpdateColumnOrderDTO } from "../../models/dto/column/IUpdateColumnOrderDTO";
 
 const useProjectService = () => {
-  const { post, get, put } = useHttp();
+  const { post, get, put, remove } = useHttp();
   const bastPath = "/api/project";
 
   const getAllUserProjects = () => {
@@ -64,6 +65,19 @@ const useProjectService = () => {
     );
   };
 
+  const changeColumnOrder = (
+    projectId: string,
+    columnOrderDto: IUpdateColumnOrderDTO
+  ) => {
+    return put<IUpdateColumnOrderDTO, AxiosResponse<void>>(
+      bastPath + "/" + projectId + "/ChangeColumnOrder",
+      columnOrderDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
   const deleteColumn = (projectId: string, columnId: string) => {
     return put<void, AxiosResponse<void>>(
       bastPath + "/" + projectId + "/DeleteColumn/" + columnId,
@@ -74,6 +88,22 @@ const useProjectService = () => {
     );
   };
 
+  const completeProject = (projectId: string) => {
+    return put<void, AxiosResponse<void>>(
+      bastPath + "/" + projectId + "/Complete",
+      undefined,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  const deleteProject = (projectId: string) => {
+    return remove<void, AxiosResponse<void>>(bastPath + "/" + projectId, {
+      withCredentials: true,
+    });
+  };
+
   return {
     getAllUserProjects,
     createNewProject,
@@ -82,6 +112,9 @@ const useProjectService = () => {
     addColumnToProject,
     updateColumn,
     deleteColumn,
+    changeColumnOrder,
+    completeProject,
+    deleteProject,
   };
 };
 
