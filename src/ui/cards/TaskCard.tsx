@@ -1,72 +1,114 @@
 import { BellIcon } from "@heroicons/react/24/solid";
 import { Task } from "../../models/entities/Task";
 import avatar from "../../assets/avatar.png";
-import { useState, useRef } from "react";
-import Draggable from "react-draggable";
+import { useRef } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import type { Identifier, XYCoord } from "dnd-core";
 
 interface IProps {
   task: Task;
   onClick: () => void;
+  index: number;
+  id: string;
+  moveCard: (dragIndex: number, hoverIndex: number) => void;
+}
+
+interface DragItem {
+  index: number;
+  id: string;
+  type: string;
 }
 
 export default function TaskCard(props: IProps) {
-  const { task, onClick } = props;
-  // const [taskYPosition, setTaskYPosition] = useState<number | null>(null);
-  // const taskLineRef = useRef<any>(null);
+  const { task, id, onClick, index, moveCard } = props;
+  const ref = useRef<HTMLDivElement>(null);
 
-  // const handleTaskDrag = (ev: any) => {
-  //   console.log(ev.movementY);
-  //   setTaskYPosition((prev) => {
-  //     if (prev) {
-  //       if (ev.movementY > 0) {
-  //         return prev - 86;
-  //       } else {
-  //         return prev + 80;
-  //       }
-  //     } else {
-  //       if (ev.movementY > 0) {
-  //         return -86;
-  //       } else {
-  //         return 80;
-  //       }
-  //     }
-  //   });
-  // };
+  const ItemTypes = {
+    CARD: "card",
+  };
 
-  // const handleTaskStopDrag = (ev: any) => {
-  //   if (taskYPosition) {
-  //     const newPosition = Math.floor(taskYPosition / 84);
-  //   }
-  //   //   if (newPosition !== 0 && newPosition !== -1) {
-  //   //     const newOrder = newPosition < -1 ? column.order - 1 : column.order + 1;
-  //   //     let formData = new FormData();
-  //   //     formData.append("columnId", column._id);
-  //   //     formData.append("order", newOrder.toString());
-  //   //     formData.append("form-id", "updateColumnOrder");
-  //   //     submit(formData, {
-  //   //       method: "post",
-  //   //       action: "/user/projects/" + id,
-  //   //     });
-  //   //   }
-  //   // }
+  const [{ handlerId }, drop] = useDrop<
+    DragItem,
+    void,
+    { handlerId: Identifier | null }
+  >({
+    accept: ItemTypes.CARD,
+    collect(monitor) {
+      return {
+        handlerId: monitor.getHandlerId(),
+      };
+    },
+    hover(item: DragItem, monitor) {
+      if (!ref.current) {
+        return;
+      }
+      const dragIndex = item.index;
+      const hoverIndex = index;
 
-  //   setTaskYPosition(null);
-  // };
+      // Don't replace items with themselves
+      if (dragIndex === hoverIndex) {
+        return;
+      }
+
+      // Determine rectangle on screen
+      const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+      // Get vertical middle
+      const hoverMiddleY =
+        (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+      // Determine mouse position
+      const clientOffset = monitor.getClientOffset();
+
+      // Get pixels to the top
+      const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+      // Only perform the move when the mouse has crossed half of the items height
+      // When dragging downwards, only move when the cursor is below 50%
+      // When dragging upwards, only move when the cursor is above 50%
+
+      // Dragging downwards
+      if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+        return;
+      }
+
+      // Dragging upwards
+      if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+        return;
+      }
+
+      // Time to actually perform the action
+      moveCard(dragIndex, hoverIndex);
+
+      // Note: we're mutating the monitor item here!
+      // Generally it's better to avoid mutations,
+      // but it's good here for the sake of performance
+      // to avoid expensive index searches.
+      item.index = hoverIndex;
+    },
+  });
+
+  const [{ isDragging }, drag] = useDrag({
+    type: ItemTypes.CARD,
+    item: () => {
+      return { id, index };
+    },
+    collect: (monitor: any) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  const opacity = isDragging ? 0 : 1;
+  drag(drop(ref));
 
   return (
-    <div className="relative h-max w-full">
-      {/* <Draggable
-        axis="none"
-        nodeRef={taskLineRef}
-        defaultPosition={{ x: 0, y: 0 }}
-        grid={[86, 86]}
-        onDrag={handleTaskDrag}
-        onStop={handleTaskStopDrag}
-      > */}
-      <div
-        // ref={taskLineRef}
-        className="h-max w-full cursor-grab gap-2 rounded-lg border border-neutral-600 bg-neutral-800/60 p-2 transition hover:border-neutral-400"
-      >
+    <div
+      className="relative h-max w-full"
+      ref={ref}
+      style={{ opacity }}
+      data-handler-id={handlerId}
+    >
+      <div className="h-max w-full cursor-grab gap-2 rounded-lg border border-neutral-600 bg-neutral-800/60 p-2 transition hover:border-neutral-400">
         <div></div>
         <div className="flex h-max w-full items-center gap-2">
           <div
@@ -120,16 +162,6 @@ export default function TaskCard(props: IProps) {
           <></>
         )}
       </div>
-      {/* </Draggable> */}
-      {/* <div
-        style={{
-          bottom: taskYPosition !== null ? taskYPosition : -4,
-          display: taskYPosition !== null ? "flex" : "none",
-        }}
-        className="z-80 absolute flex  w-full "
-      >
-        <div className="w-full border-b-2 border-indigo-500"></div>
-      </div> */}
     </div>
   );
 }

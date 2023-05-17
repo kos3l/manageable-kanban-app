@@ -1,33 +1,25 @@
 import {
   CheckCircleIcon,
-  EllipsisHorizontalIcon,
-  PencilIcon,
   PencilSquareIcon,
   PlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import {
-  QueryClient,
-  useMutation,
-  useQuery,
-  useQueryClient,
-} from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Form, useParams, useSubmit } from "react-router-dom";
-import useProjectService from "../../hooks/service/useProjectService";
 import useTaskService from "../../hooks/service/useTaskService";
-import { IUpdateColumnOrderDTO } from "../../models/dto/column/IUpdateColumnOrderDTO";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { Column } from "../../models/entities/Column";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
 import FilledButton from "../buttons/FilledButton";
 import ActionInput from "../inputs/ActionInput";
-import TextInput from "../inputs/TextInput";
 import CreateTaskCard from "./CreateTaskCard";
 import TaskCard from "./TaskCard";
+import update from "immutability-helper";
+import { IUpdateTaskOrderDTO } from "../../models/dto/task/IUpdateTaskOrderDTO";
 
 interface IProps {
   column: Column;
@@ -44,7 +36,7 @@ const tasksFromColumnQuery = (
     projectId: string
   ) => Promise<AxiosResponse<Task[], any>>
 ) => ({
-  queryKey: ["task", "column", "project", projectId, columnId],
+  queryKey: [columnId],
   queryFn: async () => {
     const response = await getTasksByColumnId(columnId, projectId);
     if (response.status == 403) {
@@ -56,13 +48,14 @@ const tasksFromColumnQuery = (
         statusText: "Not Found",
       });
     }
-    return response.data.sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    return response.data;
   },
 });
 
 export default function ColumnWrapperCard(props: IProps) {
   const { column, project, taskClicked, isManageColumnsOn } = props;
-  const { getTasksByColumnId, createNewTask } = useTaskService();
+  const { getTasksByColumnId, createNewTask, updateTaskOrder } =
+    useTaskService();
   const submit = useSubmit();
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -72,11 +65,17 @@ export default function ColumnWrapperCard(props: IProps) {
   if (!id) {
     return <p>Loading</p>;
   }
+
+  const { data: tasks } = useQuery(
+    tasksFromColumnQuery(id, column._id, getTasksByColumnId)
+  );
+
   const [xPosition, setXPosition] = useState<number | null>(null);
 
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
+  const [stateTasks, setStateTasks] = useState<Task[]>([]);
 
   const mutation = useMutation({
     mutationFn: (taskDto: ICreateTaskDTO) => {
@@ -84,15 +83,28 @@ export default function ColumnWrapperCard(props: IProps) {
     },
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
-        queryKey: ["task", "column", "project", id, column._id],
+        queryKey: [column._id],
       });
       setShowCreate(false);
     },
   });
 
-  const { data: tasks } = useQuery(
-    tasksFromColumnQuery(id, column._id, getTasksByColumnId)
-  );
+  const mutationTaskOrder = useMutation({
+    mutationFn: (taskDto: IUpdateTaskOrderDTO) => {
+      return updateTaskOrder(taskDto);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: [column._id],
+      });
+    },
+  });
+
+  useEffect(() => {
+    if (tasks) {
+      setStateTasks(tasks);
+    }
+  }, [tasks]);
 
   const handleColumnDrag = (ev: any) => {
     if (xPosition && xPosition >= 596.8 && ev.movementX > 0) {
@@ -137,6 +149,41 @@ export default function ColumnWrapperCard(props: IProps) {
 
     setXPosition(null);
   };
+
+  const moveCard = useCallback((dragIndex: number, hoverIndex: number) => {
+    setStateTasks((prevCards: Task[]) => {
+      const updatedArray = update(prevCards, {
+        $splice: [
+          [dragIndex, 1],
+          [hoverIndex, 0, prevCards[dragIndex] as Task],
+        ],
+      });
+      mutationTaskOrder.mutate({
+        columnId: column._id,
+        projectId: project._id,
+        tasks: updatedArray.map((task) => task._id),
+      });
+      return updatedArray;
+    });
+  }, []);
+
+  const renderCard = useCallback((card: Task, index: number) => {
+    if (!card) {
+      return;
+    }
+    return (
+      <TaskCard
+        key={card._id}
+        onClick={() => {
+          taskClicked(card);
+        }}
+        index={index}
+        task={card}
+        moveCard={moveCard}
+        id={card._id}
+      ></TaskCard>
+    );
+  }, []);
 
   return (
     <div className="relative flex h-full max-h-full w-full">
@@ -243,18 +290,7 @@ export default function ColumnWrapperCard(props: IProps) {
             </div>
             {tasks && tasks.length > 0 ? (
               <div className="mt-1 flex w-full flex-col gap-1.5">
-                {tasks.map((task, index) => {
-                  return (
-                    <div key={index} className="w-full">
-                      <TaskCard
-                        onClick={() => {
-                          taskClicked(task);
-                        }}
-                        task={task}
-                      ></TaskCard>
-                    </div>
-                  );
-                })}
+                {stateTasks.map((card, i) => renderCard(card, i))}
               </div>
             ) : (
               <></>
