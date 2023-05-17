@@ -4,6 +4,7 @@ import { Task } from "../../models/entities/Task";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { IUpdateTaskDTO } from "../../models/dto/task/IUpdateTaskDTO";
 import { IUpdateUserToTask } from "../../models/dto/project/IUpdateUserToTask";
+import { IUpdateTaskOrderDTO } from "../../models/dto/task/IUpdateTaskOrderDTO";
 
 const useTaskService = () => {
   const { get, post, put, remove } = useHttp();
@@ -38,6 +39,16 @@ const useTaskService = () => {
     return put<IUpdateTaskDTO, AxiosResponse<void>>(
       bastPath + "/" + taskId,
       taskDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  const updateTaskOrder = (tasksDto: IUpdateTaskOrderDTO) => {
+    return put<IUpdateTaskOrderDTO, AxiosResponse<void>>(
+      bastPath + "/column/order",
+      tasksDto,
       {
         withCredentials: true,
       }
@@ -80,6 +91,7 @@ const useTaskService = () => {
     addUserToTask,
     removeUserFromTask,
     updateTask,
+    updateTaskOrder,
     deleteTask,
   };
 };

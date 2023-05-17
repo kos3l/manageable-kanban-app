@@ -73,6 +73,7 @@ export default function ColumnWrapperCard(props: IProps) {
     return <p>Loading</p>;
   }
   const [xPosition, setXPosition] = useState<number | null>(null);
+
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
@@ -244,14 +245,13 @@ export default function ColumnWrapperCard(props: IProps) {
               <div className="mt-1 flex w-full flex-col gap-1.5">
                 {tasks.map((task, index) => {
                   return (
-                    <div
-                      key={index}
-                      className="w-full"
-                      onClick={() => {
-                        taskClicked(task);
-                      }}
-                    >
-                      <TaskCard task={task}></TaskCard>
+                    <div key={index} className="w-full">
+                      <TaskCard
+                        onClick={() => {
+                          taskClicked(task);
+                        }}
+                        task={task}
+                      ></TaskCard>
                     </div>
                   );
                 })}
