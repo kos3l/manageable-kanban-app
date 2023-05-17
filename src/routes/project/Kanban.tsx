@@ -1,7 +1,9 @@
 import {
   CheckCircleIcon,
   ClockIcon,
+  Cog6ToothIcon,
   PlusIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useState } from "react";
@@ -11,6 +13,7 @@ import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
 import { IUpdateColumnDTO } from "../../models/dto/column/IUpdateColumn";
 import { Project } from "../../models/entities/Project";
 import { Task } from "../../models/entities/Task";
+import ActionButton from "../../ui/buttons/ActionButton";
 import ColumnWrapperCard from "../../ui/cards/ColumnWrapperCard";
 import SelectedTaskCard from "../../ui/cards/SelectedTaskCard";
 import DisplayField from "../../ui/display-field/DisplayField";
@@ -25,7 +28,11 @@ export const action =
     updateColumn: (
       projectId: string,
       columnDto: IUpdateColumnDTO
-    ) => Promise<AxiosResponse<void, any>> | null
+    ) => Promise<AxiosResponse<void, any>> | null,
+    deleteColumn: (
+      projectId: string,
+      columnId: string
+    ) => Promise<AxiosResponse<void, any>>
   ) =>
   async ({ request, params }: any) => {
     const formData = await request.formData();
@@ -45,6 +52,13 @@ export const action =
       await queryClient.invalidateQueries({
         queryKey: ["project", params.id],
       });
+    } else if (formId == "deleteColumnForm") {
+      formData.delete("form-id");
+      let columnId = Object.fromEntries(formData);
+      await deleteColumn(params.id, columnId.id);
+      await queryClient.invalidateQueries({
+        queryKey: ["project", params.id],
+      });
     }
     return redirect(`./kanban`);
   };
@@ -52,6 +66,7 @@ export const action =
 export default function KanbanPage() {
   const project = useRouteLoaderData("selectedProject") as Project;
   const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const [isManageColumnsOn, setIsManageColumnsOn] = useState<boolean>(false);
 
   if (!project) {
     return <>Loading</>;
@@ -96,6 +111,20 @@ export default function KanbanPage() {
           </div>
         </div>
       </Link>
+      <div className="ml-4 flex h-14 w-72">
+        <ActionButton
+          content={isManageColumnsOn ? "Done" : "Manage columns"}
+          icon={
+            isManageColumnsOn ? (
+              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+            ) : (
+              <Cog6ToothIcon className="w-5 text-indigo-500"></Cog6ToothIcon>
+            )
+          }
+          color={"indigo"}
+          onClick={() => setIsManageColumnsOn(!isManageColumnsOn)}
+        ></ActionButton>
+      </div>
       <div className="absolute top-20 flex h-[calc(100%-5rem)] w-max justify-center gap-4 overflow-scroll pl-3 pb-3  md:justify-start 2xl:justify-center">
         {project.columns
           .sort((a, b) => a.order - b.order)
@@ -105,6 +134,7 @@ export default function KanbanPage() {
                 <ColumnWrapperCard
                   project={project}
                   column={col}
+                  isManageColumnsOn={isManageColumnsOn}
                   taskClicked={(task) => {
                     setSelectedTask(task);
                   }}

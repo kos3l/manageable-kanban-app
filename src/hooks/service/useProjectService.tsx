@@ -56,8 +56,18 @@ const useProjectService = () => {
 
   const updateColumn = (projectId: string, columnDto: IUpdateColumnDTO) => {
     return put<IUpdateColumnDTO, AxiosResponse<void>>(
-      bastPath + "/" + projectId + "/column",
+      bastPath + "/" + projectId + "/Column",
       columnDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  const deleteColumn = (projectId: string, columnId: string) => {
+    return put<void, AxiosResponse<void>>(
+      bastPath + "/" + projectId + "/DeleteColumn/" + columnId,
+      undefined,
       {
         withCredentials: true,
       }
@@ -71,6 +81,7 @@ const useProjectService = () => {
     updateProject,
     addColumnToProject,
     updateColumn,
+    deleteColumn,
   };
 };
 

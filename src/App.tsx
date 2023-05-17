@@ -64,6 +64,7 @@ const App = ({ queryClient }: any) => {
     updateProject,
     addColumnToProject,
     updateColumn,
+    deleteColumn,
   } = useProjectService();
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -124,7 +125,8 @@ const App = ({ queryClient }: any) => {
               action={kanbanActions(
                 queryClient,
                 addColumnToProject,
-                updateColumn
+                updateColumn,
+                deleteColumn
               )}
             >
               <Route index path="" element={<ProjectPage />} />

@@ -30,6 +30,7 @@ interface IProps {
   column: Column;
   project: Project;
   taskClicked: (task: Task) => void;
+  isManageColumnsOn: boolean;
 }
 
 const tasksFromColumnQuery = (
@@ -57,7 +58,7 @@ const tasksFromColumnQuery = (
 });
 
 export default function ColumnWrapperCard(props: IProps) {
-  const { column, project, taskClicked } = props;
+  const { column, project, taskClicked, isManageColumnsOn } = props;
   const { getTasksByColumnId, createNewTask } = useTaskService();
   const { id } = useParams();
   const queryClient = useQueryClient();
@@ -110,11 +111,6 @@ export default function ColumnWrapperCard(props: IProps) {
               ></ActionInput>
             </div>
           </Form>
-          {/* <div className="flex w-max items-center gap-2">
-              <div className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-red-900/30">
-                <TrashIcon className="w-5 text-red-700"></TrashIcon>
-              </div>
-            </div> */}
         </div>
       ) : (
         <div className="mb-0.5 flex min-h-[3.5rem] w-full basis-14 items-center justify-between rounded-lg border border-neutral-600 ">
@@ -122,15 +118,29 @@ export default function ColumnWrapperCard(props: IProps) {
             {column.name + " | " + tasks?.length}
           </p>
           <div className="mr-3 flex w-max items-center gap-2">
-            <div
-              onClick={() => {
-                setIsEditOn(true);
-                setName(column.name);
-              }}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-neutral-700/60"
-            >
-              <PencilSquareIcon className="w-5 text-neutral-300"></PencilSquareIcon>
-            </div>
+            {isManageColumnsOn ? (
+              <Form
+                action="../"
+                method="post"
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-red-900/30"
+              >
+                <input name="form-id" hidden defaultValue="deleteColumnForm" />
+                <input name="id" hidden defaultValue={column._id} />
+                <button type="submit">
+                  <TrashIcon className="w-5 text-red-700"></TrashIcon>
+                </button>
+              </Form>
+            ) : (
+              <div
+                onClick={() => {
+                  setIsEditOn(true);
+                  setName(column.name);
+                }}
+                className="flex h-8 w-8 cursor-pointer items-center justify-center rounded bg-neutral-700/60"
+              >
+                <PencilSquareIcon className="w-5 text-neutral-300"></PencilSquareIcon>
+              </div>
+            )}
           </div>
         </div>
       )}
