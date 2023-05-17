@@ -35,7 +35,7 @@ export default function CreateTeam() {
   const [description, setDescription] = useState<string>("");
 
   return (
-    <div className="flex w-full justify-center md:justify-start 2xl:justify-center">
+    <div className="flex w-full justify-center bg-gradient-to-b from-neutral-900 p-4 md:justify-start 2xl:justify-center">
       <Form
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"
@@ -61,20 +61,22 @@ export default function CreateTeam() {
             name="description"
           ></TextareaInput>
         </div>
-        <ActionButton
-          content={"Save"}
-          color="indigo"
-          isSubmitBtn
-          icon={
-            <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
-          }
-        ></ActionButton>
-        <ActionButton
-          onClick={() => navigate(-1)}
-          content={"Cancel"}
-          color="red"
-          icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
-        ></ActionButton>
+        <div className="flex gap-2">
+          <ActionButton
+            content={"Save"}
+            color="indigo"
+            isSubmitBtn
+            icon={
+              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+            }
+          ></ActionButton>
+          <ActionButton
+            onClick={() => navigate(-1)}
+            content={"Cancel"}
+            color="red"
+            icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
+          ></ActionButton>
+        </div>
       </Form>
     </div>
   );

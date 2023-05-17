@@ -40,12 +40,12 @@ export default class NavigationItems {
     },
     {
       name: "Kanban Boards",
-      path: "/user/kanban-boards",
+      path: "/user/kanban-overview",
       icon: <ListBulletIcon className="w-4 text-indigo-500"></ListBulletIcon>,
     },
     {
       name: "Create A Project",
-      path: "/user/project-create",
+      path: "/user/projects/create",
       icon: <PlusIcon className="w-4 text-indigo-500"></PlusIcon>,
     },
   ];

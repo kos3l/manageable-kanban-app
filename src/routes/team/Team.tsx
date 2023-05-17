@@ -2,6 +2,7 @@ import {
   ClipboardDocumentListIcon,
   ClockIcon,
   PencilSquareIcon,
+  TrashIcon,
   UserPlusIcon,
   UsersIcon,
 } from "@heroicons/react/24/solid";
@@ -65,12 +66,14 @@ export default function TeamPage() {
             {team.name}
           </h1>
           <DisplayField
+            color="white"
             label={"Created at"}
             placeholder={"Date not found"}
             value={new Date(team.createdAt).toLocaleDateString()}
             icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
           ></DisplayField>
           <DisplayField
+            color="white"
             label={"Description"}
             placeholder={"No Description"}
             value={team.description}
@@ -111,9 +114,7 @@ export default function TeamPage() {
                   submit(null, { method: "delete" });
                 }
               }}
-              icon={
-                <PencilSquareIcon className="w-5 text-red-600"></PencilSquareIcon>
-              }
+              icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
             ></ActionButton>
           </div>
         </div>
@@ -138,6 +139,7 @@ export default function TeamPage() {
           displayEntities={team.userModels ? team.userModels : []}
           displayComponent={(user) => (
             <UserCard
+              noEmail={false}
               color="white"
               key={user._id}
               user={user}

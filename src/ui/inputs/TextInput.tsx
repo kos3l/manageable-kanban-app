@@ -2,10 +2,10 @@ import { ReactNode } from "react";
 
 interface IProps {
   placeholder: string;
-  icon: ReactNode;
+  icon?: ReactNode;
   value?: string;
   onChange: (newValue: string) => void;
-  name: string;
+  name?: string;
 }
 
 export default function TextInput(props: IProps) {
@@ -13,9 +13,11 @@ export default function TextInput(props: IProps) {
 
   return (
     <div className="flex h-12 w-full items-center rounded-lg border border-neutral-600 bg-neutral-900 px-2">
-      <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-neutral-700">
-        {icon}
-      </div>
+      {icon && (
+        <div className="flex h-7 w-7 min-w-[1.8rem] items-center justify-center rounded-lg bg-neutral-700">
+          {icon}
+        </div>
+      )}
       <input
         name={name}
         value={value}

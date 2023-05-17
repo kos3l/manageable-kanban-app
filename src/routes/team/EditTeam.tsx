@@ -47,7 +47,7 @@ export default function EditTeam() {
   );
 
   return (
-    <div className="flex w-full justify-center md:justify-start 2xl:justify-center">
+    <div className=" flex w-full justify-center md:justify-start 2xl:justify-center">
       <Form
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"
@@ -73,20 +73,22 @@ export default function EditTeam() {
             name="description"
           ></TextareaInput>
         </div>
-        <ActionButton
-          content={"Save"}
-          color="indigo"
-          isSubmitBtn
-          icon={
-            <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
-          }
-        ></ActionButton>
-        <ActionButton
-          onClick={() => navigate(-1)}
-          content={"Cancel"}
-          color="red"
-          icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
-        ></ActionButton>
+        <div className="flex gap-2">
+          <ActionButton
+            content={"Save"}
+            color="indigo"
+            isSubmitBtn
+            icon={
+              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+            }
+          ></ActionButton>
+          <ActionButton
+            onClick={() => navigate(-1)}
+            content={"Cancel"}
+            color="red"
+            icon={<XMarkIcon className="w-5 text-red-600"></XMarkIcon>}
+          ></ActionButton>
+        </div>
       </Form>
     </div>
   );
