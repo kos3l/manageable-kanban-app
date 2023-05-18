@@ -33,6 +33,7 @@ import { User } from "../../models/entities/User";
 import useUserService from "../../hooks/service/useUserService";
 import { IUpdateTeamUsersDTO } from "../../models/dto/team/IUpdateTeamUsersDTO";
 import DisplayField from "../../ui/display-field/DisplayField";
+import TeamBanner from "../../ui/banner/TeamBanner";
 
 export const action =
   (
@@ -120,24 +121,8 @@ export default function UpdateTeamMembersPage() {
 
   return (
     <div className="flex w-full flex-wrap justify-center gap-3 md:w-3/4 md:justify-start 2xl:justify-center">
-      <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-        <div className="w-20 overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
-          <img src={avatar} alt="" className="h-full w-full object-contain" />
-        </div>
-        <div className="flex w-max flex-col gap-2">
-          <DisplayField
-            color="white"
-            label={"Team:"}
-            value={team.name}
-            placeholder={""}
-          ></DisplayField>
-          <DisplayField
-            color="white"
-            label={"Created By"}
-            value={teamCreator?.firstName + " " + teamCreator?.lastName}
-            placeholder={""}
-          ></DisplayField>
-        </div>
+      <div className="w-full">
+        <TeamBanner team={team}></TeamBanner>
       </div>
       <WrapperCard
         name={"Current Members"}

@@ -170,6 +170,9 @@ export default function SelectedtTaskCard(props: IProps) {
           selectedTask.columnId,
         ],
       });
+      queryClient.invalidateQueries({
+        queryKey: [selectedTask.columnId],
+      });
     },
   });
 
@@ -189,6 +192,9 @@ export default function SelectedtTaskCard(props: IProps) {
           selectedTask.projectId,
           selectedTask.columnId,
         ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [selectedTask.columnId],
       });
     },
   });

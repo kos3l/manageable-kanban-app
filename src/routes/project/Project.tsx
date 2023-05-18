@@ -6,6 +6,7 @@ import {
   PencilSquareIcon,
   TrashIcon,
   UserPlusIcon,
+  UsersIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useQuery } from "react-query";
@@ -18,6 +19,7 @@ import { colorIndex } from "../../models/util/ColorIndex";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DisplayField from "../../ui/display-field/DisplayField";
 import avatar from "../../assets/avatar.png";
+import TeamBanner from "../../ui/banner/TeamBanner";
 
 const projectByIdQuery = (
   projectId: string,
@@ -153,18 +155,8 @@ export default function ProjectPage() {
         </div>
       </div>
       <div className="flex h-max w-full flex-col gap-2 rounded-lg border border-neutral-800 sm:grow sm:flex-nowrap">
-        <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-          <div className="w-20 overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
-            <img src={avatar} alt="" className="h-full w-full object-contain" />
-          </div>
-          <div className="flex w-max flex-col gap-2">
-            <DisplayField
-              color="white"
-              label={"Team:"}
-              value={project.team[0].name}
-              placeholder={""}
-            ></DisplayField>
-          </div>
+        <div className="w-full">
+          <TeamBanner team={project.team[0]}></TeamBanner>
         </div>
         {project.techStack && project.techStack.length > 0 ? (
           <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2">
