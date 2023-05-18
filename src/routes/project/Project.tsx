@@ -1,13 +1,10 @@
 import {
-  Bars3Icon,
   CheckCircleIcon,
   CheckIcon,
   ClockIcon,
   ListBulletIcon,
   PencilSquareIcon,
   TrashIcon,
-  UserPlusIcon,
-  UsersIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
 import { useQuery } from "react-query";
@@ -22,9 +19,9 @@ import DisplayField from "../../ui/display-field/DisplayField";
 import TeamBanner from "../../ui/banner/TeamBanner";
 import useTaskService from "../../hooks/service/useTaskService";
 import { DateHelper } from "../../util/helpers/DateHelper";
-import { Doughnut } from "react-chartjs-2";
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, Chart } from "chart.js";
-ChartJS.register(ArcElement, Tooltip, Legend);
+import TasksPerColumnChart from "../../ui/charts/TasksPerColumnChart";
+import TaskCard from "../../ui/cards/TaskCard";
+import StaticTaskCard from "../../ui/cards/StaticTaskCard";
 
 const projectByIdQuery = (
   projectId: string,
@@ -54,31 +51,6 @@ export default function ProjectPage() {
     return <>No team id found</>;
   }
 
-  type tailwindColor = { name: string; hex: string };
-  const colors: tailwindColor[] = [
-    { name: "pink", hex: "#db2777" },
-    { name: "violet", hex: "#7c3aed" },
-    { name: "indigo", hex: "#4338ca" },
-    { name: "green", hex: "#16a34a" },
-    { name: "amber", hex: "#f59e0b" },
-    { name: "red", hex: "#b91c1c" },
-    { name: "cyan", hex: "#06b6d4" },
-    { name: "white", hex: "#d4d4d4" },
-    { name: "red-l", hex: "#fca5a5" },
-    { name: "red-d", hex: "#7f1d1d" },
-    { name: "yellow-l", hex: "#fef3c7" },
-    { name: "green-l", hex: "#d9f99d" },
-    { name: "green-d", hex: "#365314" },
-    { name: "emerald-d", hex: "#34d399" },
-    { name: "blue-d", hex: "#1e3a8a" },
-    { name: "rose", hex: "#fda4af" },
-    { name: "rose-d", hex: "#881337" },
-    { name: "fuchsia", hex: "#d946ef" },
-    { name: "purple", hex: "#c084fc" },
-    { name: "purple-d", hex: "#4c1d95" },
-    { name: "lime", hex: "#ecfccb" },
-  ];
-
   const { data: tasks } = useQuery({
     queryKey: ["tasks", id],
     queryFn: async () => {
@@ -96,35 +68,11 @@ export default function ProjectPage() {
     },
   });
 
-  type columnsChartData = {
-    id: number;
-    label: string;
-    data: number[];
-    backgroundColor: string[];
-    borderColor: string[];
-    borderWidth: number;
-  };
-
   const { data: project } = useQuery(projectByIdQuery(id, getProjectById));
 
   if (!project) {
     return <>Loading</>;
   }
-
-  const toRGBA = (color: string) => {
-    const { style } = new Option();
-    style.color = color;
-    return style.color.replace(")", ", 0.2)").replace("rgb", "rgba");
-  };
-
-  const chartColumns: columnsChartData = {
-    id: 1,
-    label: "Tasks",
-    data: project.columns.map((col) => col.tasks.length),
-    backgroundColor: colors.map((col) => toRGBA(col.hex)),
-    borderColor: colors.map((col) => col.hex),
-    borderWidth: 1,
-  };
 
   const daysLeft =
     project.status == ProjectStatus.ONGOING
@@ -234,7 +182,7 @@ export default function ProjectPage() {
             </div>
           </div>
         </div>
-        <div className="flex h-max w-full flex-col gap-2 rounded-lg border border-neutral-800 sm:flex-nowrap md:grow">
+        <div className="flex h-max w-full flex-col gap-2 sm:flex-nowrap md:grow">
           <div className="w-full">
             <TeamBanner team={project.team[0]}></TeamBanner>
           </div>
@@ -258,8 +206,8 @@ export default function ProjectPage() {
             <></>
           )}
           {tasks && tasks.length > 0 ? (
-            <div className="flex h-max w-full items-center gap-2">
-              <div className="flex h-max grow flex-col items-center gap-2">
+            <div className="flex h-max w-full items-start gap-2">
+              <div className="flex h-max w-3/5 flex-col items-start gap-2">
                 <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
                   <div className="flex grow flex-col border-r border-neutral-600">
                     <p className="text-sm text-neutral-500">Total Tasks:</p>
@@ -282,50 +230,53 @@ export default function ProjectPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex h-max w-full flex-col items-center justify-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-                  <div className="flex w-full text-neutral-600">
-                    <p>Tasks per column</p>
-                  </div>
-                  <div className="flex h-max w-[40%]">
-                    <Doughnut
-                      data={{
-                        labels: project.columns.map((col) => col.name),
-                        datasets: [chartColumns],
-                      }}
-                      options={{
-                        responsive: true,
-                        plugins: {
-                          legend: {
-                            display: false,
-                          },
-                        },
-                      }}
-                    ></Doughnut>
-                  </div>
-                  <div className="mt-4 flex h-max w-full flex-wrap gap-3">
-                    {project.columns.map((col, index) => {
-                      return (
-                        <div
-                          className="basis-max flex grow items-center gap-2 rounded-lg px-3 py-2 leading-4"
-                          style={{
-                            backgroundColor: toRGBA(colors[index].hex),
-                            border: "1px solid" + colors[index].hex,
-                          }}
-                        >
-                          <p className="traking-wider font-serif text-sm">
-                            {col.name}
-                          </p>
-                          <p className="mt-0.5 text-lg font-medium">
-                            {col.tasks.length}
-                          </p>{" "}
-                        </div>
-                      );
-                    })}
-                  </div>
+                <div className="flex h-max w-full rounded-lg border border-neutral-600 bg-neutral-800/50">
+                  <TasksPerColumnChart
+                    columns={project.columns}
+                  ></TasksPerColumnChart>
                 </div>
               </div>
-              <div className="flex h-max grow items-center gap-2">
-                <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2"></div>
+              <div className="flex h-full w-2/5 flex-col items-center gap-2">
+                <div className="flex h-60 w-full flex-col justify-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-3">
+                  <div className="flex h-max w-full items-center  justify-between">
+                    <p className="text-sm text-neutral-500">Unassigned Tasks</p>
+                    <p className="font-serif font-medium text-indigo-500">
+                      {tasks.filter((task) => task.userIds.length == 0).length}
+                    </p>
+                  </div>
+                  <div className="flex w-full flex-col  gap-2 overflow-scroll">
+                    {tasks
+                      .filter((task) => task.userIds.length == 0)
+                      .map((task, index) => {
+                        return (
+                          <StaticTaskCard
+                            task={task}
+                            key={index}
+                          ></StaticTaskCard>
+                        );
+                      })}
+                  </div>
+                </div>
+                <div className="flex h-60 w-full flex-col justify-center gap-2  rounded-lg border border-neutral-600 bg-neutral-800/30 p-3">
+                  <div className="flex h-max w-full items-center justify-between">
+                    <p className="text-sm text-neutral-500">Overdue Tasks</p>
+                    <p className="font-serif font-medium text-indigo-500">
+                      {tasks.filter((task) => task.userIds.length == 0).length}
+                    </p>
+                  </div>
+                  <div className="flex w-full flex-col gap-2 overflow-scroll">
+                    {tasks
+                      .filter((task) => task.userIds.length == 0)
+                      .map((task, index) => {
+                        return (
+                          <StaticTaskCard
+                            task={task}
+                            key={index}
+                          ></StaticTaskCard>
+                        );
+                      })}
+                  </div>
+                </div>
               </div>
             </div>
           ) : (
