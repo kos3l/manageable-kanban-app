@@ -22,7 +22,7 @@ export default function TeamBanner(props: IProps) {
           </div>
           <div className="flex flex-col items-start leading-4">
             <p className="tracking-wider text-neutral-600">Team</p>
-            <h1 className="font-serif text-2xl">{team.name}</h1>{" "}
+            <h1 className="font-serif text-lg sm:text-2xl">{team.name}</h1>{" "}
           </div>
         </div>
       </div>

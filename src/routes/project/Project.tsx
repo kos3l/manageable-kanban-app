@@ -22,6 +22,7 @@ import { DateHelper } from "../../util/helpers/DateHelper";
 import TasksPerColumnChart from "../../ui/charts/TasksPerColumnChart";
 import TaskCard from "../../ui/cards/TaskCard";
 import StaticTaskCard from "../../ui/cards/StaticTaskCard";
+import TaskListCard from "../../ui/cards/TaskListCard";
 
 const projectByIdQuery = (
   projectId: string,
@@ -116,7 +117,7 @@ export default function ProjectPage() {
             <h1 className="break-word font-serif text-lg tracking-wider">
               {project.name}
             </h1>
-            <div className="flex w-max flex-row gap-2 md:flex-col">
+            <div className="flex w-max flex-col gap-2 sm:flex-row md:flex-col">
               <DisplayField
                 color="white"
                 label={"Start Date"}
@@ -187,27 +188,29 @@ export default function ProjectPage() {
             <TeamBanner team={project.team[0]}></TeamBanner>
           </div>
           {project.techStack && project.techStack.length > 0 ? (
-            <div className="flex h-max w-full flex-wrap items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2">
-              <p className="ml-2 mt-1 tracking-wider text-neutral-500">
+            <div className="flex h-max w-full flex-col items-start justify-center gap-1 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2 sm:flex-row sm:items-center sm:justify-start sm:gap-2">
+              <p className="mr-2 min-w-max tracking-wider text-neutral-500 sm:mt-1 sm:ml-2">
                 Tools stack
               </p>
-              {project.techStack.map((tech, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
-                  >
-                    <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
-                  </div>
-                );
-              })}
+              <div className="flex h-max flex-wrap gap-2">
+                {project.techStack.map((tech, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
+                    >
+                      <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ) : (
             <></>
           )}
           {tasks && tasks.length > 0 ? (
-            <div className="flex h-max w-full items-start gap-2">
-              <div className="flex h-max w-3/5 flex-col items-start gap-2">
+            <div className="flex h-max w-full flex-col items-start gap-2 xl:flex-row">
+              <div className="flex h-max w-full flex-col items-start gap-2 xl:w-3/5">
                 <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
                   <div className="flex grow flex-col border-r border-neutral-600">
                     <p className="text-sm text-neutral-500">Total Tasks:</p>
@@ -236,47 +239,17 @@ export default function ProjectPage() {
                   ></TasksPerColumnChart>
                 </div>
               </div>
-              <div className="flex h-full w-2/5 flex-col items-center gap-2">
-                <div className="flex h-60 w-full flex-col justify-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-3">
-                  <div className="flex h-max w-full items-center  justify-between">
-                    <p className="text-sm text-neutral-500">Unassigned Tasks</p>
-                    <p className="font-serif font-medium text-indigo-500">
-                      {tasks.filter((task) => task.userIds.length == 0).length}
-                    </p>
-                  </div>
-                  <div className="flex w-full flex-col  gap-2 overflow-scroll">
-                    {tasks
-                      .filter((task) => task.userIds.length == 0)
-                      .map((task, index) => {
-                        return (
-                          <StaticTaskCard
-                            task={task}
-                            key={index}
-                          ></StaticTaskCard>
-                        );
-                      })}
-                  </div>
-                </div>
-                <div className="flex h-60 w-full flex-col justify-center gap-2  rounded-lg border border-neutral-600 bg-neutral-800/30 p-3">
-                  <div className="flex h-max w-full items-center justify-between">
-                    <p className="text-sm text-neutral-500">Overdue Tasks</p>
-                    <p className="font-serif font-medium text-indigo-500">
-                      {tasks.filter((task) => task.userIds.length == 0).length}
-                    </p>
-                  </div>
-                  <div className="flex w-full flex-col gap-2 overflow-scroll">
-                    {tasks
-                      .filter((task) => task.userIds.length == 0)
-                      .map((task, index) => {
-                        return (
-                          <StaticTaskCard
-                            task={task}
-                            key={index}
-                          ></StaticTaskCard>
-                        );
-                      })}
-                  </div>
-                </div>
+              <div className="flex h-full w-full flex-col items-center gap-2 xl:w-2/5">
+                <TaskListCard
+                  title="Unassigned Taskss"
+                  tasks={tasks.filter((task) => task.userIds.length == 0)}
+                ></TaskListCard>
+                <TaskListCard
+                  title="Overdue Tasks"
+                  tasks={tasks.filter(
+                    (task) => new Date() > new Date(task.endDate)
+                  )}
+                ></TaskListCard>
               </div>
             </div>
           ) : (
@@ -291,7 +264,4 @@ export default function ProjectPage() {
       </div>
     </div>
   );
-}
-function resolveConfig(tailwindConfig: any) {
-  throw new Error("Function not implemented.");
 }
