@@ -5,6 +5,7 @@ import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { IUpdateTaskDTO } from "../../models/dto/task/IUpdateTaskDTO";
 import { IUpdateUserToTask } from "../../models/dto/project/IUpdateUserToTask";
 import { IUpdateTaskOrderDTO } from "../../models/dto/task/IUpdateTaskOrderDTO";
+import { ICreateLabelDTO } from "../../models/dto/task/ICreateLabelDTO";
 
 const useTaskService = () => {
   const { get, post, put, remove } = useHttp();
@@ -84,6 +85,26 @@ const useTaskService = () => {
     );
   };
 
+  const addLabelToTask = (taskId: string, labelDto: ICreateLabelDTO) => {
+    return put<ICreateLabelDTO, AxiosResponse<void>>(
+      bastPath + "/" + taskId + "/AddLabel",
+      labelDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  const removeLabelFromTask = (taskId: string, labelId: string) => {
+    return put<IUpdateUserToTask, AxiosResponse<void>>(
+      bastPath + "/" + taskId + "/RemoveLabel/" + labelId,
+      undefined,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
   return {
     getTasksByColumnId,
     createNewTask,
@@ -93,6 +114,8 @@ const useTaskService = () => {
     updateTask,
     updateTaskOrder,
     deleteTask,
+    removeLabelFromTask,
+    addLabelToTask,
   };
 };
 

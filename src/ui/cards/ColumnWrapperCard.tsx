@@ -239,7 +239,7 @@ export default function ColumnWrapperCard(props: IProps) {
           ) : (
             <div className="handle mb-0.5 flex min-h-[3.5rem] w-full basis-14 cursor-grab items-center justify-between rounded-lg border border-neutral-600 ">
               <p className="neutral-500 ml-3 font-serif text-base tracking-wider">
-                {column.name + " | " + tasks?.length}
+                {tasks ? column.name + " | " + tasks.length : column.name}
               </p>
               <div className="mr-3 flex w-max items-center gap-2">
                 {isManageColumnsOn ? (

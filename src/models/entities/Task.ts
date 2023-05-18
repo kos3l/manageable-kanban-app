@@ -1,3 +1,4 @@
+import { Label } from "./Label";
 import { User } from "./User";
 
 type Task = {
@@ -11,7 +12,7 @@ type Task = {
   userIds: string[];
   createdAt: Date;
   users: User[];
-  //   labels: string;
+  labels: Label[];
 };
 
 export { type Task };
