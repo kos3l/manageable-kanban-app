@@ -4,6 +4,7 @@ import avatar from "../../assets/avatar.png";
 import { useRef } from "react";
 import { useDrag, useDrop } from "react-dnd";
 import type { Identifier, XYCoord } from "dnd-core";
+import LabelCard from "./LabelCard";
 
 interface IProps {
   task: Task;
@@ -109,7 +110,15 @@ export default function TaskCard(props: IProps) {
       data-handler-id={handlerId}
     >
       <div className="h-max w-full cursor-grab gap-2 rounded-lg border border-neutral-600 bg-neutral-800/60 p-2 transition hover:border-neutral-400">
-        <div></div>
+        {task.labels && task.labels.length > 0 ? (
+          <div className="mb-2 flex h-max w-full flex-wrap items-center gap-2">
+            {task.labels.map((label, index) => (
+              <LabelCard label={label} key={index}></LabelCard>
+            ))}
+          </div>
+        ) : (
+          <></>
+        )}
         <div className="flex h-max w-full items-center gap-2">
           <div
             className={

@@ -212,6 +212,9 @@ export default function SelectedtTaskCard(props: IProps) {
           selectedTask.columnId,
         ],
       });
+      queryClient.invalidateQueries({
+        queryKey: [selectedTask.columnId],
+      });
     },
   });
 
@@ -231,6 +234,9 @@ export default function SelectedtTaskCard(props: IProps) {
           selectedTask.projectId,
           selectedTask.columnId,
         ],
+      });
+      queryClient.invalidateQueries({
+        queryKey: [selectedTask.columnId],
       });
     },
   });
@@ -353,11 +359,15 @@ export default function SelectedtTaskCard(props: IProps) {
             </div>
           ) : (
             <>
-              <div className="mt-1 flex w-full flex-wrap gap-2">
-                {data.labels.map((label, index) => (
-                  <LabelCard label={label} key={index}></LabelCard>
-                ))}
-              </div>
+              {data.labels && data.labels.length > 0 ? (
+                <div className="mt-1 flex w-full flex-wrap gap-2">
+                  {data.labels.map((label, index) => (
+                    <LabelCard label={label} key={index}></LabelCard>
+                  ))}
+                </div>
+              ) : (
+                <></>
+              )}
               <p className="break-word w-full max-w-full font-serif text-xl tracking-wider">
                 {data.title}
               </p>
