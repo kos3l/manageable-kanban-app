@@ -13,7 +13,7 @@ export default function TaskListCard(props: IProps) {
     <div
       className={
         tasks.length > 0
-          ? "flex h-60 w-full flex-col justify-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-3"
+          ? "flex h-60 w-full flex-col justify-start gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-3"
           : "flex h-max w-full flex-col justify-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/30 p-3"
       }
     >
