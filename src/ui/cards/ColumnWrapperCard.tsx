@@ -85,6 +85,12 @@ export default function ColumnWrapperCard(props: IProps) {
       queryClient.invalidateQueries({
         queryKey: [column._id],
       });
+      queryClient.invalidateQueries({
+        queryKey: ["statistic"],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["projects", "teams"],
+      });
       setShowCreate(false);
     },
   });

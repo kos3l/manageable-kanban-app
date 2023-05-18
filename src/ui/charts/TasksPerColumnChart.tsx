@@ -90,6 +90,7 @@ export default function TasksPerColumnChart(props: IProps) {
           .map((col, index) => {
             return (
               <div
+                key={index}
                 className="basis-max flex grow items-center gap-2 rounded-lg px-3 py-2 leading-4"
                 style={{
                   backgroundColor: toRGBA(colors[index].hex),
