@@ -24,7 +24,6 @@ import useTaskService from "../../hooks/service/useTaskService";
 import { DateHelper } from "../../util/helpers/DateHelper";
 import { Doughnut } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Chart } from "chart.js";
-
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 const projectByIdQuery = (
@@ -54,6 +53,31 @@ export default function ProjectPage() {
   if (!id) {
     return <>No team id found</>;
   }
+
+  type tailwindColor = { name: string; hex: string };
+  const colors: tailwindColor[] = [
+    { name: "pink", hex: "#db2777" },
+    { name: "violet", hex: "#7c3aed" },
+    { name: "indigo", hex: "#4338ca" },
+    { name: "green", hex: "#16a34a" },
+    { name: "amber", hex: "#f59e0b" },
+    { name: "red", hex: "#b91c1c" },
+    { name: "cyan", hex: "#06b6d4" },
+    { name: "white", hex: "#d4d4d4" },
+    { name: "red-l", hex: "#fca5a5" },
+    { name: "red-d", hex: "#7f1d1d" },
+    { name: "yellow-l", hex: "#fef3c7" },
+    { name: "green-l", hex: "#d9f99d" },
+    { name: "green-d", hex: "#365314" },
+    { name: "emerald-d", hex: "#34d399" },
+    { name: "blue-d", hex: "#1e3a8a" },
+    { name: "rose", hex: "#fda4af" },
+    { name: "rose-d", hex: "#881337" },
+    { name: "fuchsia", hex: "#d946ef" },
+    { name: "purple", hex: "#c084fc" },
+    { name: "purple-d", hex: "#4c1d95" },
+    { name: "lime", hex: "#ecfccb" },
+  ];
 
   const { data: tasks } = useQuery({
     queryKey: ["tasks", id],
@@ -87,22 +111,18 @@ export default function ProjectPage() {
     return <>Loading</>;
   }
 
+  const toRGBA = (color: string) => {
+    const { style } = new Option();
+    style.color = color;
+    return style.color.replace(")", ", 0.2)").replace("rgb", "rgba");
+  };
+
   const chartColumns: columnsChartData = {
     id: 1,
-    label: "test",
+    label: "Tasks",
     data: project.columns.map((col) => col.tasks.length),
-    backgroundColor: [
-      "rgba(255, 99, 132, 0.2)",
-      "rgba(54, 162, 235, 0.2)",
-      "rgba(255, 206, 86, 0.2)",
-      "rgba(75, 192, 192, 0.2)",
-    ],
-    borderColor: [
-      "rgba(255, 99, 132, 1)",
-      "rgba(54, 162, 235, 1)",
-      "rgba(255, 206, 86, 1)",
-      "rgba(75, 192, 192, 1)",
-    ],
+    backgroundColor: colors.map((col) => toRGBA(col.hex)),
+    borderColor: colors.map((col) => col.hex),
     borderWidth: 1,
   };
 
@@ -237,7 +257,6 @@ export default function ProjectPage() {
           ) : (
             <></>
           )}
-          {/* Tasks */}
           {tasks && tasks.length > 0 ? (
             <div className="flex h-max w-full items-center gap-2">
               <div className="flex h-max grow flex-col items-center gap-2">
@@ -263,13 +282,46 @@ export default function ProjectPage() {
                     </p>
                   </div>
                 </div>
-                <div className="flex h-max w-full justify-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-                  <Doughnut
-                    data={{
-                      labels: project.columns.map((col) => col.name),
-                      datasets: [chartColumns],
-                    }}
-                  ></Doughnut>
+                <div className="flex h-max w-full flex-col items-center justify-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
+                  <div className="flex w-full text-neutral-600">
+                    <p>Tasks per column</p>
+                  </div>
+                  <div className="flex h-max w-[40%]">
+                    <Doughnut
+                      data={{
+                        labels: project.columns.map((col) => col.name),
+                        datasets: [chartColumns],
+                      }}
+                      options={{
+                        responsive: true,
+                        plugins: {
+                          legend: {
+                            display: false,
+                          },
+                        },
+                      }}
+                    ></Doughnut>
+                  </div>
+                  <div className="mt-4 flex h-max w-full flex-wrap gap-3">
+                    {project.columns.map((col, index) => {
+                      return (
+                        <div
+                          className="basis-max flex grow items-center gap-2 rounded-lg px-3 py-2 leading-4"
+                          style={{
+                            backgroundColor: toRGBA(colors[index].hex),
+                            border: "1px solid" + colors[index].hex,
+                          }}
+                        >
+                          <p className="traking-wider font-serif text-sm">
+                            {col.name}
+                          </p>
+                          <p className="mt-0.5 text-lg font-medium">
+                            {col.tasks.length}
+                          </p>{" "}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               </div>
               <div className="flex h-max grow items-center gap-2">
