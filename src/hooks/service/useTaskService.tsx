@@ -20,6 +20,15 @@ const useTaskService = () => {
     );
   };
 
+  const getTasksByProjectId = (projectId: string) => {
+    return get<void, AxiosResponse<Task[]>>(
+      bastPath + "/project/" + projectId,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
   const getTaskById = (taskId: string) => {
     return get<void, AxiosResponse<Task>>(bastPath + "/" + taskId, {
       withCredentials: true,
@@ -107,6 +116,7 @@ const useTaskService = () => {
 
   return {
     getTasksByColumnId,
+    getTasksByProjectId,
     createNewTask,
     getTaskById,
     addUserToTask,

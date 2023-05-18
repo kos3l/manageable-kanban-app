@@ -18,8 +18,8 @@ import { ProjectStatusText } from "../../models/enum/ProjectStatusText";
 import { colorIndex } from "../../models/util/ColorIndex";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DisplayField from "../../ui/display-field/DisplayField";
-import avatar from "../../assets/avatar.png";
 import TeamBanner from "../../ui/banner/TeamBanner";
+import useTaskService from "../../hooks/service/useTaskService";
 
 const projectByIdQuery = (
   projectId: string,
@@ -44,10 +44,28 @@ const projectByIdQuery = (
 export default function ProjectPage() {
   const { id } = useParams();
   const { getProjectById } = useProjectService();
-
+  const { getTasksByProjectId } = useTaskService();
   if (!id) {
     return <>No team id found</>;
   }
+
+  const { data: tasks } = useQuery({
+    queryKey: ["tasks", id],
+    queryFn: async () => {
+      const response = await getTasksByProjectId(id);
+      if (response.status == 403) {
+        throw new Error("Token expired");
+      }
+      if (!response) {
+        throw new Response("", {
+          status: 404,
+          statusText: "Not Found",
+        });
+      }
+      return response.data;
+    },
+  });
+
   const { data: project } = useQuery(projectByIdQuery(id, getProjectById));
 
   if (!project) {
@@ -73,8 +91,8 @@ export default function ProjectPage() {
   };
 
   return (
-    <div className="flex h-max w-full flex-wrap gap-3 p-4  xl:flex-nowrap 2xl:w-3/4">
-      <div className="flex h-max w-full flex-col gap-3 xl:basis-96">
+    <div className="flex h-max w-full flex-wrap gap-2 p-4 md:flex-nowrap lg:gap-3 2xl:w-3/4">
+      <div className="flex h-max w-full flex-col gap-3 md:basis-96">
         <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
           <div className={`${labelVariants[ProjectStatus[project.status]]}`}>
             <p className="truncate font-serif text-base font-medium tracking-wider ">
@@ -90,22 +108,24 @@ export default function ProjectPage() {
           <h1 className="break-word font-serif text-lg tracking-wider">
             {project.name}
           </h1>
-          <DisplayField
-            color="white"
-            label={"Start Date"}
-            placeholder={"Date not found"}
-            value={new Date(project.startDate).toLocaleDateString()}
-            icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
-          ></DisplayField>
-          <DisplayField
-            color="white"
-            label={"End Date"}
-            placeholder={"Date not found"}
-            icon={
-              <CheckCircleIcon className="w-6 text-neutral-300"></CheckCircleIcon>
-            }
-            value={new Date(project.endDate).toLocaleDateString()}
-          ></DisplayField>
+          <div className="flex w-max flex-row gap-2 md:flex-col">
+            <DisplayField
+              color="white"
+              label={"Start Date"}
+              placeholder={"Date not found"}
+              value={new Date(project.startDate).toLocaleDateString()}
+              icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
+            ></DisplayField>
+            <DisplayField
+              color="white"
+              label={"End Date"}
+              placeholder={"Date not found"}
+              icon={
+                <CheckCircleIcon className="w-6 text-neutral-300"></CheckCircleIcon>
+              }
+              value={new Date(project.endDate).toLocaleDateString()}
+            ></DisplayField>
+          </div>
           <DisplayField
             color="white"
             label={"Description"}
@@ -113,8 +133,8 @@ export default function ProjectPage() {
             value={project.description}
           ></DisplayField>
         </div>
-        <div className="flex w-full flex-wrap gap-3 md:flex-nowrap xl:flex-col">
-          <div className="grow basis-full md:basis-1/3">
+        <div className="flex h-max w-full flex-wrap gap-2 md:flex-col md:flex-nowrap">
+          <div className=" grow">
             <Link to={"./update-members"}>
               <ActionButton
                 color="indigo"
@@ -123,7 +143,7 @@ export default function ProjectPage() {
               ></ActionButton>
             </Link>
           </div>
-          <div className="grow basis-full md:basis-1/3">
+          <div className="grow">
             <Link to={"./kanban"}>
               <ActionButton
                 color="indigo"
@@ -134,7 +154,7 @@ export default function ProjectPage() {
               ></ActionButton>
             </Link>{" "}
           </div>
-          <div className="grow basis-full md:basis-1/3">
+          <div className="grow">
             <Link to={"./edit"}>
               <ActionButton
                 color="indigo"
@@ -145,7 +165,7 @@ export default function ProjectPage() {
               ></ActionButton>
             </Link>{" "}
           </div>
-          <div className="grow basis-full md:basis-1/3">
+          <div className="grow">
             <ActionButton
               color="red"
               content={"Delete Project"}
@@ -154,27 +174,25 @@ export default function ProjectPage() {
           </div>
         </div>
       </div>
-      <div className="flex h-max w-full flex-col gap-2 rounded-lg border border-neutral-800 sm:grow sm:flex-nowrap">
+      <div className="flex h-max w-full flex-col gap-2 rounded-lg border border-neutral-800 sm:flex-nowrap md:grow">
         <div className="w-full">
           <TeamBanner team={project.team[0]}></TeamBanner>
         </div>
         {project.techStack && project.techStack.length > 0 ? (
-          <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2">
-            <>
-              <p className="ml-2 mt-1 tracking-wider text-neutral-500">
-                Tools stack
-              </p>
-              {project.techStack.map((tech, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
-                  >
-                    <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
-                  </div>
-                );
-              })}
-            </>
+          <div className="flex h-max w-full flex-wrap items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2">
+            <p className="ml-2 mt-1 tracking-wider text-neutral-500">
+              Tools stack
+            </p>
+            {project.techStack.map((tech, index) => {
+              return (
+                <div
+                  key={index}
+                  className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
+                >
+                  <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
+                </div>
+              );
+            })}
           </div>
         ) : (
           <></>
