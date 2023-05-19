@@ -55,13 +55,14 @@ const tasksFromColumnQuery = (
 
 export default function ColumnWrapperCard(props: IProps) {
   const { column, project, taskClicked, isManageColumnsOn } = props;
-  const { getTasksByColumnId, createNewTask, updateTaskOrder } =
-    useTaskService();
-  const submit = useSubmit();
-  const { id } = useParams();
   const queryClient = useQueryClient();
   const columnRef = useRef<any>(null);
   const lineRef = useRef<any>(null);
+  const { id } = useParams();
+
+  const submit = useSubmit();
+  const { getTasksByColumnId, createNewTask, updateTaskOrder } =
+    useTaskService();
 
   if (!id) {
     return <p>Loading</p>;
@@ -72,11 +73,16 @@ export default function ColumnWrapperCard(props: IProps) {
   );
 
   const [xPosition, setXPosition] = useState<number | null>(null);
-
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [stateTasks, setStateTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    if (tasks) {
+      setStateTasks(tasks);
+    }
+  }, [tasks]);
 
   const mutation = useMutation({
     mutationFn: (taskDto: ICreateTaskDTO) => {
@@ -106,12 +112,6 @@ export default function ColumnWrapperCard(props: IProps) {
       });
     },
   });
-
-  useEffect(() => {
-    if (tasks) {
-      setStateTasks(tasks);
-    }
-  }, [tasks]);
 
   const handleColumnDrag = (ev: any) => {
     if (xPosition && xPosition >= 596.8 && ev.movementX > 0) {

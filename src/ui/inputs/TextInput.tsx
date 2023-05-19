@@ -22,7 +22,7 @@ export default function TextInput(props: IProps) {
       setError("Field is required!");
       setShowError(true);
     } else if (minLenght && minLenght > val.length) {
-      setError(`Filed must be atleast ${minLenght} characters.`);
+      setError(`Minimum ${minLenght} characters.`);
       setShowError(true);
     } else {
       setError("");

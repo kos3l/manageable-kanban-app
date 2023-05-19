@@ -372,6 +372,8 @@ export default function SelectedtTaskCard(props: IProps) {
                 icon={<TagIcon className="w-5 text-neutral-300"></TagIcon>}
                 value={title}
                 onChange={(newVal) => setTitle(newVal)}
+                isRequred={true}
+                minLenght={2}
               ></TextInput>
             </div>
           ) : (
@@ -488,6 +490,7 @@ export default function SelectedtTaskCard(props: IProps) {
                   value={description}
                   onChange={(val) => setDescription(val)}
                   name="description"
+                  minLenght={3}
                 ></TextareaInput>
                 <p className="mt-4 mb-2 w-3/4 border-b border-neutral-500 pb-1 text-sm tracking-wider opacity-50">
                   Manage users

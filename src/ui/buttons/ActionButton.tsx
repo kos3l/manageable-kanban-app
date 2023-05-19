@@ -8,6 +8,7 @@ interface IProps {
   color: string;
   isSubmitBtn?: boolean;
   isDisabled?: boolean;
+  isSmaller?: boolean;
 }
 
 type colorVariants = {
@@ -16,7 +17,8 @@ type colorVariants = {
 };
 
 export default function ActionButton(props: IProps) {
-  const { icon, color, content, onClick, isSubmitBtn, isDisabled } = props;
+  const { icon, color, content, onClick, isSubmitBtn, isDisabled, isSmaller } =
+    props;
 
   const wrapperColorVariants: colorIndex & colorVariants = {
     indigo:
@@ -36,12 +38,18 @@ export default function ActionButton(props: IProps) {
 
   return (
     <button
+      style={isSmaller ? { padding: "7px" } : {}}
       type={isSubmitBtn ? "submit" : "button"}
       onClick={onClick ? () => onClick() : undefined}
       className={`${wrapperColorVariants[color]}`}
       disabled={isDisabled}
     >
-      <div className={`${boxColorVariants[color]}`}>{icon}</div>
+      <div
+        style={isSmaller ? { width: "2rem", height: "2rem" } : {}}
+        className={`${boxColorVariants[color]}`}
+      >
+        {icon}
+      </div>
       <p className="m-0 font-serif text-sm font-semibold tracking-wider ">
         {content}
       </p>
