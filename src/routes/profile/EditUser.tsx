@@ -47,18 +47,14 @@ export const action =
 
 export default function EditUserPage() {
   const user = useRouteLoaderData("userRoot") as User;
+  const formRef = useRef<any>();
   const navigate = useNavigate();
   const submit = useSubmit();
-  const formRef = useRef<any>();
 
   const [firstName, setFirstName] = useState<string>(user.firstName);
   const [lastName, setLastName] = useState<string>(user.lastName);
   const [birthdate, setBirthdate] = useState<Date>(user.birthdate);
   const [bio, setBio] = useState<string>(user.bio ? user.bio : "");
-
-  const isFormInvalid = () => {
-    return firstName == "" || lastName == "" || bio == "";
-  };
 
   useEffect(() => {
     document.addEventListener("keyup", onEnterPress);
@@ -72,6 +68,10 @@ export default function EditUserPage() {
       submit(formRef.current);
     }
   }
+
+  const isFormInvalid = () => {
+    return firstName == "" || lastName == "" || bio == "";
+  };
 
   return (
     <div className="flex w-full justify-center bg-gradient-to-b from-neutral-900 p-4 md:justify-start 2xl:justify-center">

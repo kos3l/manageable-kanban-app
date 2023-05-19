@@ -5,15 +5,15 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QueryClient } from "react-query";
 import {
   Form,
   redirect,
   useNavigate,
   useRouteLoaderData,
+  useSubmit,
 } from "react-router-dom";
-import { ICreateTeamDTO } from "../../models/dto/team/ICreateTeamDTO";
 import { IUpdateTeamDTO } from "../../models/dto/team/IUpdateTeamDTO";
 import { Team } from "../../models/entities/Team";
 import QueryKeys from "../../static/QueryKeys";
@@ -53,15 +53,36 @@ export const action =
 
 export default function EditTeam() {
   const team = useRouteLoaderData("selectedTeam") as Team;
+  const formRef = useRef<any>();
   const navigate = useNavigate();
+  const submit = useSubmit();
+
   const [name, setName] = useState<string>(team.name);
   const [description, setDescription] = useState<string>(
     team.description ? team.description : ""
   );
 
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [name, description]);
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isFormInvalid()) {
+      submit(formRef.current);
+    }
+  }
+
+  const isFormInvalid = () => {
+    return name == "" || description == "";
+  };
+
   return (
     <div className=" flex w-full justify-center md:justify-start 2xl:justify-center">
       <Form
+        ref={formRef}
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3 md:w-3/6 xl:w-1/3"
       >
@@ -75,6 +96,7 @@ export default function EditTeam() {
             value={name}
             onChange={(val) => setName(val)}
             name="name"
+            minLenght={2}
           ></TextInput>
           <TextareaInput
             icon={
@@ -84,15 +106,23 @@ export default function EditTeam() {
             value={description}
             onChange={(val) => setDescription(val)}
             name="description"
+            minLenght={3}
           ></TextareaInput>
         </div>
         <div className="flex gap-2">
           <ActionButton
             content={"Save"}
-            color="indigo"
+            color={isFormInvalid() ? "white" : "indigo"}
             isSubmitBtn
+            isDisabled={isFormInvalid()}
             icon={
-              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+              <CheckCircleIcon
+                className={
+                  isFormInvalid()
+                    ? "w-5 text-neutral-300"
+                    : "w-5 text-indigo-500"
+                }
+              ></CheckCircleIcon>
             }
           ></ActionButton>
           <ActionButton
