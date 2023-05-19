@@ -65,12 +65,15 @@ export default function UserDashboardPage() {
     return <p>loading</p>;
   }
 
+  // Get all columns which have tasks assigned to the logged in user
   const allColumns = projects
     .map((project) => project.columns)
     .reduce((acc, val) => {
       return acc.concat(val);
-    });
+    })
+    .filter((col) => tasks?.find((task) => task.columnId == col._id));
 
+  // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
   const mergedColumns = Array.from(
     new Set(allColumns.map((col) => col.name))
   ).map((name) => {
@@ -82,7 +85,8 @@ export default function UserDashboardPage() {
         .map((edition) => edition.tasks)
         .reduce((acc, val) => {
           return acc.concat(val);
-        }),
+        })
+        .filter((task) => tasks?.find((t) => t._id == task)),
     };
   }) as Column[];
 

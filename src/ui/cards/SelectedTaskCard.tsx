@@ -150,11 +150,15 @@ export default function SelectedtTaskCard(props: IProps) {
         ],
       });
       queryClient.invalidateQueries({
+        queryKey: [selectedTask.columnId],
+      });
+      queryClient.invalidateQueries({
         queryKey: ["statistic"],
       });
       queryClient.invalidateQueries({
         queryKey: ["projects", "teams"],
       });
+
       onClose();
     },
   });
