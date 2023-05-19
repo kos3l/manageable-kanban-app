@@ -18,16 +18,18 @@ import TextInput from "../../ui/inputs/TextInput";
 import Dropdown from "../../ui/selection/Dropdown";
 
 enum Sorting {
+  STATUS = "Status",
   AZ = "A - Z",
   ZA = "Z - A",
   NEWEST = "Newest",
   OLDEST = "Oldest",
+  TEAMS = "Teams",
 }
 
 export default function ProjectsOverviewPage() {
   const navigate = useNavigate();
   const { getAllUserProjects } = useProjectService();
-  const [sortingOption, setSortingOption] = useState<string>(Sorting.AZ);
+  const [sortingOption, setSortingOption] = useState<string>(Sorting.STATUS);
   const [search, setSearch] = useState<string>("");
 
   const { data } = useQuery({
@@ -44,6 +46,26 @@ export default function ProjectsOverviewPage() {
       navigate("/login", { replace: true });
     },
   });
+
+  if (!data) {
+    return <p>Loading</p>;
+  }
+
+  if (sortingOption === Sorting.STATUS) {
+    data.sort((a, b) => b.status - a.status);
+  } else if (sortingOption === Sorting.AZ) {
+    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
+  } else if (sortingOption === Sorting.ZA) {
+    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1));
+  } else if (sortingOption === Sorting.NEWEST) {
+    data.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+  } else if (sortingOption === Sorting.OLDEST) {
+    data.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+  } else if (sortingOption === Sorting.TEAMS) {
+    data.sort((a, b) =>
+      a.team[0].name.toLowerCase() > b.team[0].name.toLowerCase() ? 1 : -1
+    );
+  }
 
   return (
     <div className="grid h-max w-full grid-cols-4 gap-2 bg-gradient-to-b from-neutral-900 p-4 2xl:w-3/4">

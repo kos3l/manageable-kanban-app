@@ -49,9 +49,9 @@ export default function TeamsOverviewPage() {
   if (sortingOption === Sorting.PROJECTS) {
     data.sort((a, b) => b.projects.length - a.projects.length);
   } else if (sortingOption === Sorting.AZ) {
-    data.sort((a, b) => (a.name > b.name ? 1 : -1));
+    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
   } else if (sortingOption === Sorting.ZA) {
-    data.sort((a, b) => (a.name > b.name ? -1 : 1));
+    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1));
   } else if (sortingOption === Sorting.NEWEST) {
     data.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   } else if (sortingOption === Sorting.OLDEST) {

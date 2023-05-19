@@ -13,6 +13,7 @@ type Project = {
   teamId: string;
   team: Team[];
   columns: Column[];
+  createdAt: Date;
 };
 
 export { type Project };
