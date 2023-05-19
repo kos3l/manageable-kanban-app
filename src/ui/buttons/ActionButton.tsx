@@ -7,6 +7,7 @@ interface IProps {
   onClick?: () => void;
   color: string;
   isSubmitBtn?: boolean;
+  isDisabled?: boolean;
 }
 
 type colorVariants = {
@@ -15,14 +16,14 @@ type colorVariants = {
 };
 
 export default function ActionButton(props: IProps) {
-  const { icon, color, content, onClick, isSubmitBtn } = props;
+  const { icon, color, content, onClick, isSubmitBtn, isDisabled } = props;
 
   const wrapperColorVariants: colorIndex & colorVariants = {
     indigo:
-      "flex w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-xl hover:transition",
-    red: "flex w-full items-center gap-4 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-red-700 hover:drop-shadow-4xl hover:transition",
+      "flex w-full disabled:opacity-75 disabled:border-neutral-600 items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-xl hover:transition",
+    red: "flex w-full items-center gap-4 disabled:opacity-75 disabled:border-neutral-600 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-red-700 hover:drop-shadow-4xl hover:transition",
     white:
-      "flex w-full items-center gap-4 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
+      "flex w-full items-center gap-4 disabled:opacity-75 disabled:border-neutral-600 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
   };
 
   const boxColorVariants: colorIndex & colorVariants = {
@@ -38,9 +39,10 @@ export default function ActionButton(props: IProps) {
       type={isSubmitBtn ? "submit" : "button"}
       onClick={onClick ? () => onClick() : undefined}
       className={`${wrapperColorVariants[color]}`}
+      disabled={isDisabled}
     >
       <div className={`${boxColorVariants[color]}`}>{icon}</div>
-      <p className="m-0 font-serif text-sm font-semibold tracking-wider">
+      <p className="m-0 font-serif text-sm font-semibold tracking-wider ">
         {content}
       </p>
     </button>

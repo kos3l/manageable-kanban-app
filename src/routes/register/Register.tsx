@@ -1,6 +1,7 @@
 import {
   AtSymbolIcon,
   CakeIcon,
+  ExclamationTriangleIcon,
   IdentificationIcon,
   KeyIcon,
   UserPlusIcon,
@@ -15,6 +16,9 @@ import DateInput from "../../ui/inputs/DateInput";
 import TextInput from "../../ui/inputs/TextInput";
 import { DateHelper } from "../../util/helpers/DateHelper";
 import gradient from "../../assets/gradient.svg";
+import { AxiosError, AxiosResponse } from "axios";
+import { IRegisterUserResponse } from "../../models/responses/IRegisterUserResponse";
+import { IApiError } from "../../models/responses/IApiError";
 
 export default function RegisterPage() {
   const { registerUser } = useAuthService();
@@ -24,7 +28,12 @@ export default function RegisterPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const mutation = useMutation({
+  const mutation = useMutation<
+    AxiosResponse<IRegisterUserResponse, any>,
+    AxiosResponse<IApiError, any>,
+    ICreateUserDTO,
+    unknown
+  >({
     mutationFn: (newUser: ICreateUserDTO) => {
       return registerUser(newUser);
     },
@@ -33,6 +42,10 @@ export default function RegisterPage() {
   if (mutation.isSuccess) {
     return <Navigate to={"/login"}></Navigate>;
   }
+
+  const isFormInvalid = () => {
+    return firstName == "" || lastName == "" || email == "" || password == "";
+  };
 
   return (
     <>
@@ -54,10 +67,12 @@ export default function RegisterPage() {
                   icon={
                     <IdentificationIcon className="m-0 w-5 p-0"></IdentificationIcon>
                   }
+                  isRequred={true}
                   placeholder="First Name.."
                   value={firstName}
                   onChange={(val) => setFirstName(val)}
                   name="firstName"
+                  minLenght={3}
                 ></TextInput>
                 <TextInput
                   icon={
@@ -65,8 +80,10 @@ export default function RegisterPage() {
                   }
                   placeholder="Last Name.."
                   value={lastName}
+                  isRequred={true}
                   onChange={(val) => setLastName(val)}
                   name="lastName"
+                  minLenght={3}
                 ></TextInput>
                 <DateInput
                   icon={<CakeIcon className="m-0 w-5 p-0"></CakeIcon>}
@@ -80,6 +97,8 @@ export default function RegisterPage() {
                   value={email}
                   onChange={(val) => setEmail(val)}
                   name="email"
+                  isRequred={true}
+                  minLenght={6}
                 ></TextInput>
                 <TextInput
                   icon={<KeyIcon className="m-0 w-4 p-0"></KeyIcon>}
@@ -87,12 +106,26 @@ export default function RegisterPage() {
                   value={password}
                   onChange={(val) => setPassword(val)}
                   name="password"
+                  isRequred={true}
+                  minLenght={6}
                 ></TextInput>
+                {mutation.isError &&
+                mutation.error.data.message == "Email already exists" ? (
+                  <div className="flex w-max items-center gap-2">
+                    <ExclamationTriangleIcon className="w-6 text-red-700"></ExclamationTriangleIcon>{" "}
+                    <p className="mt-0.5 text-lg text-neutral-500">
+                      Sorry, this email has been used already.
+                    </p>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="w-full">
               <ActionButton
-                color="indigo"
+                isDisabled={isFormInvalid()}
+                color={isFormInvalid() ? "white" : "indigo"}
                 onClick={() => {
                   mutation.mutate({
                     firstName: firstName,
@@ -104,7 +137,13 @@ export default function RegisterPage() {
                 }}
                 content={"SIGN UP"}
                 icon={
-                  <UserPlusIcon className="w-5 text-indigo-600"></UserPlusIcon>
+                  <UserPlusIcon
+                    className={
+                      isFormInvalid()
+                        ? "w-5 text-neutral-300"
+                        : "w-5 text-indigo-600"
+                    }
+                  ></UserPlusIcon>
                 }
               ></ActionButton>
             </div>
