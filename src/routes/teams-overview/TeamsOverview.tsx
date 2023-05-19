@@ -8,6 +8,7 @@ import { useState } from "react";
 import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
+import { Team } from "../../models/entities/Team";
 import FilledButton from "../../ui/buttons/FilledButton";
 import TeamCard from "../../ui/cards/TeamCard";
 import TextInput from "../../ui/inputs/TextInput";
@@ -26,6 +27,7 @@ export default function TeamsOverviewPage() {
   const { getAllUserTeams } = useTeamService();
   const [sortingOption, setSortingOption] = useState<string>(Sorting.PROJECTS);
   const [search, setSearch] = useState<string>("");
+  const [teams, setTeams] = useState<Team[]>([]);
 
   const { data } = useQuery({
     queryKey: ["team"],
@@ -35,6 +37,7 @@ export default function TeamsOverviewPage() {
       if (response.status == 401 || response.status == 403) {
         throw new Error("Token expired");
       }
+      setTeams(response.data);
       return response.data;
     },
     onError: (error: any) => {
@@ -47,15 +50,29 @@ export default function TeamsOverviewPage() {
   }
 
   if (sortingOption === Sorting.PROJECTS) {
-    data.sort((a, b) => b.projects.length - a.projects.length);
+    teams.sort((a, b) => b.projects.length - a.projects.length);
   } else if (sortingOption === Sorting.AZ) {
-    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
+    teams.sort((a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+    );
   } else if (sortingOption === Sorting.ZA) {
-    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1));
+    teams.sort((a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1
+    );
   } else if (sortingOption === Sorting.NEWEST) {
-    data.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+    teams.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   } else if (sortingOption === Sorting.OLDEST) {
-    data.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+    teams.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+  }
+
+  function handleSearchInputChange(newValue: string) {
+    const originalArray = data ? data : teams;
+    setTeams(
+      originalArray.filter((team) =>
+        team.name.toLowerCase().includes(newValue.toLowerCase())
+      )
+    );
+    setSearch(newValue);
   }
 
   return (
@@ -68,7 +85,10 @@ export default function TeamsOverviewPage() {
             icon={
               <MagnifyingGlassIcon className="w-4 text-neutral-300"></MagnifyingGlassIcon>
             }
-            onChange={(newValue: string) => setSearch(newValue)}
+            value={search}
+            onChange={(newValue: string) => {
+              handleSearchInputChange(newValue);
+            }}
           ></TextInput>
         </div>
         <div className="flex h-max w-[32.7%] items-center">
@@ -84,9 +104,9 @@ export default function TeamsOverviewPage() {
             dropdownValues={Object.values(Sorting)}
           ></Dropdown>
         </div>
-        {data ? (
+        {teams ? (
           <div className="grid w-full grid-cols-6 gap-2">
-            {data.map((team, index) => {
+            {teams.map((team, index) => {
               return (
                 <div
                   className="col-span-6 sm:col-span-3 md:col-span-2"

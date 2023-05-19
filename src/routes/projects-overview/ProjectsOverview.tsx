@@ -11,6 +11,7 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
 import useTeamService from "../../hooks/service/useTeamService";
+import { Project } from "../../models/entities/Project";
 import FilledButton from "../../ui/buttons/FilledButton";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
@@ -31,6 +32,7 @@ export default function ProjectsOverviewPage() {
   const { getAllUserProjects } = useProjectService();
   const [sortingOption, setSortingOption] = useState<string>(Sorting.STATUS);
   const [search, setSearch] = useState<string>("");
+  const [projects, setProjects] = useState<Project[]>([]);
 
   const { data } = useQuery({
     queryKey: ["projects"],
@@ -40,6 +42,7 @@ export default function ProjectsOverviewPage() {
       if (response.status == 403) {
         throw new Error("Token expired");
       }
+      setProjects(response.data);
       return response.data;
     },
     onError: (error: any) => {
@@ -52,19 +55,33 @@ export default function ProjectsOverviewPage() {
   }
 
   if (sortingOption === Sorting.STATUS) {
-    data.sort((a, b) => b.status - a.status);
+    projects.sort((a, b) => b.status - a.status);
   } else if (sortingOption === Sorting.AZ) {
-    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
+    projects.sort((a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1
+    );
   } else if (sortingOption === Sorting.ZA) {
-    data.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1));
+    projects.sort((a, b) =>
+      a.name.toLowerCase() > b.name.toLowerCase() ? -1 : 1
+    );
   } else if (sortingOption === Sorting.NEWEST) {
-    data.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
+    projects.sort((a, b) => (a.createdAt > b.createdAt ? -1 : 1));
   } else if (sortingOption === Sorting.OLDEST) {
-    data.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
+    projects.sort((a, b) => (a.createdAt > b.createdAt ? 1 : -1));
   } else if (sortingOption === Sorting.TEAMS) {
-    data.sort((a, b) =>
+    projects.sort((a, b) =>
       a.team[0].name.toLowerCase() > b.team[0].name.toLowerCase() ? 1 : -1
     );
+  }
+
+  function handleSearchInputChange(newValue: string) {
+    const originalArray = data ? data : projects;
+    setProjects(
+      originalArray.filter((project) =>
+        project.name.toLowerCase().includes(newValue.toLowerCase())
+      )
+    );
+    setSearch(newValue);
   }
 
   return (
@@ -77,7 +94,10 @@ export default function ProjectsOverviewPage() {
             icon={
               <MagnifyingGlassIcon className="w-4 text-neutral-300"></MagnifyingGlassIcon>
             }
-            onChange={(newValue: string) => setSearch(newValue)}
+            value={search}
+            onChange={(newValue: string) => {
+              handleSearchInputChange(newValue);
+            }}
           ></TextInput>
         </div>
         <div className="flex h-max w-[32.7%] items-center">
@@ -93,9 +113,9 @@ export default function ProjectsOverviewPage() {
             dropdownValues={Object.values(Sorting)}
           ></Dropdown>
         </div>
-        {data ? (
+        {projects ? (
           <div className="grid h-max w-full grid-cols-6 gap-2">
-            {data.map((project, index) => {
+            {projects.map((project, index) => {
               return (
                 <div
                   className="col-span-6 sm:col-span-3 md:col-span-2"
