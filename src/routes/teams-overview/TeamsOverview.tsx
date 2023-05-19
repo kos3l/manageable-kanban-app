@@ -76,8 +76,8 @@ export default function TeamsOverviewPage() {
   }
 
   return (
-    <div className="grid h-max w-full grid-cols-4 gap-2 bg-gradient-to-b from-neutral-900 p-4 2xl:w-3/4">
-      <div className="col-span-3 flex flex-wrap gap-x-2 gap-y-4">
+    <div className="grid h-max w-full gap-2 bg-gradient-to-b from-neutral-900 p-4 2xl:w-3/4">
+      <div className="flex w-full flex-wrap gap-y-2 gap-x-2 sm:gap-y-4 xl:w-3/4">
         <div className="flex h-max flex-auto items-center">
           <TextInput
             name="search"
@@ -91,7 +91,7 @@ export default function TeamsOverviewPage() {
             }}
           ></TextInput>
         </div>
-        <div className="flex h-max w-[32.7%] items-center">
+        <div className="mb-2 flex h-max w-full items-center sm:mb-0 sm:w-[32.7%]">
           <Dropdown
             color="indigo"
             name="sorting"

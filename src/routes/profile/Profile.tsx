@@ -1,9 +1,4 @@
-import {
-  Link,
-  useLoaderData,
-  useRevalidator,
-  useRouteLoaderData,
-} from "react-router-dom";
+import { Link } from "react-router-dom";
 import { User } from "../../models/entities/User";
 import avatar from "../../assets/avatar.png";
 import ActionButton from "../../ui/buttons/ActionButton";
@@ -20,7 +15,6 @@ import { Project } from "../../models/entities/Project";
 import useProjectService from "../../hooks/service/useProjectService";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
-import { ReactNode, useEffect } from "react";
 import useUserService from "../../hooks/service/useUserService";
 import WrapperCard from "../../ui/cards/WrapperCard";
 import useTeamService from "../../hooks/service/useTeamService";
@@ -114,7 +108,7 @@ export default function ProfilePage() {
         <div className="col-span-4 flex h-max flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 2xl:h-max">
           <h1 className="text-xl">{user.firstName + " " + user.lastName}</h1>
           <div className="flex h-max w-full flex-wrap items-start gap-2 sm:flex-nowrap">
-            <div className="flex w-full sm:min-w-[rem] sm:basis-72">
+            <div className="flex w-full sm:min-w-[7rem] sm:basis-32">
               <DisplayField
                 color="white"
                 label={"Birthday"}
