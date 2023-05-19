@@ -125,6 +125,7 @@ export default function UpdateTeamMembersPage() {
         <TeamBanner team={team}></TeamBanner>
       </div>
       <WrapperCard
+        minHeight={false}
         name={"Current Members"}
         displayEntities={team.userModels ? team.userModels : []}
         displayComponent={(user) => (

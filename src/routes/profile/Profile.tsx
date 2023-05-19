@@ -138,6 +138,7 @@ export default function ProfilePage() {
         </div>
         <div className="col-span-4 flex max-h-full grow  overflow-scroll lg:col-span-2">
           <WrapperCard
+            minHeight={false}
             name={"Teams"}
             displayEntities={teams ? teams : []}
             displayComponent={(team) => (
@@ -151,6 +152,7 @@ export default function ProfilePage() {
         </div>
         <div className="col-span-4 flex max-h-full grow gap-3  overflow-scroll lg:col-span-2">
           <WrapperCard
+            minHeight={false}
             name={"Projects"}
             displayEntities={
               projects ? projects.sort((a, b) => b.status - a.status) : []

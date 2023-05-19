@@ -131,7 +131,7 @@ export default function UserRootPage() {
           </button>
         </div>
         <div className="flex h-full grow flex-col-reverse md:flex-col">
-          <div className="relative z-40 flex h-max w-full grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 py-4 md:justify-end md:border-t-0 md:border-b md:py-[11px]">
+          <div className="relative z-40 flex h-max w-screen grow-0 items-center justify-between border-t border-neutral-700 bg-neutral-900 px-4 py-4 md:w-full md:justify-end md:border-t-0 md:border-b md:py-[11px]">
             <div className="flex h-full w-1/2 flex-row-reverse items-center justify-end gap-4 md:w-max md:flex-row">
               <p className="mt-1 font-serif text-sm">
                 {user?.firstName + " " + user?.lastName}

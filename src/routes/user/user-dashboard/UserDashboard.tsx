@@ -95,9 +95,10 @@ export default function UserDashboardPage() {
       <h1 className="bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-2xl font-bold text-transparent ">
         Welcome to your dashboard!
       </h1>
-      <div className="flex h-max w-full gap-3">
-        <div className="flex h-max w-2/5">
+      <div className="flex h-max w-full flex-col gap-3 sm:flex-row">
+        <div className="flex h-max w-full sm:h-[38rem] sm:w-2/5">
           <WrapperCard
+            minHeight={true}
             name={"Projects"}
             displayEntities={
               projects ? projects.sort((a, b) => b.status - a.status) : []
@@ -113,12 +114,14 @@ export default function UserDashboardPage() {
             )}
           ></WrapperCard>
         </div>
-        <div className="flex h-max w-3/5 flex-col gap-3">
+        <div className="flex h-max w-full flex-col gap-3 sm:w-3/5">
           <div className="flex h-max w-full gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-1">
-            <TasksPerColumnChart columns={mergedColumns}></TasksPerColumnChart>
+            <TasksPerColumnChart
+              label="Your Tasks Per Column"
+              columns={mergedColumns}
+            ></TasksPerColumnChart>
           </div>
-          <div className="flex w-full gap-2">
-            {/* Limit to be only first 10 */}
+          <div className="flex w-full flex-col gap-2 lg:flex-row">
             <TaskListCard
               tasks={
                 tasks

@@ -126,6 +126,7 @@ export default function TeamPage() {
       </div>
       <div className="flex w-full flex-wrap-reverse gap-4 sm:grow sm:flex-nowrap">
         <WrapperCard
+          minHeight={false}
           name={"Projects"}
           displayEntities={team.projectModels ? team.projectModels : []}
           displayComponent={(project) => (
@@ -141,6 +142,7 @@ export default function TeamPage() {
         ></WrapperCard>
         <WrapperCard
           name={"Members"}
+          minHeight={false}
           displayEntities={team.userModels ? team.userModels : []}
           displayComponent={(user) => (
             <UserCard

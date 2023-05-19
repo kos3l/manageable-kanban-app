@@ -235,6 +235,7 @@ export default function ProjectPage() {
                 </div>
                 <div className="flex h-max w-full rounded-lg border border-neutral-600 bg-neutral-800/50">
                   <TasksPerColumnChart
+                    label="Tasks Per Column"
                     columns={project.columns}
                   ></TasksPerColumnChart>
                 </div>

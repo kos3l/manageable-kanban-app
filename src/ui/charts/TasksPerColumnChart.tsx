@@ -5,10 +5,11 @@ ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface IProps {
   columns: Column[];
+  label: string;
 }
 
 export default function TasksPerColumnChart(props: IProps) {
-  const { columns } = props;
+  const { columns, label } = props;
 
   if (!columns) {
     return <>Loading</>;
@@ -66,7 +67,7 @@ export default function TasksPerColumnChart(props: IProps) {
   return (
     <div className="flex h-full w-full flex-col items-center justify-between gap-3 p-3">
       <div className="flex w-full text-neutral-600">
-        <p>Tasks per column</p>
+        <p>{label}</p>
       </div>
       <div className="flex h-max w-1/2 2xl:w-[280px]">
         <Doughnut
