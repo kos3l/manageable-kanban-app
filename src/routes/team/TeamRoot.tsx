@@ -51,6 +51,9 @@ export const action =
     await queryClient.invalidateQueries({
       queryKey: ["team", "teams", "projects", "user", "profile", params.id],
     });
+    await queryClient.invalidateQueries({
+      queryKey: ["statistic"],
+    });
     return redirect(`/user/teams-overview`);
   };
 

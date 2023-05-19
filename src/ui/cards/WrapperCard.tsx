@@ -24,11 +24,15 @@ export default function WrapperCard<T>(props: IProps<T>) {
           {displayEntities.length}
         </p>
       </div>
-      <div className="flex w-full flex-col gap-3">
-        {displayEntities.map((entity, index) => {
-          return displayComponent(entity);
-        })}
-      </div>
+      {displayEntities && displayEntities.length > 0 ? (
+        <div className="flex w-full flex-col gap-3">
+          {displayEntities.map((entity, index) => {
+            return displayComponent(entity);
+          })}
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

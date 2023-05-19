@@ -7,8 +7,8 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Link, Navigate, redirect, useParams } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
 import { Project } from "../../models/entities/Project";
 import { ProjectStatus } from "../../models/enum/ProjectStatus";
@@ -20,8 +20,6 @@ import TeamBanner from "../../ui/banner/TeamBanner";
 import useTaskService from "../../hooks/service/useTaskService";
 import { DateHelper } from "../../util/helpers/DateHelper";
 import TasksPerColumnChart from "../../ui/charts/TasksPerColumnChart";
-import TaskCard from "../../ui/cards/TaskCard";
-import StaticTaskCard from "../../ui/cards/StaticTaskCard";
 import TaskListCard from "../../ui/cards/TaskListCard";
 
 const projectByIdQuery = (
@@ -46,8 +44,11 @@ const projectByIdQuery = (
 
 export default function ProjectPage() {
   const { id } = useParams();
-  const { getProjectById } = useProjectService();
+  const queryClient = useQueryClient();
+  const { getProjectById, completeProject, deleteProject } =
+    useProjectService();
   const { getTasksByProjectId } = useTaskService();
+
   if (!id) {
     return <>No team id found</>;
   }
@@ -66,6 +67,31 @@ export default function ProjectPage() {
         });
       }
       return response.data;
+    },
+  });
+
+  const completeProjectMutation = useMutation({
+    mutationFn: () => {
+      return completeProject(id);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["project", id],
+      });
+    },
+  });
+
+  const deleteProjectMutation = useMutation({
+    mutationFn: () => {
+      return deleteProject(id);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["project", id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["projects"],
+      });
     },
   });
 
@@ -97,6 +123,19 @@ export default function ProjectPage() {
     OVERDUE:
       "rounded-lg flex justify-center px-2 border border-red-700 bg-red-800/20 py-1 text-red-700",
   };
+
+  function handleDeleteProject() {
+    const warning = confirm(
+      "This action will delete the project. Do you want to proceed?"
+    );
+    if (warning) {
+      deleteProjectMutation.mutate();
+    }
+  }
+
+  if (deleteProjectMutation.isSuccess) {
+    return <Navigate to={"/user/projects-overview"}></Navigate>;
+  }
 
   return (
     <div className="flex h-max w-full 2xl:justify-center">
@@ -144,13 +183,12 @@ export default function ProjectPage() {
           </div>
           <div className="flex h-max w-full flex-wrap gap-2 md:flex-col md:flex-nowrap">
             <div className=" grow">
-              <Link to={"./update-members"}>
-                <ActionButton
-                  color="indigo"
-                  content={"Complete"}
-                  icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
-                ></ActionButton>
-              </Link>
+              <ActionButton
+                onClick={() => completeProjectMutation.mutate()}
+                color="indigo"
+                content={"Complete"}
+                icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
+              ></ActionButton>
             </div>
             <div className="grow">
               <Link to={"./kanban"}>
@@ -176,6 +214,7 @@ export default function ProjectPage() {
             </div>
             <div className="grow">
               <ActionButton
+                onClick={() => handleDeleteProject()}
                 color="red"
                 content={"Delete Project"}
                 icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}

@@ -116,7 +116,7 @@ export default function TeamPage() {
                   "Are you sure you want to delete this team?"
                 );
                 if (warning) {
-                  submit(null, { method: "delete" });
+                  submit(null, { method: "post", action: "/user/teams/" + id });
                 }
               }}
               icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
