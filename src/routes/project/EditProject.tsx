@@ -7,13 +7,14 @@ import {
 } from "@heroicons/react/24/solid";
 import Bars3CenterLeftIcon from "@heroicons/react/24/solid/Bars3CenterLeftIcon";
 import { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QueryClient } from "react-query";
 import {
   Form,
   redirect,
   useNavigate,
   useRouteLoaderData,
+  useSubmit,
 } from "react-router-dom";
 import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
 import { Project } from "../../models/entities/Project";
@@ -54,6 +55,9 @@ export const action =
 
 export default function EditProjectPage() {
   const project = useRouteLoaderData("selectedProject") as Project;
+  const formRef = useRef<any>();
+  const submit = useSubmit();
+
   const [name, setName] = useState<string>(project.name);
   const [description, setDescription] = useState<string>(
     project.description ? project.description : ""
@@ -73,9 +77,32 @@ export default function EditProjectPage() {
     setNewTech("");
   }
 
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [name, description, techStack, endDate]);
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isFormInvalid()) {
+      submit(formRef.current);
+    }
+  }
+
+  const isFormInvalid = () => {
+    return (
+      name == "" ||
+      description == "" ||
+      techStack.length == 0 ||
+      new Date(project.startDate) >= endDate
+    );
+  };
+
   return (
     <div className="flex w-full justify-center p-4 md:justify-start 2xl:justify-center">
       <Form
+        ref={formRef}
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3  xl:w-5/6"
       >
@@ -101,6 +128,7 @@ export default function EditProjectPage() {
               value={name}
               onChange={(val) => setName(val)}
               name="name"
+              minLenght={2}
             ></TextInput>
             <div className="flex w-full flex-wrap gap-2 lg:flex-nowrap">
               <div className="flex grow">
@@ -122,6 +150,7 @@ export default function EditProjectPage() {
               value={description}
               onChange={(val) => setDescription(val)}
               name="description"
+              minLenght={3}
             ></TextareaInput>
           </div>
           <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
@@ -176,10 +205,17 @@ export default function EditProjectPage() {
         <div className="flex w-full gap-2 md:w-96">
           <ActionButton
             content={"Save"}
-            color="indigo"
             isSubmitBtn
+            color={isFormInvalid() ? "white" : "indigo"}
+            isDisabled={isFormInvalid()}
             icon={
-              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+              <CheckCircleIcon
+                className={
+                  isFormInvalid()
+                    ? "w-5 text-neutral-300"
+                    : "w-5 text-indigo-500"
+                }
+              ></CheckCircleIcon>
             }
           ></ActionButton>
           <ActionButton
