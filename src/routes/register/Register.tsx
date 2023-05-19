@@ -6,7 +6,7 @@ import {
   KeyIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery } from "react-query";
 import { Link, Navigate, redirect } from "react-router-dom";
 import useAuthService from "../../hooks/service/useAuthService";
@@ -39,13 +39,32 @@ export default function RegisterPage() {
     },
   });
 
-  if (mutation.isSuccess) {
-    return <Navigate to={"/login"}></Navigate>;
-  }
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [firstName, lastName, email, password, birthday]);
 
   const isFormInvalid = () => {
     return firstName == "" || lastName == "" || email == "" || password == "";
   };
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isFormInvalid()) {
+      mutation.mutate({
+        firstName: firstName,
+        lastName: lastName,
+        email: email,
+        password: password,
+        birthdate: birthday,
+      });
+    }
+  }
+
+  if (mutation.isSuccess) {
+    return <Navigate to={"/login"}></Navigate>;
+  }
 
   return (
     <>

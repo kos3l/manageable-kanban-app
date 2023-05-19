@@ -41,18 +41,10 @@ export default function LoginPage() {
     },
   });
 
-  if (mutation.isSuccess) {
-    return <Navigate to={"/user/user-dashboard"}></Navigate>;
-  }
-
   useEffect(() => {
-    document.addEventListener("keyup", (ev: KeyboardEvent) =>
-      onEnterPress(ev, isFormInvalid())
-    );
+    document.addEventListener("keyup", onEnterPress);
     return () => {
-      document.removeEventListener("keyup", (ev: KeyboardEvent) =>
-        onEnterPress(ev, isFormInvalid())
-      );
+      document.removeEventListener("keyup", onEnterPress);
     };
   }, [email, password]);
 
@@ -60,16 +52,19 @@ export default function LoginPage() {
     return email == "" || password == "";
   };
 
-  function onEnterPress(event: KeyboardEvent, isValid: boolean) {
-    console.log(isFormInvalid());
-    // if (event.key == "Enter") {
-    //   mutation.mutate({
-    //     email: email,
-    //     password: password,
-    //   });
-    // }
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isFormInvalid()) {
+      mutation.mutate({
+        email: email,
+        password: password,
+      });
+    }
   }
-  console.log(email);
+
+  if (mutation.isSuccess) {
+    return <Navigate to={"/user/user-dashboard"}></Navigate>;
+  }
+
   return (
     <>
       <div className="absolute bottom-0 left-0 z-10 flex w-full">

@@ -46,7 +46,7 @@ export default function HomePage() {
           </div>
         </div>
         <div className="col-span-6 mb-0 flex h-max items-center justify-center sm:mb-16">
-          <div className="h-96 w-full overflow-hidden rounded-lg  drop-shadow-4xl sm:w-full sm:w-5/6">
+          <div className="h-96 w-full overflow-hidden rounded-lg drop-shadow-4xl sm:h-[auto] sm:w-5/6">
             <img
               src={mock}
               alt=""
