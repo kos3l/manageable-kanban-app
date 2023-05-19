@@ -114,7 +114,7 @@ export default function LoginPage() {
             </div>
             <div className="w-full">
               <ActionButton
-                color="indigo"
+                color={isFormInvalid() ? "white" : "indigo"}
                 isDisabled={isFormInvalid()}
                 content={"SIGN IN"}
                 onClick={() => {
@@ -124,7 +124,13 @@ export default function LoginPage() {
                   });
                 }}
                 icon={
-                  <ArrowLeftOnRectangleIcon className="w-6 text-indigo-600"></ArrowLeftOnRectangleIcon>
+                  <ArrowLeftOnRectangleIcon
+                    className={
+                      isFormInvalid()
+                        ? "w-6 text-neutral-300"
+                        : "w-6 text-indigo-600"
+                    }
+                  ></ArrowLeftOnRectangleIcon>
                 }
               ></ActionButton>
             </div>
