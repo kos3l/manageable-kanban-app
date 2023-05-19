@@ -4,7 +4,7 @@ export default function Root() {
   return (
     <>
       <div className="min-h-screen bg-hero-pattern text-neutral-200 2xl:flex 2xl:flex-col 2xl:items-center">
-        <div className="flex min-h-screen w-full flex-col 2xl:w-2/3 2xl:justify-start">
+        <div className="flex h-max min-h-screen w-full flex-col 2xl:w-2/3 2xl:justify-start">
           <div className="mb-4 flex w-full basis-24 px-4 md:mb-10 md:px-8 2xl:px-0">
             <div className="flex items-center">
               <Link to={"/"}>
