@@ -552,29 +552,27 @@ export default function SelectedtTaskCard(props: IProps) {
                   .sort((a, b) => (a.firstName > b.firstName ? 1 : -1))
                   .map((user, index) => {
                     return (
-                      <Link to={"/users/profile/" + user._id} key={index}>
-                        <div
-                          key={user._id}
-                          className={
-                            "flex h-max w-full max-w-[10rem] items-center justify-between gap-2 overflow-scroll  transition hover:text-pink-500"
-                          }
-                        >
-                          <div className="flex grow gap-2 truncate">
-                            <div className="basis-7 overflow-hidden rounded-lg">
-                              <img
-                                src={avatar}
-                                alt=""
-                                className="h-full w-full object-contain"
-                              />
-                            </div>
-                            <p className="mt-2 grow truncate">
-                              <span className="opacity-70">
-                                {user.firstName + " " + user.lastName}
-                              </span>
-                            </p>
+                      <div
+                        key={user._id}
+                        className={
+                          "flex h-max w-full max-w-[10rem] items-center justify-between gap-2 overflow-scroll "
+                        }
+                      >
+                        <div className="flex grow gap-2 truncate">
+                          <div className="basis-7 overflow-hidden rounded-lg">
+                            <img
+                              src={avatar}
+                              alt=""
+                              className="h-full w-full object-contain"
+                            />
                           </div>
+                          <p className="mt-2 grow truncate">
+                            <span className="opacity-70">
+                              {user.firstName + " " + user.lastName}
+                            </span>
+                          </p>
                         </div>
-                      </Link>
+                      </div>
                     );
                   })}
               </div>
