@@ -23,7 +23,7 @@ export default function ActionButton(props: IProps) {
       "flex w-full disabled:opacity-75 disabled:border-neutral-600 items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-indigo-600 hover:drop-shadow-xl hover:transition",
     red: "flex w-full items-center gap-4 disabled:opacity-75 disabled:border-neutral-600 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-red-700 hover:drop-shadow-4xl hover:transition",
     white:
-      "flex w-full items-center gap-4 disabled:opacity-75 disabled:border-neutral-600 rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
+      "flex w-full items-center gap-4  rounded-lg border border-neutral-600 bg-neutral-900 px-3 py-3 transition hover:border-neutral-300 hover:drop-shadow-4xl hover:transition",
   };
 
   const boxColorVariants: colorIndex & colorVariants = {

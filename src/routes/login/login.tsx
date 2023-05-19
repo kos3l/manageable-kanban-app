@@ -1,9 +1,10 @@
 import {
   ArrowLeftOnRectangleIcon,
   AtSymbolIcon,
+  ExclamationTriangleIcon,
   KeyIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, Navigate, redirect } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
@@ -12,6 +13,9 @@ import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
 import useAuthService from "../../hooks/service/useAuthService";
 import gradient from "../../assets/gradient.svg";
+import { AxiosResponse } from "axios";
+import { IAccessToken } from "../../auth/context/AuthContext";
+import { IApiError } from "../../models/responses/IApiError";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -19,7 +23,12 @@ export default function LoginPage() {
   const { setAuth } = useAuth();
   const { loginUser } = useAuthService();
 
-  const mutation = useMutation({
+  const mutation = useMutation<
+    AxiosResponse<IAccessToken, any>,
+    AxiosResponse<IApiError, any>,
+    ICreateLoginDTO,
+    unknown
+  >({
     mutationFn: (newUser: ICreateLoginDTO) => {
       return loginUser(newUser);
     },
@@ -36,6 +45,31 @@ export default function LoginPage() {
     return <Navigate to={"/user/user-dashboard"}></Navigate>;
   }
 
+  useEffect(() => {
+    document.addEventListener("keyup", (ev: KeyboardEvent) =>
+      onEnterPress(ev, isFormInvalid())
+    );
+    return () => {
+      document.removeEventListener("keyup", (ev: KeyboardEvent) =>
+        onEnterPress(ev, isFormInvalid())
+      );
+    };
+  }, [email, password]);
+
+  const isFormInvalid = () => {
+    return email == "" || password == "";
+  };
+
+  function onEnterPress(event: KeyboardEvent, isValid: boolean) {
+    console.log(isFormInvalid());
+    // if (event.key == "Enter") {
+    //   mutation.mutate({
+    //     email: email,
+    //     password: password,
+    //   });
+    // }
+  }
+  console.log(email);
   return (
     <>
       <div className="absolute bottom-0 left-0 z-10 flex w-full">
@@ -59,6 +93,8 @@ export default function LoginPage() {
                   placeholder="Email.."
                   value={email}
                   onChange={(val) => setEmail(val)}
+                  isRequred={true}
+                  minLenght={6}
                 ></TextInput>
                 <TextInput
                   name="password"
@@ -66,12 +102,25 @@ export default function LoginPage() {
                   placeholder="Password.."
                   value={password}
                   onChange={(val) => setPassword(val)}
+                  isRequred={true}
+                  minLenght={6}
                 ></TextInput>
+                {mutation.isError ? (
+                  <div className="flex w-max items-center gap-2">
+                    <ExclamationTriangleIcon className="w-6 text-red-700"></ExclamationTriangleIcon>{" "}
+                    <p className="mt-0.5 text-lg text-neutral-500">
+                      Wrong email or password
+                    </p>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="w-full">
               <ActionButton
                 color="indigo"
+                isDisabled={isFormInvalid()}
                 content={"SIGN IN"}
                 onClick={() => {
                   mutation.mutate({
