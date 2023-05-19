@@ -34,6 +34,7 @@ import useUserService from "../../hooks/service/useUserService";
 import { IUpdateTeamUsersDTO } from "../../models/dto/team/IUpdateTeamUsersDTO";
 import DisplayField from "../../ui/display-field/DisplayField";
 import TeamBanner from "../../ui/banner/TeamBanner";
+import QueryKeys from "../../static/QueryKeys";
 
 export const action =
   (
@@ -51,7 +52,19 @@ export const action =
 
     await updateTeamMembers(params.id, usersDto);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "user", "profile"],
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProjects,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.user,
     });
     return true;
   };
@@ -69,7 +82,7 @@ export default function UpdateTeamMembersPage() {
   const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const fetchedUser = useQuery({
-    queryKey: ["user", "email"],
+    queryKey: QueryKeys.user,
     retry: 1,
     enabled: searchEnabled,
     queryFn: async () => {

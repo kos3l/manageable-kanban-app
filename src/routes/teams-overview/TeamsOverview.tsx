@@ -9,6 +9,7 @@ import { useQuery } from "react-query";
 import { Link, useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 import FilledButton from "../../ui/buttons/FilledButton";
 import TeamCard from "../../ui/cards/TeamCard";
 import TextInput from "../../ui/inputs/TextInput";
@@ -30,7 +31,7 @@ export default function TeamsOverviewPage() {
   const [teams, setTeams] = useState<Team[]>([]);
 
   const { data } = useQuery({
-    queryKey: ["team"],
+    queryKey: QueryKeys.allTeams,
     retry: 1,
     queryFn: async () => {
       const response = await getAllUserTeams();

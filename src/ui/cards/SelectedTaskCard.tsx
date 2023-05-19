@@ -32,6 +32,7 @@ import ActionInput from "../inputs/ActionInput";
 import ColorPicker from "../selection/ColorPicker";
 import { ICreateLabelDTO } from "../../models/dto/task/ICreateLabelDTO";
 import LabelCard from "./LabelCard";
+import QueryKeys from "../../static/QueryKeys";
 
 interface IProps {
   selectedTask: Task;
@@ -153,10 +154,10 @@ export default function SelectedtTaskCard(props: IProps) {
         queryKey: [selectedTask.columnId],
       });
       queryClient.invalidateQueries({
-        queryKey: ["statistic"],
+        queryKey: QueryKeys.statistic,
       });
       queryClient.invalidateQueries({
-        queryKey: ["projects", "teams"],
+        queryKey: QueryKeys.projectsWithTeams,
       });
 
       onClose();

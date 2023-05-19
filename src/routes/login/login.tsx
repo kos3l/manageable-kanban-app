@@ -1,6 +1,5 @@
 import {
   ArrowLeftOnRectangleIcon,
-  ArrowRightOnRectangleIcon,
   AtSymbolIcon,
   KeyIcon,
 } from "@heroicons/react/24/solid";
@@ -11,7 +10,6 @@ import useAuth from "../../hooks/useAuth";
 import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
-import { useNavigate } from "react-router-dom";
 import useAuthService from "../../hooks/service/useAuthService";
 import gradient from "../../assets/gradient.svg";
 
@@ -101,7 +99,4 @@ export default function LoginPage() {
       </div>
     </>
   );
-}
-function log(newUser: ICreateLoginDTO): Promise<unknown> {
-  throw new Error("Function not implemented.");
 }

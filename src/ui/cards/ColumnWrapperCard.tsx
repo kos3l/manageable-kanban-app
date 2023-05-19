@@ -20,6 +20,7 @@ import CreateTaskCard from "./CreateTaskCard";
 import TaskCard from "./TaskCard";
 import update from "immutability-helper";
 import { IUpdateTaskOrderDTO } from "../../models/dto/task/IUpdateTaskOrderDTO";
+import QueryKeys from "../../static/QueryKeys";
 
 interface IProps {
   column: Column;
@@ -86,10 +87,10 @@ export default function ColumnWrapperCard(props: IProps) {
         queryKey: [column._id],
       });
       queryClient.invalidateQueries({
-        queryKey: ["statistic"],
+        queryKey: QueryKeys.statistic,
       });
       queryClient.invalidateQueries({
-        queryKey: ["projects", "teams"],
+        queryKey: QueryKeys.projectsWithTeams,
       });
       setShowCreate(false);
     },

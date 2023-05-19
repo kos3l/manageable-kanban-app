@@ -1,8 +1,9 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { User } from "../../models/entities/User";
 import avatar from "../../assets/avatar.png";
 import ActionButton from "../../ui/buttons/ActionButton";
 import {
+  ArrowRightOnRectangleIcon,
   CakeIcon,
   ClipboardDocumentListIcon,
   PencilSquareIcon,
@@ -19,11 +20,14 @@ import useUserService from "../../hooks/service/useUserService";
 import WrapperCard from "../../ui/cards/WrapperCard";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
+import useAuthService from "../../hooks/service/useAuthService";
+import useAuth from "../../hooks/useAuth";
+import QueryKeys from "../../static/QueryKeys";
 
 const projectsWithTeamsQuery = (
   getAllUserProjects: () => Promise<AxiosResponse<Project[], any>>
 ) => ({
-  queryKey: ["projects", "teams"],
+  queryKey: QueryKeys.projectsWithTeams,
   queryFn: async () => {
     const response = await getAllUserProjects();
     if (response.status == 403) {
@@ -43,7 +47,7 @@ const projectsWithTeamsQuery = (
 const profileQuery = (
   getUserProfileQuery: () => Promise<AxiosResponse<User, any>>
 ) => ({
-  queryKey: ["profile"],
+  queryKey: QueryKeys.userProfile,
   queryFn: async () => {
     const response = await getUserProfileQuery();
     if (response.status == 403) {
@@ -62,7 +66,7 @@ const profileQuery = (
 const getAllTeams = (
   getAllUserTeams: () => Promise<AxiosResponse<Team[], any>>
 ) => ({
-  queryKey: ["team"],
+  queryKey: QueryKeys.allTeams,
   queryFn: async () => {
     const response = await getAllUserTeams();
     if (response.status == 401 || response.status == 403) {
@@ -77,6 +81,9 @@ export default function ProfilePage() {
   const { getAllUserProjects } = useProjectService();
   const { getLoggedInUserProfile } = useUserService();
   const { getAllUserTeams } = useTeamService();
+  const { logoutUser } = useAuthService();
+  const { setAuth } = useAuth();
+  const navigate = useNavigate();
 
   const { data: user } = useQuery(profileQuery(getLoggedInUserProfile));
   const { data: projects } = useQuery(
@@ -87,6 +94,22 @@ export default function ProfilePage() {
   if (!user) {
     return <>Loading</>;
   }
+
+  const logout = useQuery({
+    queryKey: QueryKeys.logout,
+    retry: 1,
+    queryFn: async () => {
+      await logoutUser();
+    },
+    onSuccess: (data: any) => {
+      navigate("/login");
+      setAuth((prev) => {
+        return { accessToken: null };
+      });
+    },
+    enabled: false,
+    refetchOnWindowFocus: false,
+  });
 
   return (
     <div className="relative flex h-max w-full flex-wrap gap-4 bg-gradient-to-b from-neutral-900 p-4 sm:h-full sm:flex-nowrap sm:overflow-scroll 2xl:w-2/3">
@@ -103,6 +126,14 @@ export default function ProfilePage() {
             }
           ></ActionButton>
         </Link>
+        <ActionButton
+          onClick={() => logout.refetch()}
+          color="indigo"
+          content={"Log out"}
+          icon={
+            <ArrowRightOnRectangleIcon className="w-5 text-indigo-500"></ArrowRightOnRectangleIcon>
+          }
+        ></ActionButton>
       </div>
       <div className="flex grid h-max w-full grow-0 grid-cols-4 gap-3 sm:grow 2xl:h-max">
         <div className="col-span-4 flex h-max flex-col gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3 2xl:h-max">

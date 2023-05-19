@@ -16,6 +16,7 @@ import {
 } from "react-router-dom";
 import { IUpdateUserDTO } from "../../models/dto/user/IUpdateUserDTO";
 import { User } from "../../models/entities/User";
+import QueryKeys from "../../static/QueryKeys";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DateInput from "../../ui/inputs/DateInput";
 import TextareaInput from "../../ui/inputs/TextareaInput";
@@ -38,7 +39,7 @@ export const action =
     }
     await updateUser(params.id, updates);
     await queryClient.invalidateQueries({
-      queryKey: ["profile"],
+      queryKey: QueryKeys.userProfile,
     });
     return redirect(`/user/profile/${params.id}`);
   };

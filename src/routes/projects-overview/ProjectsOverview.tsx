@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Project } from "../../models/entities/Project";
+import QueryKeys from "../../static/QueryKeys";
 import FilledButton from "../../ui/buttons/FilledButton";
 import ProjectCard from "../../ui/cards/ProjectCard";
 import TeamCard from "../../ui/cards/TeamCard";
@@ -35,7 +36,7 @@ export default function ProjectsOverviewPage() {
   const [projects, setProjects] = useState<Project[]>([]);
 
   const { data } = useQuery({
-    queryKey: ["projects"],
+    queryKey: QueryKeys.userProjects,
     retry: 1,
     queryFn: async () => {
       const response = await getAllUserProjects();

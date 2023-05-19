@@ -16,6 +16,7 @@ import {
 import { ICreateTeamDTO } from "../../models/dto/team/ICreateTeamDTO";
 import { IUpdateTeamDTO } from "../../models/dto/team/IUpdateTeamDTO";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextareaInput from "../../ui/inputs/TextareaInput";
 import TextInput from "../../ui/inputs/TextInput";
@@ -33,7 +34,19 @@ export const action =
     const team = Object.fromEntries(formData) as IUpdateTeamDTO;
     await updateTeam(params.id, team);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "user", "profile"],
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProjects,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.user,
     });
     return redirect(`/user/teams/${params.id}`);
   };

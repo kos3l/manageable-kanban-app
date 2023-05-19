@@ -21,6 +21,7 @@ import useTaskService from "../../hooks/service/useTaskService";
 import { DateHelper } from "../../util/helpers/DateHelper";
 import TasksPerColumnChart from "../../ui/charts/TasksPerColumnChart";
 import TaskListCard from "../../ui/cards/TaskListCard";
+import QueryKeys from "../../static/QueryKeys";
 
 const projectByIdQuery = (
   projectId: string,
@@ -90,7 +91,7 @@ export default function ProjectPage() {
         queryKey: ["project", id],
       });
       queryClient.invalidateQueries({
-        queryKey: ["projects"],
+        queryKey: QueryKeys.userProjects,
       });
     },
   });
@@ -182,14 +183,20 @@ export default function ProjectPage() {
             ></DisplayField>
           </div>
           <div className="flex h-max w-full flex-wrap gap-2 md:flex-col md:flex-nowrap">
-            <div className=" grow">
-              <ActionButton
-                onClick={() => completeProjectMutation.mutate()}
-                color="indigo"
-                content={"Complete"}
-                icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
-              ></ActionButton>
-            </div>
+            {project.status !== ProjectStatus.NOTSTARTED &&
+            project.status !== ProjectStatus.COMPLETED ? (
+              <div className=" grow">
+                <ActionButton
+                  onClick={() => completeProjectMutation.mutate()}
+                  color="indigo"
+                  content={"Complete"}
+                  icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
+                ></ActionButton>
+              </div>
+            ) : (
+              <></>
+            )}
+
             <div className="grow">
               <Link to={"./kanban"}>
                 <ActionButton

@@ -14,6 +14,7 @@ import { Form, redirect, useNavigate } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 import ActionButton from "../../ui/buttons/ActionButton";
 import ActionInput from "../../ui/inputs/ActionInput";
 import DateInput from "../../ui/inputs/DateInput";
@@ -25,7 +26,7 @@ import { DateHelper } from "../../util/helpers/DateHelper";
 const getAllTeams = (
   getAllUserTeams: () => Promise<AxiosResponse<Team[], any>>
 ) => ({
-  queryKey: ["team"],
+  queryKey: QueryKeys.allTeams,
   queryFn: async () => {
     const response = await getAllUserTeams();
     if (response.status == 401 || response.status == 403) {
@@ -50,7 +51,13 @@ export const action =
     project.techStack = JSON.parse(techStack);
     const newProject = await createProject(project as ICreateProjectDTO);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "profile"],
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
     });
     return redirect(`/user/projects/${newProject.data._id}`);
   };

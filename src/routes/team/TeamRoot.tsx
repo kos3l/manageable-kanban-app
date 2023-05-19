@@ -3,6 +3,7 @@ import { QueryClient, useQuery } from "react-query";
 import { Outlet, redirect, useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 
 const teamByIdQuery = (
   teamId: string,
@@ -49,10 +50,25 @@ export const action =
   async ({ request, params }: any) => {
     await deleteTeam(params.id);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "user", "profile", params.id],
+      queryKey: ["project", params.id],
     });
     await queryClient.invalidateQueries({
-      queryKey: ["statistic"],
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProjects,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.user,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.statistic,
     });
     return redirect(`/user/teams-overview`);
   };

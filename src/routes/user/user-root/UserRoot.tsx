@@ -20,11 +20,12 @@ import useAuthService from "../../../hooks/service/useAuthService";
 import { useState } from "react";
 import { AxiosResponse } from "axios";
 import { User } from "../../../models/entities/User";
+import QueryKeys from "../../../static/QueryKeys";
 
 export const profileQuery = (
   getUserProfileQuery: () => Promise<AxiosResponse<User, any>>
 ) => ({
-  queryKey: ["profile"],
+  queryKey: QueryKeys.userProfile,
   queryFn: async () => {
     const response = await getUserProfileQuery();
     if (response.status == 403) {
@@ -65,7 +66,7 @@ export default function UserRootPage() {
   const navigate = useNavigate();
 
   const logout = useQuery({
-    queryKey: ["logout"],
+    queryKey: QueryKeys.logout,
     retry: 1,
     queryFn: async () => {
       await logoutUser();

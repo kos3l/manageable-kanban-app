@@ -1,6 +1,7 @@
 import { Doughnut } from "react-chartjs-2";
 import { Column } from "../../models/entities/Column";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { ListBulletIcon } from "@heroicons/react/24/solid";
 ChartJS.register(ArcElement, Tooltip, Legend);
 
 interface IProps {
@@ -66,46 +67,59 @@ export default function TasksPerColumnChart(props: IProps) {
 
   return (
     <div className="flex h-full w-full flex-col items-center justify-between gap-3 p-3">
-      <div className="flex w-full text-neutral-600">
-        <p>{label}</p>
-      </div>
-      <div className="flex h-max w-1/2 2xl:w-[280px]">
-        <Doughnut
-          data={{
-            labels: columns.map((col) => col.name),
-            datasets: [chartColumns],
-          }}
-          options={{
-            responsive: true,
-            plugins: {
-              legend: {
-                display: false,
-              },
-            },
-          }}
-        ></Doughnut>
-      </div>
-      <div className="mt-4 flex h-max w-full flex-wrap gap-3">
-        {columns
-          .sort((a, b) => b.tasks.length - a.tasks.length)
-          .map((col, index) => {
-            return (
-              <div
-                key={index}
-                className="basis-max flex grow items-center gap-2 rounded-lg px-3 py-2 leading-4"
-                style={{
-                  backgroundColor: toRGBA(colors[index].hex),
-                  border: "1px solid" + colors[index].hex,
-                }}
-              >
-                <p className="traking-wider font-serif text-sm">{col.name}</p>
-                <p className="mt-0.5 text-lg font-medium">
-                  {col.tasks.length}
-                </p>{" "}
-              </div>
-            );
-          })}
-      </div>
+      {columns && columns.length > 0 ? (
+        <>
+          <div className="flex w-full text-neutral-600">
+            <p>{label}</p>
+          </div>
+          <div className="flex h-max w-1/2 2xl:w-[280px]">
+            <Doughnut
+              data={{
+                labels: columns.map((col) => col.name),
+                datasets: [chartColumns],
+              }}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: {
+                    display: false,
+                  },
+                },
+              }}
+            ></Doughnut>
+          </div>
+          <div className="mt-4 flex h-max w-full flex-wrap gap-3">
+            {columns
+              .sort((a, b) => b.tasks.length - a.tasks.length)
+              .map((col, index) => {
+                return (
+                  <div
+                    key={index}
+                    className="basis-max flex grow items-center gap-2 rounded-lg px-3 py-2 leading-4"
+                    style={{
+                      backgroundColor: toRGBA(colors[index].hex),
+                      border: "1px solid" + colors[index].hex,
+                    }}
+                  >
+                    <p className="traking-wider font-serif text-sm">
+                      {col.name}
+                    </p>
+                    <p className="mt-0.5 text-lg font-medium">
+                      {col.tasks.length}
+                    </p>{" "}
+                  </div>
+                );
+              })}
+          </div>
+        </>
+      ) : (
+        <div className="flex h-44 w-full items-center justify-center gap-2">
+          <ListBulletIcon className="w-8"></ListBulletIcon>
+          <p className="mt-1 text-2xl tracking-wider text-neutral-600">
+            No tasks yet
+          </p>
+        </div>
+      )}
     </div>
   );
 }

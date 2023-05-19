@@ -10,6 +10,7 @@ import { QueryClient } from "react-query";
 import { Form, redirect, useNavigate } from "react-router-dom";
 import { ICreateTeamDTO } from "../../models/dto/team/ICreateTeamDTO";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextareaInput from "../../ui/inputs/TextareaInput";
 import TextInput from "../../ui/inputs/TextInput";
@@ -24,7 +25,13 @@ export const action =
     const team = Object.fromEntries(formData) as ICreateTeamDTO;
     const newTeam = await createTeam(team);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "profile"],
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
     });
     return redirect(`/user/teams/${newTeam.data._id}`);
   };

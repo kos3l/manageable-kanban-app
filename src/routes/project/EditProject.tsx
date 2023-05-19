@@ -17,6 +17,7 @@ import {
 } from "react-router-dom";
 import { IUpdateProjectDTO } from "../../models/dto/project/IUpdateProjectDTO";
 import { Project } from "../../models/entities/Project";
+import QueryKeys from "../../static/QueryKeys";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DisplayField from "../../ui/display-field/DisplayField";
 import ActionInput from "../../ui/inputs/ActionInput";
@@ -40,7 +41,13 @@ export const action =
     project.techStack = JSON.parse(techStack);
     await updateProject(params.id, project as IUpdateProjectDTO);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "profile"],
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
     });
     return redirect(`/user/projects-overview`);
   };
