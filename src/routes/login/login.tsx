@@ -30,6 +30,7 @@ export default function LoginPage() {
       setAuth({ accessToken: accessToken });
       setEmail("");
       setPassword("");
+      redirect("/user/user-dashboard");
     },
   });
 
@@ -91,11 +92,6 @@ export default function LoginPage() {
                 <Link to={"../register"}>
                   <span className="ml-1 text-neutral-200/80 underline">
                     Register
-                  </span>
-                </Link>
-                <Link to={"/user/user-dashboard"}>
-                  <span className="ml-1 text-neutral-200/80 underline">
-                    test
                   </span>
                 </Link>
               </p>
