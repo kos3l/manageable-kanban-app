@@ -9,7 +9,7 @@ import {
 import { AxiosResponse } from "axios";
 import { ReactNode } from "react";
 import { QueryClient, useQuery } from "react-query";
-import { Link, useParams, useSubmit } from "react-router-dom";
+import { Link, redirect, useParams, useSubmit } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
 import ActionButton from "../../ui/buttons/ActionButton";

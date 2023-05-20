@@ -49,25 +49,25 @@ export const action =
   ) =>
   async ({ request, params }: any) => {
     await deleteTeam(params.id);
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: ["project", params.id],
     });
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: QueryKeys.allTeams,
     });
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: QueryKeys.userProfile,
     });
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: QueryKeys.projectsWithTeams,
     });
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: QueryKeys.userProjects,
     });
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: QueryKeys.user,
     });
-    await queryClient.invalidateQueries({
+    queryClient.invalidateQueries({
       queryKey: QueryKeys.statistic,
     });
     return redirect(`/user/teams-overview`);
