@@ -9,7 +9,6 @@ import {
   ClockIcon,
   Bars3CenterLeftIcon,
   UsersIcon,
-  PaperClipIcon,
   PlusCircleIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
@@ -33,16 +32,18 @@ import ColorPicker from "../selection/ColorPicker";
 import { ICreateLabelDTO } from "../../models/dto/task/ICreateLabelDTO";
 import LabelCard from "./LabelCard";
 import QueryKeys from "../../static/QueryKeys";
+import { Project } from "../../models/entities/Project";
 
 interface IProps {
   selectedTask: Task;
   teamId: string;
+  project: Project;
   onClose: () => void;
 }
 
 export default function SelectedtTaskCard(props: IProps) {
   // SECTION: Const and Variables
-  const { selectedTask, onClose, teamId } = props;
+  const { selectedTask, onClose, teamId, project } = props;
   const {
     updateTask,
     getTaskById,
@@ -303,6 +304,12 @@ export default function SelectedtTaskCard(props: IProps) {
     return <p>Loading</p>;
   }
 
+  console.log(title == "");
+  console.log(new Date(project.startDate) > startDate);
+
+  console.log(new Date(project.endDate) < endDate);
+
+  console.log(endDate < startDate);
   // SECTION: UI
   return (
     <div
@@ -439,6 +446,12 @@ export default function SelectedtTaskCard(props: IProps) {
         <div className="flex w-1/4 flex-col-reverse items-end justify-end gap-2">
           {isEditOn ? (
             <button
+              disabled={
+                title == "" ||
+                new Date(project.startDate) > startDate ||
+                new Date(project.endDate) < endDate ||
+                endDate < startDate
+              }
               onClick={() => {
                 updateTaskMutation.mutate({
                   title: title,
@@ -448,12 +461,10 @@ export default function SelectedtTaskCard(props: IProps) {
                 });
                 setIsEditOn(false);
               }}
-              className="flex w-24 items-center gap-1 rounded border border-indigo-600 py-1 px-3 transition hover:bg-indigo-700/10"
+              className="flex w-24 items-center gap-1 rounded  border border-indigo-600 py-1 px-3 text-indigo-500 transition hover:bg-indigo-700/10 disabled:border-neutral-700 disabled:bg-neutral-800/40 disabled:text-neutral-700"
             >
-              <CheckCircleIcon className="w-4 rounded text-indigo-600"></CheckCircleIcon>
-              <p className="mt-0.5 text-sm tracking-wider text-indigo-500">
-                Save
-              </p>
+              <CheckCircleIcon className="w-4 rounded"></CheckCircleIcon>
+              <p className="mt-0.5 text-sm tracking-wider">Save</p>
             </button>
           ) : (
             <>

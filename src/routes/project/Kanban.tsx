@@ -186,6 +186,7 @@ export default function KanbanPage() {
             teamId={project.teamId}
             selectedTask={selectedTask}
             onClose={() => setSelectedTask(null)}
+            project={project}
           ></SelectedTaskCard>
         </div>
       ) : (
