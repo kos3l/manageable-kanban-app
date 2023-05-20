@@ -28,8 +28,6 @@ const useHttp = () => {
     ? import.meta.env.VITE_BASE_URL_PRODUCTION
     : import.meta.env.VITE_BASE_URL_DEVELOPMENT;
 
-  console.log(baseUrl, "axios base url - useHttp");
-
   const http = axios.create({
     baseURL: baseUrl,
     headers,
@@ -86,7 +84,6 @@ const useHttp = () => {
       (response) => response,
       async (error) => {
         const { response } = error;
-        console.log(response);
         const prevRequest = error.config;
         if (error.response.status == 401 && !prevRequest.sent) {
           prevRequest.sent = true;

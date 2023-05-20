@@ -8,7 +8,7 @@ type Team = {
   description?: string;
   picture?: string;
   users: string[];
-  projects?: string[];
+  projects: string[];
   createdAt: Date;
   userModels?: User[];
   projectModels: Project[];

@@ -3,6 +3,7 @@ import { QueryClient, useQuery } from "react-query";
 import { Outlet, redirect, useParams } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 
 const teamByIdQuery = (
   teamId: string,
@@ -49,7 +50,25 @@ export const action =
   async ({ request, params }: any) => {
     await deleteTeam(params.id);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "user", "profile", params.id],
+      queryKey: ["project", params.id],
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProjects,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.user,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.statistic,
     });
     return redirect(`/user/teams-overview`);
   };
@@ -59,17 +78,17 @@ export default function TeamRootPage() {
   const { getTeamById } = useTeamService();
 
   if (!id) {
-    return <>No team id found</>;
+    return (
+      <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 p-4 xl:flex-nowrap 2xl:w-3/4">
+        {<>Loading</>}
+      </div>
+    );
   }
   const { data: team } = useQuery(teamByIdQuery(id, getTeamById));
 
-  if (!team) {
-    return <>Loading</>;
-  }
-
   return (
     <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 p-4 xl:flex-nowrap 2xl:w-3/4">
-      <Outlet />
+      {!team ? <>Loading</> : <Outlet />}
     </div>
   );
 }

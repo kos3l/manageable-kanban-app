@@ -46,17 +46,18 @@ export default function ProjectRoot() {
   const { getProjectById } = useProjectService();
 
   if (!id) {
-    return <>No team id found</>;
+    return (
+      <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 p-4 xl:flex-nowrap 2xl:w-3/4">
+        {<>Loading</>}
+      </div>
+    );
   }
-  const { data: project } = useQuery(projectByIdQuery(id, getProjectById));
 
-  if (!project) {
-    return <>Loading</>;
-  }
+  const { data: project } = useQuery(projectByIdQuery(id, getProjectById));
 
   return (
     <div className="relative w-full  bg-gradient-to-b  from-neutral-900 ">
-      <Outlet />
+      {!project ? <>Loading</> : <Outlet />}
     </div>
   );
 }

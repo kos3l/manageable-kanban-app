@@ -20,6 +20,7 @@ import CreateTaskCard from "./CreateTaskCard";
 import TaskCard from "./TaskCard";
 import update from "immutability-helper";
 import { IUpdateTaskOrderDTO } from "../../models/dto/task/IUpdateTaskOrderDTO";
+import QueryKeys from "../../static/QueryKeys";
 
 interface IProps {
   column: Column;
@@ -54,13 +55,14 @@ const tasksFromColumnQuery = (
 
 export default function ColumnWrapperCard(props: IProps) {
   const { column, project, taskClicked, isManageColumnsOn } = props;
-  const { getTasksByColumnId, createNewTask, updateTaskOrder } =
-    useTaskService();
-  const submit = useSubmit();
-  const { id } = useParams();
   const queryClient = useQueryClient();
   const columnRef = useRef<any>(null);
   const lineRef = useRef<any>(null);
+  const { id } = useParams();
+
+  const submit = useSubmit();
+  const { getTasksByColumnId, createNewTask, updateTaskOrder } =
+    useTaskService();
 
   if (!id) {
     return <p>Loading</p>;
@@ -71,11 +73,16 @@ export default function ColumnWrapperCard(props: IProps) {
   );
 
   const [xPosition, setXPosition] = useState<number | null>(null);
-
   const [showCreate, setShowCreate] = useState<boolean>(false);
   const [isEditOn, setIsEditOn] = useState<boolean>(false);
   const [name, setName] = useState<string>("");
   const [stateTasks, setStateTasks] = useState<Task[]>([]);
+
+  useEffect(() => {
+    if (tasks) {
+      setStateTasks(tasks);
+    }
+  }, [tasks]);
 
   const mutation = useMutation({
     mutationFn: (taskDto: ICreateTaskDTO) => {
@@ -84,6 +91,12 @@ export default function ColumnWrapperCard(props: IProps) {
     onSuccess: (data, variables, context) => {
       queryClient.invalidateQueries({
         queryKey: [column._id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.statistic,
+      });
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.projectsWithTeams,
       });
       setShowCreate(false);
     },
@@ -99,12 +112,6 @@ export default function ColumnWrapperCard(props: IProps) {
       });
     },
   });
-
-  useEffect(() => {
-    if (tasks) {
-      setStateTasks(tasks);
-    }
-  }, [tasks]);
 
   const handleColumnDrag = (ev: any) => {
     if (xPosition && xPosition >= 596.8 && ev.movementX > 0) {
@@ -239,7 +246,7 @@ export default function ColumnWrapperCard(props: IProps) {
           ) : (
             <div className="handle mb-0.5 flex min-h-[3.5rem] w-full basis-14 cursor-grab items-center justify-between rounded-lg border border-neutral-600 ">
               <p className="neutral-500 ml-3 font-serif text-base tracking-wider">
-                {column.name + " | " + tasks?.length}
+                {tasks ? column.name + " | " + tasks.length : column.name}
               </p>
               <div className="mr-3 flex w-max items-center gap-2">
                 {isManageColumnsOn ? (

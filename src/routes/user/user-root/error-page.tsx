@@ -4,11 +4,11 @@ import LandingButton from "../../../ui/buttons/LandingButton";
 
 export default function ErrorPage() {
   const error: any = useRouteError();
-  console.log(error);
+
   return (
     <div
       id="error-page"
-      className="flex h-screen w-screen items-center justify-center bg-hero-pattern "
+      className="bg-red-pattern flex h-screen w-screen items-center justify-center "
     >
       <div className="flex w-max flex-col items-start">
         <h1 className="mt-2 mb-3 text-4xl font-bold text-neutral-300 drop-shadow xl:leading-[4rem]">

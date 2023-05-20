@@ -8,6 +8,7 @@ type User = {
   profilePicture?: string;
   bio?: string;
   teams: string[];
+  tasks: string[];
 };
 
 export { type User };

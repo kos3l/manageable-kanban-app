@@ -8,12 +8,13 @@ import {
 } from "@heroicons/react/24/solid";
 import Bars3CenterLeftIcon from "@heroicons/react/24/solid/Bars3CenterLeftIcon";
 import { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { QueryClient, useQuery } from "react-query";
-import { Form, redirect, useNavigate } from "react-router-dom";
+import { Form, redirect, useNavigate, useSubmit } from "react-router-dom";
 import useTeamService from "../../hooks/service/useTeamService";
 import { ICreateProjectDTO } from "../../models/dto/project/ICreateProjectDTO";
 import { Team } from "../../models/entities/Team";
+import QueryKeys from "../../static/QueryKeys";
 import ActionButton from "../../ui/buttons/ActionButton";
 import ActionInput from "../../ui/inputs/ActionInput";
 import DateInput from "../../ui/inputs/DateInput";
@@ -25,7 +26,7 @@ import { DateHelper } from "../../util/helpers/DateHelper";
 const getAllTeams = (
   getAllUserTeams: () => Promise<AxiosResponse<Team[], any>>
 ) => ({
-  queryKey: ["team"],
+  queryKey: QueryKeys.allTeams,
   queryFn: async () => {
     const response = await getAllUserTeams();
     if (response.status == 401 || response.status == 403) {
@@ -50,12 +51,23 @@ export const action =
     project.techStack = JSON.parse(techStack);
     const newProject = await createProject(project as ICreateProjectDTO);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "profile"],
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
     });
     return redirect(`/user/projects/${newProject.data._id}`);
   };
 
 export default function CreateProject() {
+  const { getAllUserTeams } = useTeamService();
+  const navigate = useNavigate();
+  const formRef = useRef<any>();
+  const submit = useSubmit();
+
   const [name, setName] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [techStack, setTechStack] = useState<string[]>([]);
@@ -63,8 +75,7 @@ export default function CreateProject() {
   const [endDate, setEndDate] = useState<Date>(new Date());
   const [team, setTeam] = useState<Team>();
   const [newTech, setNewTech] = useState<string>("");
-  const navigate = useNavigate();
-  const { getAllUserTeams } = useTeamService();
+
   const { data: teams } = useQuery(getAllTeams(getAllUserTeams));
 
   function handleAddNewTech() {
@@ -77,9 +88,33 @@ export default function CreateProject() {
     setNewTech("");
   }
 
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [name, description, techStack, endDate, startDate]);
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isFormInvalid()) {
+      submit(formRef.current);
+    }
+  }
+
+  const isFormInvalid = () => {
+    return (
+      name == "" ||
+      description == "" ||
+      techStack.length == 0 ||
+      team == null ||
+      startDate >= endDate
+    );
+  };
+
   return (
     <div className="flex w-full justify-center bg-gradient-to-b from-neutral-900 p-4 md:justify-start 2xl:justify-center">
       <Form
+        ref={formRef}
         method="post"
         className="flex h-max max-h-full w-full flex-col gap-3  xl:w-5/6"
       >
@@ -96,6 +131,8 @@ export default function CreateProject() {
               value={name}
               onChange={(val) => setName(val)}
               name="name"
+              isRequred={true}
+              minLenght={2}
             ></TextInput>
             <div className="flex w-full flex-wrap gap-2 lg:flex-nowrap">
               <div className="flex grow">
@@ -141,6 +178,7 @@ export default function CreateProject() {
               value={description}
               onChange={(val) => setDescription(val)}
               name="description"
+              minLenght={3}
             ></TextareaInput>
           </div>
           <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
@@ -195,10 +233,17 @@ export default function CreateProject() {
         <div className="flex w-full gap-2 md:w-96">
           <ActionButton
             content={"Save"}
-            color="indigo"
             isSubmitBtn
+            color={isFormInvalid() ? "white" : "indigo"}
+            isDisabled={isFormInvalid()}
             icon={
-              <CheckCircleIcon className="w-5 text-indigo-500"></CheckCircleIcon>
+              <CheckCircleIcon
+                className={
+                  isFormInvalid()
+                    ? "w-5 text-neutral-300"
+                    : "w-5 text-indigo-500"
+                }
+              ></CheckCircleIcon>
             }
           ></ActionButton>
           <ActionButton

@@ -1,9 +1,15 @@
-import { CheckCircleIcon, ClockIcon, TagIcon } from "@heroicons/react/24/solid";
+import {
+  CheckCircleIcon,
+  CheckIcon,
+  ClockIcon,
+  TagIcon,
+} from "@heroicons/react/24/solid";
 import { useEffect, useRef, useState } from "react";
 import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { Column } from "../../models/entities/Column";
 import { Project } from "../../models/entities/Project";
 import { DateHelper } from "../../util/helpers/DateHelper";
+import ActionButton from "../buttons/ActionButton";
 import DateInput from "../inputs/DateInput";
 import TextInput from "../inputs/TextInput";
 
@@ -39,11 +45,40 @@ export default function CreateTaskCard(props: IProps) {
     };
   }, []);
 
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [title, startDate, endDate]);
+
   function clearState() {
     setTitle("");
     setStartDate(new Date(project.startDate));
-    setStartDate(DateHelper.addOneDay(project.startDate));
+    setEndDate(DateHelper.addOneDay(project.startDate));
   }
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isCreatetaskInvalid()) {
+      createTask({
+        title: title,
+        startDate: startDate,
+        endDate: endDate,
+        columnId: column._id,
+      });
+      clearState();
+      onClose();
+    }
+  }
+
+  const isCreatetaskInvalid = () => {
+    return (
+      title == "" ||
+      startDate >= endDate ||
+      startDate < new Date(project.startDate) ||
+      endDate > new Date(project.endDate)
+    );
+  };
 
   return (
     <>
@@ -58,6 +93,8 @@ export default function CreateTaskCard(props: IProps) {
             icon={<TagIcon className="w-5 text-neutral-300"></TagIcon>}
             onChange={(newVal) => setTitle(newVal)}
             name="title"
+            isRequred={true}
+            minLenght={2}
           ></TextInput>
           <DateInput
             icon={<ClockIcon className="w-5 text-neutral-300"></ClockIcon>}
@@ -76,7 +113,9 @@ export default function CreateTaskCard(props: IProps) {
           ></DateInput>
           <div className="flex h-max w-full gap-2">
             <div className="grow">
-              <button
+              <ActionButton
+                content={"Save"}
+                isSmaller={true}
                 onClick={() => {
                   createTask({
                     title: title,
@@ -86,20 +125,18 @@ export default function CreateTaskCard(props: IProps) {
                   });
                   clearState();
                 }}
-                className="w-full rounded border border-transparent bg-indigo-800/30 py-1.5 px-3 text-sm text-indigo-500 transition hover:border-indigo-600"
-              >
-                <p className="mt-0.5 tracking-wider">SAVE</p>
-              </button>
-            </div>
-            <div className="grow">
-              <button
-                onClick={() => {
-                  onClose(), clearState();
-                }}
-                className="w-full rounded border border-transparent bg-neutral-800/60 py-1.5 px-3 text-sm text-neutral-500 transition hover:border-neutral-400"
-              >
-                <p className="mt-0.5 tracking-wider">CANCEL</p>
-              </button>
+                color={isCreatetaskInvalid() ? "white" : "indigo"}
+                isDisabled={isCreatetaskInvalid()}
+                icon={
+                  <CheckIcon
+                    className={
+                      isCreatetaskInvalid()
+                        ? "w-5 text-neutral-300"
+                        : "w-5 text-indigo-500"
+                    }
+                  ></CheckIcon>
+                }
+              ></ActionButton>
             </div>
           </div>
         </div>
