@@ -64,41 +64,46 @@ export default function UserDashboardPage() {
   const { getAllUserProjects } = useProjectService();
   const { getTasksByUser } = useTaskService();
 
-  const { data: projects, isLoading: projectsLoading } = useQuery(
+  const { data: projects } = useQuery(
     projectsWithTeamsQuery(getAllUserProjects)
   );
-  const { data: tasks, isLoading: tasksLoading } = useQuery(
-    tasksForUserQuery(getTasksByUser)
-  );
+  const { data: tasks } = useQuery(tasksForUserQuery(getTasksByUser));
+
+  if (!projects) {
+    return (
+      <div className="flex h-max w-full flex-col gap-3 bg-gradient-to-b from-neutral-900 p-4 2xl:w-3/4">
+        <h1 className="bg-gradient-to-r from-indigo-500 to-pink-500 bg-clip-text text-2xl font-bold text-transparent ">
+          Welcome to your dashboard!
+        </h1>
+      </div>
+    );
+  }
 
   // Get all columns which have tasks assigned to the logged in user
   const allColumns = projects
-    ? projects
-        .filter((project) => project.status !== ProjectStatus.COMPLETED)
-        .map((project) => project.columns)
+    .filter((project) => project.status !== ProjectStatus.COMPLETED)
+    .map((project) => project.columns)
+    .reduce((acc, val) => {
+      return acc.concat(val);
+    })
+    .filter((col) => tasks?.find((task) => task.columnId == col._id));
+
+  // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
+  const mergedColumns = Array.from(
+    new Set(allColumns.map((col) => col.name))
+  ).map((name) => {
+    return {
+      _id: allColumns.find((col) => col.name === name)?._id,
+      name: name,
+      tasks: allColumns
+        .filter((col) => col.name === name)
+        .map((edition) => edition.tasks)
         .reduce((acc, val) => {
           return acc.concat(val);
         })
-        .filter((col) => tasks?.find((task) => task.columnId == col._id))
-    : [];
-
-  // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
-  const mergedColumns =
-    allColumns && allColumns.length > 0
-      ? (Array.from(new Set(allColumns.map((col) => col.name))).map((name) => {
-          return {
-            _id: allColumns.find((col) => col.name === name)?._id,
-            name: name,
-            tasks: allColumns
-              .filter((col) => col.name === name)
-              .map((edition) => edition.tasks)
-              .reduce((acc, val) => {
-                return acc.concat(val);
-              })
-              .filter((task) => tasks?.find((t) => t._id == task)),
-          };
-        }) as Column[])
-      : [];
+        .filter((task) => tasks?.find((t) => t._id == task)),
+    };
+  }) as Column[];
 
   function getOverdueTasks() {
     if (tasks && tasks.length > 0) {
