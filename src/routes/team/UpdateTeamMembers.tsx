@@ -1,38 +1,23 @@
 import {
-  IdentificationIcon,
-  Bars3CenterLeftIcon,
-  CheckCircleIcon,
-  XMarkIcon,
-  UsersIcon,
   TrashIcon,
   AtSymbolIcon,
   MagnifyingGlassIcon,
   PlusIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { QueryClient, useQuery } from "react-query";
-import {
-  Form,
-  redirect,
-  useLoaderData,
-  useNavigate,
-  useRouteLoaderData,
-  useSubmit,
-} from "react-router-dom";
-import { ICreateTeamDTO } from "../../models/dto/team/ICreateTeamDTO";
+import { useRouteLoaderData, useSubmit } from "react-router-dom";
 import { Team } from "../../models/entities/Team";
-import ActionButton from "../../ui/buttons/ActionButton";
 import UserCard from "../../ui/cards/UserCard";
 import WrapperCard from "../../ui/cards/WrapperCard";
-import TextareaInput from "../../ui/inputs/TextareaInput";
 import TextInput from "../../ui/inputs/TextInput";
-import avatar from "../../assets/avatar.png";
 import FilledButton from "../../ui/buttons/FilledButton";
 import { User } from "../../models/entities/User";
 import useUserService from "../../hooks/service/useUserService";
 import { IUpdateTeamUsersDTO } from "../../models/dto/team/IUpdateTeamUsersDTO";
-import DisplayField from "../../ui/display-field/DisplayField";
+import TeamBanner from "../../ui/banner/TeamBanner";
+import QueryKeys from "../../static/QueryKeys";
 
 export const action =
   (
@@ -50,25 +35,33 @@ export const action =
 
     await updateTeamMembers(params.id, usersDto);
     await queryClient.invalidateQueries({
-      queryKey: ["team", "teams", "projects", "user", "profile"],
+      queryKey: QueryKeys.allTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProfile,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.projectsWithTeams,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.userProjects,
+    });
+    await queryClient.invalidateQueries({
+      queryKey: QueryKeys.user,
     });
     return true;
   };
 
 export default function UpdateTeamMembersPage() {
   const team = useRouteLoaderData("selectedTeam") as Team;
-  const { getUserByEmail } = useUserService();
   let submit = useSubmit();
-
-  if (!team) {
-    return <>Loading</>;
-  }
+  const { getUserByEmail } = useUserService();
 
   const [searchEmail, setSearchEmail] = useState<string>("");
   const [searchEnabled, setSearchEnabled] = useState<boolean>(false);
 
   const fetchedUser = useQuery({
-    queryKey: ["user", "email"],
+    queryKey: QueryKeys.user,
     retry: 1,
     enabled: searchEnabled,
     queryFn: async () => {
@@ -114,32 +107,30 @@ export default function UpdateTeamMembersPage() {
     submit(formData, { method: "post" });
   }
 
-  const teamCreator = team.userModels?.find(
-    (user) => user._id == team.createdBy
-  );
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [searchEmail]);
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter") {
+      handleSearchClick();
+    }
+  }
+
+  if (!team) {
+    return <>Loading</>;
+  }
 
   return (
     <div className="flex w-full flex-wrap justify-center gap-3 md:w-3/4 md:justify-start 2xl:justify-center">
-      <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-        <div className="w-20 overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
-          <img src={avatar} alt="" className="h-full w-full object-contain" />
-        </div>
-        <div className="flex w-max flex-col gap-2">
-          <DisplayField
-            color="white"
-            label={"Team:"}
-            value={team.name}
-            placeholder={""}
-          ></DisplayField>
-          <DisplayField
-            color="white"
-            label={"Created By"}
-            value={teamCreator?.firstName + " " + teamCreator?.lastName}
-            placeholder={""}
-          ></DisplayField>
-        </div>
+      <div className="w-full">
+        <TeamBanner team={team}></TeamBanner>
       </div>
       <WrapperCard
+        minHeight={false}
         name={"Current Members"}
         displayEntities={team.userModels ? team.userModels : []}
         displayComponent={(user) => (

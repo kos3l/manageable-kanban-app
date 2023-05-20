@@ -9,7 +9,13 @@ import { AxiosResponse } from "axios";
 import { useRef, useState } from "react";
 import Draggable, { ControlPosition } from "react-draggable";
 import { QueryClient } from "react-query";
-import { Form, Link, redirect, useRouteLoaderData } from "react-router-dom";
+import {
+  Await,
+  Form,
+  Link,
+  redirect,
+  useRouteLoaderData,
+} from "react-router-dom";
 import { IUpdateAddColumn } from "../../models/dto/column/IUpdateAddColumn";
 import { IUpdateColumnDTO } from "../../models/dto/column/IUpdateColumn";
 import { IUpdateColumnOrderDTO } from "../../models/dto/column/IUpdateColumnOrderDTO";
@@ -82,7 +88,11 @@ export default function KanbanPage() {
   const [isManageColumnsOn, setIsManageColumnsOn] = useState<boolean>(false);
 
   if (!project) {
-    return <>Loading</>;
+    return (
+      <>
+        <p>Something went wrong</p>
+      </>
+    );
   }
 
   return (
@@ -186,6 +196,7 @@ export default function KanbanPage() {
             teamId={project.teamId}
             selectedTask={selectedTask}
             onClose={() => setSelectedTask(null)}
+            project={project}
           ></SelectedTaskCard>
         </div>
       ) : (

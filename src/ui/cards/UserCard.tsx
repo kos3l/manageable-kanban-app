@@ -58,30 +58,28 @@ export default function UserCard(props: IProps) {
           </div>
         </div>
       ) : (
-        <Link to={"../profile/" + user._id}>
-          <div
-            key={user._id}
-            className={
-              "flex h-12 w-full items-center justify-between gap-2 overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50 px-2 transition hover:border-neutral-400"
-            }
-          >
-            <div className="flex grow gap-2">
-              <div className="basis-7 overflow-hidden rounded-lg">
-                <img
-                  src={avatar}
-                  alt=""
-                  className="h-full w-full object-contain"
-                />
-              </div>
-              <p className="mt-1 grow truncate">
-                <span className="opacity-70">
-                  {user.firstName + " " + user.lastName}
-                </span>{" "}
-                {noEmail ? "" : " - " + user.email}
-              </p>
+        <div
+          key={user._id}
+          className={
+            "flex h-12 w-full items-center justify-between gap-2 overflow-scroll rounded-lg border border-neutral-600 bg-neutral-800/50 px-2 transition hover:border-neutral-400"
+          }
+        >
+          <div className="flex grow gap-2">
+            <div className="basis-7 overflow-hidden rounded-lg">
+              <img
+                src={avatar}
+                alt=""
+                className="h-full w-full object-contain"
+              />
             </div>
+            <p className="mt-1 grow truncate">
+              <span className="opacity-70">
+                {user.firstName + " " + user.lastName}
+              </span>{" "}
+              {noEmail ? "" : " - " + user.email}
+            </p>
           </div>
-        </Link>
+        </div>
       )}{" "}
     </>
   );

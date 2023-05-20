@@ -1,21 +1,14 @@
 import {
   ChevronUpDownIcon,
-  ClipboardDocumentIcon,
-  ClipboardDocumentListIcon,
   ListBulletIcon,
   MagnifyingGlassIcon,
-  PlusIcon,
-  UsersIcon,
 } from "@heroicons/react/24/solid";
 import { useState } from "react";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
-import useTeamService from "../../hooks/service/useTeamService";
-import FilledButton from "../../ui/buttons/FilledButton";
+import QueryKeys from "../../static/QueryKeys";
 import KanbanCard from "../../ui/cards/KanbanCard";
-import ProjectCard from "../../ui/cards/ProjectCard";
-import TeamCard from "../../ui/cards/TeamCard";
 import TextInput from "../../ui/inputs/TextInput";
 import Dropdown from "../../ui/selection/Dropdown";
 
@@ -33,7 +26,7 @@ export default function KanbanOverview() {
   const [search, setSearch] = useState<string>("");
 
   const { data } = useQuery({
-    queryKey: ["projects"],
+    queryKey: QueryKeys.userProjects,
     retry: 1,
     queryFn: async () => {
       const response = await getAllUserProjects();

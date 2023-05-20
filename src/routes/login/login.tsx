@@ -1,19 +1,21 @@
 import {
   ArrowLeftOnRectangleIcon,
-  ArrowRightOnRectangleIcon,
   AtSymbolIcon,
+  ExclamationTriangleIcon,
   KeyIcon,
 } from "@heroicons/react/24/solid";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation } from "react-query";
 import { Link, Navigate, redirect } from "react-router-dom";
 import useAuth from "../../hooks/useAuth";
 import { ICreateLoginDTO } from "../../models/dto/user/ICreateLoginDTO";
 import ActionButton from "../../ui/buttons/ActionButton";
 import TextInput from "../../ui/inputs/TextInput";
-import { useNavigate } from "react-router-dom";
 import useAuthService from "../../hooks/service/useAuthService";
 import gradient from "../../assets/gradient.svg";
+import { AxiosResponse } from "axios";
+import { IAccessToken } from "../../auth/context/AuthContext";
+import { IApiError } from "../../models/responses/IApiError";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
@@ -21,7 +23,12 @@ export default function LoginPage() {
   const { setAuth } = useAuth();
   const { loginUser } = useAuthService();
 
-  const mutation = useMutation({
+  const mutation = useMutation<
+    AxiosResponse<IAccessToken, any>,
+    AxiosResponse<IApiError, any>,
+    ICreateLoginDTO,
+    unknown
+  >({
     mutationFn: (newUser: ICreateLoginDTO) => {
       return loginUser(newUser);
     },
@@ -30,8 +37,29 @@ export default function LoginPage() {
       setAuth({ accessToken: accessToken });
       setEmail("");
       setPassword("");
+      redirect("/user/user-dashboard");
     },
   });
+
+  useEffect(() => {
+    document.addEventListener("keyup", onEnterPress);
+    return () => {
+      document.removeEventListener("keyup", onEnterPress);
+    };
+  }, [email, password]);
+
+  const isFormInvalid = () => {
+    return email == "" || password == "";
+  };
+
+  function onEnterPress(event: KeyboardEvent) {
+    if (event.key == "Enter" && !isFormInvalid()) {
+      mutation.mutate({
+        email: email,
+        password: password,
+      });
+    }
+  }
 
   if (mutation.isSuccess) {
     return <Navigate to={"/user/user-dashboard"}></Navigate>;
@@ -60,6 +88,8 @@ export default function LoginPage() {
                   placeholder="Email.."
                   value={email}
                   onChange={(val) => setEmail(val)}
+                  isRequred={true}
+                  minLenght={6}
                 ></TextInput>
                 <TextInput
                   name="password"
@@ -67,12 +97,25 @@ export default function LoginPage() {
                   placeholder="Password.."
                   value={password}
                   onChange={(val) => setPassword(val)}
+                  isRequred={true}
+                  minLenght={6}
                 ></TextInput>
+                {mutation.isError ? (
+                  <div className="flex w-max items-center gap-2">
+                    <ExclamationTriangleIcon className="w-6 text-red-700"></ExclamationTriangleIcon>{" "}
+                    <p className="mt-0.5 text-lg text-neutral-500">
+                      Wrong email or password
+                    </p>
+                  </div>
+                ) : (
+                  <></>
+                )}
               </div>
             </div>
             <div className="w-full">
               <ActionButton
-                color="indigo"
+                color={isFormInvalid() ? "white" : "indigo"}
+                isDisabled={isFormInvalid()}
                 content={"SIGN IN"}
                 onClick={() => {
                   mutation.mutate({
@@ -81,7 +124,13 @@ export default function LoginPage() {
                   });
                 }}
                 icon={
-                  <ArrowLeftOnRectangleIcon className="w-6 text-indigo-600"></ArrowLeftOnRectangleIcon>
+                  <ArrowLeftOnRectangleIcon
+                    className={
+                      isFormInvalid()
+                        ? "w-6 text-neutral-300"
+                        : "w-6 text-indigo-600"
+                    }
+                  ></ArrowLeftOnRectangleIcon>
                 }
               ></ActionButton>
             </div>
@@ -93,11 +142,6 @@ export default function LoginPage() {
                     Register
                   </span>
                 </Link>
-                <Link to={"/user/user-dashboard"}>
-                  <span className="ml-1 text-neutral-200/80 underline">
-                    test
-                  </span>
-                </Link>
               </p>
             </div>
           </div>
@@ -105,7 +149,4 @@ export default function LoginPage() {
       </div>
     </>
   );
-}
-function log(newUser: ICreateLoginDTO): Promise<unknown> {
-  throw new Error("Function not implemented.");
 }

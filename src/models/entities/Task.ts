@@ -1,3 +1,5 @@
+import { Label } from "./Label";
+import { Project } from "./Project";
 import { User } from "./User";
 
 type Task = {
@@ -11,7 +13,8 @@ type Task = {
   userIds: string[];
   createdAt: Date;
   users: User[];
-  //   labels: string;
+  labels: Label[];
+  project?: Project[];
 };
 
 export { type Task };

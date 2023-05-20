@@ -5,11 +5,10 @@ import {
   ListBulletIcon,
   PencilSquareIcon,
   TrashIcon,
-  UserPlusIcon,
 } from "@heroicons/react/24/solid";
 import { AxiosResponse } from "axios";
-import { useQuery } from "react-query";
-import { Link, useParams } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { Link, Navigate, redirect, useParams } from "react-router-dom";
 import useProjectService from "../../hooks/service/useProjectService";
 import { Project } from "../../models/entities/Project";
 import { ProjectStatus } from "../../models/enum/ProjectStatus";
@@ -17,7 +16,12 @@ import { ProjectStatusText } from "../../models/enum/ProjectStatusText";
 import { colorIndex } from "../../models/util/ColorIndex";
 import ActionButton from "../../ui/buttons/ActionButton";
 import DisplayField from "../../ui/display-field/DisplayField";
-import avatar from "../../assets/avatar.png";
+import TeamBanner from "../../ui/banner/TeamBanner";
+import useTaskService from "../../hooks/service/useTaskService";
+import { DateHelper } from "../../util/helpers/DateHelper";
+import TasksPerColumnChart from "../../ui/charts/TasksPerColumnChart";
+import TaskListCard from "../../ui/cards/TaskListCard";
+import QueryKeys from "../../static/QueryKeys";
 
 const projectByIdQuery = (
   projectId: string,
@@ -41,16 +45,67 @@ const projectByIdQuery = (
 
 export default function ProjectPage() {
   const { id } = useParams();
-  const { getProjectById } = useProjectService();
+  const queryClient = useQueryClient();
+  const { getProjectById, completeProject, deleteProject } =
+    useProjectService();
+  const { getTasksByProjectId } = useTaskService();
 
   if (!id) {
     return <>No team id found</>;
   }
+
+  const { data: tasks } = useQuery({
+    queryKey: ["tasks", id],
+    queryFn: async () => {
+      const response = await getTasksByProjectId(id);
+      if (response.status == 403) {
+        throw new Error("Token expired");
+      }
+      if (!response) {
+        throw new Response("", {
+          status: 404,
+          statusText: "Not Found",
+        });
+      }
+      return response.data;
+    },
+  });
+
+  const completeProjectMutation = useMutation({
+    mutationFn: () => {
+      return completeProject(id);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["project", id],
+      });
+    },
+  });
+
+  const deleteProjectMutation = useMutation({
+    mutationFn: () => {
+      return deleteProject(id);
+    },
+    onSuccess: (data, variables, context) => {
+      queryClient.invalidateQueries({
+        queryKey: ["project", id],
+      });
+      queryClient.invalidateQueries({
+        queryKey: QueryKeys.userProjects,
+      });
+    },
+  });
+
   const { data: project } = useQuery(projectByIdQuery(id, getProjectById));
 
   if (!project) {
     return <>Loading</>;
   }
+
+  const daysLeft =
+    project.status == ProjectStatus.ONGOING
+      ? DateHelper.differenceInDays(new Date(project.endDate), new Date())
+      : 0;
 
   type colorVariants = {
     COMPLETED: string;
@@ -70,131 +125,188 @@ export default function ProjectPage() {
       "rounded-lg flex justify-center px-2 border border-red-700 bg-red-800/20 py-1 text-red-700",
   };
 
+  function handleDeleteProject() {
+    const warning = confirm(
+      "This action will delete the project. Do you want to proceed?"
+    );
+    if (warning) {
+      deleteProjectMutation.mutate();
+    }
+  }
+
+  if (deleteProjectMutation.isSuccess) {
+    return <Navigate to={"/user/projects-overview"}></Navigate>;
+  }
+
   return (
-    <div className="flex h-max w-full flex-wrap gap-3 p-4  xl:flex-nowrap 2xl:w-3/4">
-      <div className="flex h-max w-full flex-col gap-3 xl:basis-96">
-        <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-          <div className={`${labelVariants[ProjectStatus[project.status]]}`}>
-            <p className="truncate font-serif text-base font-medium tracking-wider ">
-              {
-                ProjectStatusText[
-                  ProjectStatus[
-                    project.status
-                  ] as keyof typeof ProjectStatusText
-                ]
-              }
-            </p>
-          </div>
-          <h1 className="break-word font-serif text-lg tracking-wider">
-            {project.name}
-          </h1>
-          <DisplayField
-            color="white"
-            label={"Start Date"}
-            placeholder={"Date not found"}
-            value={new Date(project.startDate).toLocaleDateString()}
-            icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
-          ></DisplayField>
-          <DisplayField
-            color="white"
-            label={"End Date"}
-            placeholder={"Date not found"}
-            icon={
-              <CheckCircleIcon className="w-6 text-neutral-300"></CheckCircleIcon>
-            }
-            value={new Date(project.endDate).toLocaleDateString()}
-          ></DisplayField>
-          <DisplayField
-            color="white"
-            label={"Description"}
-            placeholder={"No Description"}
-            value={project.description}
-          ></DisplayField>
-        </div>
-        <div className="flex w-full flex-wrap gap-3 md:flex-nowrap xl:flex-col">
-          <div className="grow basis-full md:basis-1/3">
-            <Link to={"./update-members"}>
-              <ActionButton
-                color="indigo"
-                content={"Complete"}
-                icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
-              ></ActionButton>
-            </Link>
-          </div>
-          <div className="grow basis-full md:basis-1/3">
-            <Link to={"./kanban"}>
-              <ActionButton
-                color="indigo"
-                content={"Kanban"}
-                icon={
-                  <ListBulletIcon className="w-5 text-indigo-500"></ListBulletIcon>
+    <div className="flex h-max w-full 2xl:justify-center">
+      <div className="flex h-max w-full flex-wrap gap-2 p-4 md:flex-nowrap md:justify-start lg:gap-3  2xl:w-3/4 ">
+        <div className="flex h-max w-full flex-col gap-3 md:basis-96">
+          <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
+            <div className={`${labelVariants[ProjectStatus[project.status]]}`}>
+              <p className="truncate font-serif text-base font-medium tracking-wider ">
+                {
+                  ProjectStatusText[
+                    ProjectStatus[
+                      project.status
+                    ] as keyof typeof ProjectStatusText
+                  ]
                 }
-              ></ActionButton>
-            </Link>{" "}
-          </div>
-          <div className="grow basis-full md:basis-1/3">
-            <Link to={"./edit"}>
-              <ActionButton
-                color="indigo"
-                content={"Edit Project"}
+              </p>
+            </div>
+            <h1 className="break-word font-serif text-lg tracking-wider">
+              {project.name}
+            </h1>
+            <div className="flex w-max flex-col gap-2 sm:flex-row md:flex-col">
+              <DisplayField
+                color="white"
+                label={"Start Date"}
+                placeholder={"Date not found"}
+                value={new Date(project.startDate).toLocaleDateString()}
+                icon={<ClockIcon className="w-6 text-neutral-300"></ClockIcon>}
+              ></DisplayField>
+              <DisplayField
+                color="white"
+                label={"End Date"}
+                placeholder={"Date not found"}
                 icon={
-                  <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+                  <CheckCircleIcon className="w-6 text-neutral-300"></CheckCircleIcon>
                 }
-              ></ActionButton>
-            </Link>{" "}
-          </div>
-          <div className="grow basis-full md:basis-1/3">
-            <ActionButton
-              color="red"
-              content={"Delete Project"}
-              icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
-            ></ActionButton>
-          </div>
-        </div>
-      </div>
-      <div className="flex h-max w-full flex-col gap-2 rounded-lg border border-neutral-800 sm:grow sm:flex-nowrap">
-        <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
-          <div className="w-20 overflow-hidden rounded-lg border border-neutral-600  sm:border-0 ">
-            <img src={avatar} alt="" className="h-full w-full object-contain" />
-          </div>
-          <div className="flex w-max flex-col gap-2">
+                value={new Date(project.endDate).toLocaleDateString()}
+              ></DisplayField>
+            </div>
             <DisplayField
               color="white"
-              label={"Team:"}
-              value={project.team[0].name}
-              placeholder={""}
+              label={"Description"}
+              placeholder={"No Description"}
+              value={project.description}
             ></DisplayField>
           </div>
+          <div className="flex h-max w-full flex-wrap gap-2 md:flex-col md:flex-nowrap">
+            {project.status !== ProjectStatus.NOTSTARTED &&
+            project.status !== ProjectStatus.COMPLETED ? (
+              <div className=" grow">
+                <ActionButton
+                  onClick={() => completeProjectMutation.mutate()}
+                  color="indigo"
+                  content={"Complete"}
+                  icon={<CheckIcon className="w-5 text-indigo-500"></CheckIcon>}
+                ></ActionButton>
+              </div>
+            ) : (
+              <></>
+            )}
+
+            <div className="grow">
+              <Link to={"./kanban"}>
+                <ActionButton
+                  color="indigo"
+                  content={"Kanban"}
+                  icon={
+                    <ListBulletIcon className="w-5 text-indigo-500"></ListBulletIcon>
+                  }
+                ></ActionButton>
+              </Link>{" "}
+            </div>
+            <div className="grow">
+              <Link to={"./edit"}>
+                <ActionButton
+                  color="indigo"
+                  content={"Edit Project"}
+                  icon={
+                    <PencilSquareIcon className="w-5 text-indigo-500"></PencilSquareIcon>
+                  }
+                ></ActionButton>
+              </Link>{" "}
+            </div>
+            <div className="grow">
+              <ActionButton
+                onClick={() => handleDeleteProject()}
+                color="red"
+                content={"Delete Project"}
+                icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
+              ></ActionButton>
+            </div>
+          </div>
         </div>
-        {project.techStack && project.techStack.length > 0 ? (
-          <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2">
-            <>
-              <p className="ml-2 mt-1 tracking-wider text-neutral-500">
+        <div className="flex h-max w-full flex-col gap-2 sm:flex-nowrap md:grow">
+          <div className="w-full">
+            <TeamBanner team={project.team[0]}></TeamBanner>
+          </div>
+          {project.techStack && project.techStack.length > 0 ? (
+            <div className="flex h-max w-full flex-col items-start justify-center gap-1 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2 sm:flex-row sm:items-center sm:justify-start sm:gap-2">
+              <p className="mr-2 min-w-max tracking-wider text-neutral-500 sm:mt-1 sm:ml-2">
                 Tools stack
               </p>
-              {project.techStack.map((tech, index) => {
-                return (
-                  <div
-                    key={index}
-                    className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
-                  >
-                    <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
+              <div className="flex h-max flex-wrap gap-2">
+                {project.techStack.map((tech, index) => {
+                  return (
+                    <div
+                      key={index}
+                      className="w-max cursor-pointer rounded border border-pink-500 bg-pink-600/30 px-2"
+                    >
+                      <p className="mt-1 text-sm text-pink-500">{tech}</p>{" "}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            <></>
+          )}
+          {tasks && tasks.length > 0 ? (
+            <div className="flex h-max w-full flex-col items-start gap-2 xl:flex-row">
+              <div className="flex h-max w-full flex-col items-start gap-2 xl:w-3/5">
+                <div className="flex h-max w-full items-center gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
+                  <div className="flex grow flex-col border-r border-neutral-600">
+                    <p className="text-sm text-neutral-500">Total Tasks:</p>
+                    <p className="font-serif text-2xl font-bold tracking-wider">
+                      {tasks.length}
+                    </p>
                   </div>
-                );
-              })}
-            </>
-          </div>
-        ) : (
-          <></>
-        )}
-        {/* Tasks */}
-        <div className="flex h-max w-full items-center gap-2">
-          <div className="flex h-max grow items-center gap-2">
-            <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2"></div>
-          </div>
-          <div className="flex h-max grow items-center gap-2">
-            <div className="flex h-max w-full items-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/50 p-2"></div>
-          </div>
+                  <div className="flex grow flex-col border-r border-neutral-600">
+                    <p className="text-sm text-neutral-500">
+                      Total Assigned Tasks:
+                    </p>
+                    <p className="font-serif text-2xl font-bold tracking-wider">
+                      {tasks.filter((task) => task.userIds.length > 0).length}
+                    </p>
+                  </div>
+                  <div className="flex grow flex-col">
+                    <p className="text-sm text-neutral-500">Days Left:</p>
+                    <p className="font-serif text-2xl font-bold tracking-wider">
+                      {daysLeft}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex h-max w-full rounded-lg border border-neutral-600 bg-neutral-800/50">
+                  <TasksPerColumnChart
+                    label="Tasks Per Column"
+                    columns={project.columns}
+                  ></TasksPerColumnChart>
+                </div>
+              </div>
+              <div className="flex h-full w-full flex-col items-center gap-2 xl:w-2/5">
+                <TaskListCard
+                  title="Unassigned Taskss"
+                  tasks={tasks.filter((task) => task.userIds.length == 0)}
+                ></TaskListCard>
+                <TaskListCard
+                  title="Overdue Tasks"
+                  tasks={tasks.filter(
+                    (task) => new Date() > new Date(task.endDate)
+                  )}
+                ></TaskListCard>
+              </div>
+            </div>
+          ) : (
+            <div className="flex h-64 w-full items-center justify-center gap-2 rounded-lg border border-neutral-600 bg-neutral-800/20 p-2">
+              <ListBulletIcon className="w-8"></ListBulletIcon>
+              <p className="mt-1 text-2xl tracking-wider text-neutral-600">
+                No tasks yet
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </div>

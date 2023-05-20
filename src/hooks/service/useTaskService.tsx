@@ -5,6 +5,7 @@ import { ICreateTaskDTO } from "../../models/dto/task/ICreateTaskDTO";
 import { IUpdateTaskDTO } from "../../models/dto/task/IUpdateTaskDTO";
 import { IUpdateUserToTask } from "../../models/dto/project/IUpdateUserToTask";
 import { IUpdateTaskOrderDTO } from "../../models/dto/task/IUpdateTaskOrderDTO";
+import { ICreateLabelDTO } from "../../models/dto/task/ICreateLabelDTO";
 
 const useTaskService = () => {
   const { get, post, put, remove } = useHttp();
@@ -17,6 +18,21 @@ const useTaskService = () => {
         withCredentials: true,
       }
     );
+  };
+
+  const getTasksByProjectId = (projectId: string) => {
+    return get<void, AxiosResponse<Task[]>>(
+      bastPath + "/project/" + projectId,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  const getTasksByUser = () => {
+    return get<void, AxiosResponse<Task[]>>(bastPath + "/user", {
+      withCredentials: true,
+    });
   };
 
   const getTaskById = (taskId: string) => {
@@ -84,8 +100,30 @@ const useTaskService = () => {
     );
   };
 
+  const addLabelToTask = (taskId: string, labelDto: ICreateLabelDTO) => {
+    return put<ICreateLabelDTO, AxiosResponse<void>>(
+      bastPath + "/" + taskId + "/AddLabel",
+      labelDto,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
+  const removeLabelFromTask = (taskId: string, labelId: string) => {
+    return put<IUpdateUserToTask, AxiosResponse<void>>(
+      bastPath + "/" + taskId + "/RemoveLabel/" + labelId,
+      undefined,
+      {
+        withCredentials: true,
+      }
+    );
+  };
+
   return {
     getTasksByColumnId,
+    getTasksByProjectId,
+    getTasksByUser,
     createNewTask,
     getTaskById,
     addUserToTask,
@@ -93,6 +131,8 @@ const useTaskService = () => {
     updateTask,
     updateTaskOrder,
     deleteTask,
+    removeLabelFromTask,
+    addLabelToTask,
   };
 };
 

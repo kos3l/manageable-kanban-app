@@ -62,6 +62,11 @@ export default function TeamPage() {
     <div className="flex h-max w-full flex-wrap gap-3 xl:flex-nowrap 2xl:w-3/4">
       <div className="flex h-max w-full flex-col gap-3 xl:basis-80 ">
         <div className="flex h-max w-full flex-col gap-3 rounded-lg border border-neutral-600 bg-neutral-800/50 p-3">
+          <div className="flex h-max w-full justify-center rounded-lg bg-neutral-900">
+            <div className="flex h-24 w-full min-w-[5rem] items-center justify-center rounded-lg border border-neutral-600 bg-gradient-to-r from-violet-600 to-indigo-500  sm:border-0 ">
+              <UsersIcon className="w-12"></UsersIcon>
+            </div>
+          </div>
           <h1 className="break-word font-serif text-lg tracking-wider">
             {team.name}
           </h1>
@@ -79,7 +84,7 @@ export default function TeamPage() {
             value={team.description}
           ></DisplayField>
         </div>
-        <div className="flex w-full flex-wrap gap-4 md:flex-nowrap xl:flex-col">
+        <div className="flex w-full flex-wrap gap-3 md:flex-nowrap xl:flex-col">
           <div className="grow basis-full md:basis-1/3">
             <Link to={"./update-members"}>
               <ActionButton
@@ -111,7 +116,7 @@ export default function TeamPage() {
                   "Are you sure you want to delete this team?"
                 );
                 if (warning) {
-                  submit(null, { method: "delete" });
+                  submit(null, { method: "post", action: "/user/teams/" + id });
                 }
               }}
               icon={<TrashIcon className="w-5 text-red-600"></TrashIcon>}
@@ -121,6 +126,7 @@ export default function TeamPage() {
       </div>
       <div className="flex w-full flex-wrap-reverse gap-4 sm:grow sm:flex-nowrap">
         <WrapperCard
+          minHeight={false}
           name={"Projects"}
           displayEntities={team.projectModels ? team.projectModels : []}
           displayComponent={(project) => (
@@ -136,6 +142,7 @@ export default function TeamPage() {
         ></WrapperCard>
         <WrapperCard
           name={"Members"}
+          minHeight={false}
           displayEntities={team.userModels ? team.userModels : []}
           displayComponent={(user) => (
             <UserCard
