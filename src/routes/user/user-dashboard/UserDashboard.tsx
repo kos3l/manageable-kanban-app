@@ -83,21 +83,22 @@ export default function UserDashboardPage() {
     : [];
 
   // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
-  const mergedColumns = Array.from(
-    new Set(allColumns.map((col) => col.name))
-  ).map((name) => {
-    return {
-      _id: allColumns.find((col) => col.name === name)?._id,
-      name: name,
-      tasks: allColumns
-        .filter((col) => col.name === name)
-        .map((edition) => edition.tasks)
-        .reduce((acc, val) => {
-          return acc.concat(val);
-        })
-        .filter((task) => tasks?.find((t) => t._id == task)),
-    };
-  }) as Column[];
+  const mergedColumns =
+    allColumns && allColumns.length > 0
+      ? (Array.from(new Set(allColumns.map((col) => col.name))).map((name) => {
+          return {
+            _id: allColumns.find((col) => col.name === name)?._id,
+            name: name,
+            tasks: allColumns
+              .filter((col) => col.name === name)
+              .map((edition) => edition.tasks)
+              .reduce((acc, val) => {
+                return acc.concat(val);
+              })
+              .filter((task) => tasks?.find((t) => t._id == task)),
+          };
+        }) as Column[])
+      : [];
 
   function getOverdueTasks() {
     if (tasks && tasks.length > 0) {
