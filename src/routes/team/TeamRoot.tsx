@@ -78,17 +78,17 @@ export default function TeamRootPage() {
   const { getTeamById } = useTeamService();
 
   if (!id) {
-    return <>No team id found</>;
+    return (
+      <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 p-4 xl:flex-nowrap 2xl:w-3/4">
+        {<>Loading</>}
+      </div>
+    );
   }
   const { data: team } = useQuery(teamByIdQuery(id, getTeamById));
 
-  if (!team) {
-    return <>Loading</>;
-  }
-
   return (
     <div className="flex h-max w-full flex-wrap gap-3 bg-gradient-to-b from-neutral-900 p-4 xl:flex-nowrap 2xl:w-3/4">
-      <Outlet />
+      {!team ? <>Loading</> : <Outlet />}
     </div>
   );
 }

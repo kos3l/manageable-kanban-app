@@ -64,23 +64,23 @@ export default function UserDashboardPage() {
   const { getAllUserProjects } = useProjectService();
   const { getTasksByUser } = useTaskService();
 
-  const { data: projects } = useQuery(
+  const { data: projects, isLoading: projectsLoading } = useQuery(
     projectsWithTeamsQuery(getAllUserProjects)
   );
-  const { data: tasks } = useQuery(tasksForUserQuery(getTasksByUser));
-
-  if (!projects) {
-    return <p>loading</p>;
-  }
+  const { data: tasks, isLoading: tasksLoading } = useQuery(
+    tasksForUserQuery(getTasksByUser)
+  );
 
   // Get all columns which have tasks assigned to the logged in user
   const allColumns = projects
-    .filter((project) => project.status !== ProjectStatus.COMPLETED)
-    .map((project) => project.columns)
-    .reduce((acc, val) => {
-      return acc.concat(val);
-    })
-    .filter((col) => tasks?.find((task) => task.columnId == col._id));
+    ? projects
+        .filter((project) => project.status !== ProjectStatus.COMPLETED)
+        .map((project) => project.columns)
+        .reduce((acc, val) => {
+          return acc.concat(val);
+        })
+        .filter((col) => tasks?.find((task) => task.columnId == col._id))
+    : [];
 
   // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
   const mergedColumns = Array.from(

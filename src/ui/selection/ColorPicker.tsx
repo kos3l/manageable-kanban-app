@@ -78,7 +78,7 @@ export default function ColorPicker(props: IProps) {
     >
       <button className={`${boxColorVariants[defaultColor]}`}></button>
       {isExpanded ? (
-        <div className="absolute top-10 mb-4 flex h-max w-[3rem] flex-col items-center gap-3 rounded-lg rounded-t-none border border-t-0 border-neutral-600 bg-neutral-900 pt-2 pb-4">
+        <div className="absolute top-10 z-40 mb-4 flex h-max w-[3rem] flex-col items-center gap-3 rounded-lg rounded-t-none border border-t-0 border-neutral-600 bg-neutral-900 pt-2 pb-4">
           {colors.map((col, index) => {
             return (
               <div

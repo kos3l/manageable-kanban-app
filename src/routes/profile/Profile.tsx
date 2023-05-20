@@ -92,7 +92,11 @@ export default function ProfilePage() {
   const { data: teams } = useQuery(getAllTeams(getAllUserTeams));
 
   if (!user) {
-    return <>Loading</>;
+    return (
+      <div className="relative flex h-max w-full flex-wrap gap-4 bg-gradient-to-b from-neutral-900 p-4 sm:h-full sm:flex-nowrap sm:overflow-scroll 2xl:w-2/3">
+        {<>Loading</>}
+      </div>
+    );
   }
 
   const logout = useQuery({
