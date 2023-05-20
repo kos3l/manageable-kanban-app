@@ -125,6 +125,9 @@ export default function SelectedtTaskCard(props: IProps) {
         queryKey: ["task", "column", selectedTask._id],
       });
       queryClient.invalidateQueries({
+        queryKey: [selectedTask.columnId],
+      });
+      queryClient.invalidateQueries({
         queryKey: [
           "task",
           "column",

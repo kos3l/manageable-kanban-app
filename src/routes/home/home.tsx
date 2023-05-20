@@ -5,7 +5,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { Link } from "react-router-dom";
 import LandingButton from "../../ui/buttons/LandingButton";
-import mock from "../../assets/demo.png";
+import mock from "../../assets/demo3.png";
 export default function HomePage() {
   return (
     <>
