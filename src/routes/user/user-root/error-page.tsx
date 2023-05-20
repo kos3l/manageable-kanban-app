@@ -8,7 +8,7 @@ export default function ErrorPage() {
   return (
     <div
       id="error-page"
-      className="bg-red-pattern flex h-screen w-screen items-center justify-center "
+      className="flex h-screen w-screen items-center justify-center bg-hero-pattern "
     >
       <div className="flex w-max flex-col items-start">
         <h1 className="mt-2 mb-3 text-4xl font-bold text-neutral-300 drop-shadow xl:leading-[4rem]">
