@@ -79,31 +79,47 @@ export default function UserDashboardPage() {
     );
   }
 
-  // Get all columns which have tasks assigned to the logged in user
-  const allColumns = projects
-    .filter((project) => project.status !== ProjectStatus.COMPLETED)
-    .map((project) => project.columns)
-    .reduce((acc, val) => {
-      return acc.concat(val);
-    })
-    .filter((col) => tasks?.find((task) => task.columnId == col._id));
+  function getMergedColumns() {
+    if (projects && projects.length > 0) {
+      // Get all columns which have tasks assigned to the logged in user
+      const allColumns = projects
+        .filter((project) => project.status !== ProjectStatus.COMPLETED)
+        .map((project) => project.columns);
 
-  // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
-  const mergedColumns = Array.from(
-    new Set(allColumns.map((col) => col.name))
-  ).map((name) => {
-    return {
-      _id: allColumns.find((col) => col.name === name)?._id,
-      name: name,
-      tasks: allColumns
-        .filter((col) => col.name === name)
-        .map((edition) => edition.tasks)
-        .reduce((acc, val) => {
-          return acc.concat(val);
-        })
-        .filter((task) => tasks?.find((t) => t._id == task)),
-    };
-  }) as Column[];
+      const joinedColumns =
+        allColumns && allColumns.length > 0
+          ? allColumns
+              .reduce((acc, val) => {
+                return acc.concat(val);
+              })
+              .filter((col) => tasks?.find((task) => task.columnId == col._id))
+          : [];
+
+      // Merge columns named the same into one column and filter their tasks to leave only ones assigned to the current user
+      const mergedColumns =
+        joinedColumns && joinedColumns.length > 0
+          ? (Array.from(new Set(joinedColumns.map((col) => col.name))).map(
+              (name) => {
+                return {
+                  _id: joinedColumns.find((col) => col.name === name)?._id,
+                  name: name,
+                  tasks: joinedColumns
+                    .filter((col) => col.name === name)
+                    .map((edition) => edition.tasks)
+                    .reduce((acc, val) => {
+                      return acc.concat(val);
+                    })
+                    .filter((task) => tasks?.find((t) => t._id == task)),
+                };
+              }
+            ) as Column[])
+          : [];
+
+      return mergedColumns;
+    } else {
+      return [];
+    }
+  }
 
   function getOverdueTasks() {
     if (tasks && tasks.length > 0) {
@@ -162,7 +178,7 @@ export default function UserDashboardPage() {
           <div className="flex h-max w-full gap-3 rounded-lg border border-neutral-600 bg-neutral-800/20 p-1">
             <TasksPerColumnChart
               label="Your Tasks Per Column"
-              columns={mergedColumns}
+              columns={getMergedColumns()}
             ></TasksPerColumnChart>
           </div>
           <div className="flex w-full flex-col gap-2 lg:flex-row">

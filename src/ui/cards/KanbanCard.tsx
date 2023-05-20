@@ -19,10 +19,13 @@ export default function KanbanCard(props: IProps) {
     return <>Loading</>;
   }
 
-  const totalTasks: number = project.columns.reduce((acc, val) => {
-    const lenght: number = val.tasks.length;
-    return acc + lenght;
-  }, 0);
+  const totalTasks: number =
+    project.columns && project.columns.length > 0
+      ? project.columns.reduce((acc, val) => {
+          const lenght: number = val.tasks.length;
+          return acc + lenght;
+        }, 0)
+      : 0;
 
   return (
     <Link to={"../projects/" + project._id + "/kanban"}>
